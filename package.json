@@ -1,0 +1,25 @@
+{
+  "name": "pullman-sedili-tiktok",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "transcribe": "node scripts/transcribe.mjs",
+    "studio": "remotion studio",
+    "render": "remotion render PullmanVideo out/video.mp4"
+  },
+  "type": "module",
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@remotion/captions": "^4.0.536",
+    "@remotion/cli": "^4.0.536",
+    "@remotion/install-whisper-cpp": "^4.0.536",
+    "@remotion/media-utils": "^4.0.536",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.536"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
