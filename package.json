@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "align": "python3 scripts/align.py",
     "transcribe": "node scripts/transcribe.mjs",
     "studio": "remotion studio",
+    "preview": "remotion render PullmanVideo out/anteprima.mp4 --scale=0.5",
     "render": "remotion render PullmanVideo out/video.mp4"
   },
   "type": "module",

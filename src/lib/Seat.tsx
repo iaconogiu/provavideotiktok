@@ -13,6 +13,8 @@ export const Seat: React.FC<{
   reveal?: number;
   plain?: string | null; // se impostato, tessuto in tinta unita al posto della fantasia
   patternOpacity?: number;
+  /** 0..1: la fantasia si espande a cerchio dal centro dello schienale */
+  patternClip?: number;
   offsetY?: number;
   children?: React.ReactNode; // overlay sullo schienale (es. macchie)
   style?: React.CSSProperties;
@@ -24,6 +26,7 @@ export const Seat: React.FC<{
   reveal = 1,
   plain = null,
   patternOpacity = 1,
+  patternClip = 1,
   offsetY = 0,
   children,
   style,
@@ -34,7 +37,14 @@ export const Seat: React.FC<{
   const fabric = (sub: string) => (
     <>
       {plain && <div style={{position: 'absolute', inset: 0, background: plain}} />}
-      <div style={{position: 'absolute', inset: 0, opacity: patternOpacity}}>
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: patternOpacity,
+          clipPath: patternClip >= 1 ? undefined : `circle(${patternClip * 120}% at 50% 45%)`,
+        }}
+      >
         <FabricPattern id={`${id}-${sub}`} seed={seed} tile={tile} reveal={reveal} offsetY={offsetY} />
       </div>
     </>
