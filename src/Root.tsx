@@ -3,7 +3,7 @@ import {Composition, staticFile} from 'remotion';
 import {getAudioDurationInSeconds} from '@remotion/media-utils';
 import {PullmanVideo} from './PullmanVideo';
 import {FPS, H, W} from './lib/theme';
-import {SimbaV3} from './simba/SimbaV3';
+import {SimbaV4} from './simba/SimbaV4';
 import {DURATION} from './simba/theme';
 
 export const RemotionRoot: React.FC = () => (
@@ -21,6 +21,6 @@ export const RemotionRoot: React.FC = () => (
       return {durationInFrames: Math.ceil(sec * FPS)};
     }}
   />
-  <Composition id="Simba22Freedom" component={SimbaV3} width={W} height={H} fps={FPS} durationInFrames={Math.floor(DURATION * FPS)} />
+  <Composition id="Simba22Freedom" component={SimbaV4} width={W} height={H} fps={FPS} durationInFrames={Math.floor(DURATION * FPS)} />
   </>
 );

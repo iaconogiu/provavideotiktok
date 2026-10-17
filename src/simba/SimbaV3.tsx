@@ -13,8 +13,8 @@ const pp = (t: number, at: number) => pop(t * FPS, at * FPS);
 const ws = (line: string, i: number) => lineWords(line)[i].startMs / 1000;
 const img = (name: string) => staticFile(`simba/img/${name}.jpg`);
 
-const HITS = lineWords('freedom').map((w) => w.startMs / 1000);
-const T = {
+export const HITS = lineWords('freedom').map((w) => w.startMs / 1000);
+export const T = {
   chiami: ws('chiami', 0),
   fusi: ws('chiami', 4),
   saro: ws('chiami', 9),
@@ -140,7 +140,7 @@ const Stack: React.FC<{t: number}> = ({t}) => {
 };
 
 // ── banner di chiamata (stile iOS) ──
-const CallBanner: React.FC<{t: number; inAt: number; outAt: number; acceptAt: number; since: number}> = ({t, inAt, outAt, acceptAt, since}) => {
+export const CallBanner: React.FC<{t: number; inAt: number; outAt: number; acceptAt: number; since: number}> = ({t, inAt, outAt, acceptAt, since}) => {
   const p = sp(t, inAt) * (1 - cl(t, outAt - 0.2, outAt));
   if (p <= 0.001) return null;
   const acc = t >= acceptAt;
@@ -171,7 +171,7 @@ const CITIES = [
   {label: 'New York', h: 21},
   {label: 'Tokyo', h: 10},
 ];
-const Clocks: React.FC<{t: number; inAt: number; outAt: number; top: number; converge?: number}> = ({t, inAt, outAt, top, converge}) => {
+export const Clocks: React.FC<{t: number; inAt: number; outAt: number; top: number; converge?: number}> = ({t, inAt, outAt, top, converge}) => {
   const p = sp(t, inAt) * (1 - cl(t, outAt - 0.2, outAt));
   if (p <= 0.001) return null;
   const spin = cl(t, inAt, inAt + 0.9);
@@ -191,7 +191,7 @@ const Clocks: React.FC<{t: number; inAt: number; outAt: number; top: number; con
   );
 };
 
-const FallireFx: React.FC<{t: number}> = ({t}) => {
+export const FallireFx: React.FC<{t: number}> = ({t}) => {
   if (t < T.fallire - 0.2 || t > T.faro + 1.0) return null;
   const appear = sp(t, T.fallire - 0.08);
   const rebuild = sp(t, T.pero);
@@ -229,7 +229,7 @@ const VARIANTS: React.CSSProperties[] = [
   {color: K.paper},
 ];
 
-const FreedomFx: React.FC<{t: number}> = ({t}) => {
+export const FreedomFx: React.FC<{t: number}> = ({t}) => {
   const n = HITS.filter((h) => t >= h - 0.02).length;
   if (!n || t > T.sole - 0.1) return null;
   const last = HITS[n - 1];
