@@ -1,0 +1,266 @@
+[
+ {
+  "line": "intro",
+  "text": "Ah-ah",
+  "startMs": 70,
+  "endMs": 620
+ },
+ {
+  "line": "chiami",
+  "text": "Se",
+  "startMs": 2060,
+  "endMs": 2216
+ },
+ {
+  "line": "chiami",
+  "text": "chiami,",
+  "startMs": 2216,
+  "endMs": 2520
+ },
+ {
+  "line": "chiami",
+  "text": "guarda",
+  "startMs": 2520,
+  "endMs": 2950
+ },
+ {
+  "line": "chiami",
+  "text": "i",
+  "startMs": 2950,
+  "endMs": 3130
+ },
+ {
+  "line": "chiami",
+  "text": "fusi",
+  "startMs": 3130,
+  "endMs": 3420
+ },
+ {
+  "line": "chiami",
+  "text": "orari,",
+  "startMs": 3420,
+  "endMs": 3950
+ },
+ {
+  "line": "chiami",
+  "text": "ma",
+  "startMs": 3950,
+  "endMs": 4100
+ },
+ {
+  "line": "chiami",
+  "text": "io",
+  "startMs": 4100,
+  "endMs": 4330
+ },
+ {
+  "line": "chiami",
+  "text": "ci",
+  "startMs": 4330,
+  "endMs": 4508
+ },
+ {
+  "line": "chiami",
+  "text": "sarò",
+  "startMs": 4508,
+  "endMs": 4860
+ },
+ {
+  "line": "fallire",
+  "text": "E",
+  "startMs": 6560,
+  "endMs": 6770
+ },
+ {
+  "line": "fallire",
+  "text": "potrò",
+  "startMs": 6770,
+  "endMs": 6970
+ },
+ {
+  "line": "fallire",
+  "text": "fallire",
+  "startMs": 6970,
+  "endMs": 7520
+ },
+ {
+  "line": "fallire",
+  "text": "un",
+  "startMs": 7520,
+  "endMs": 7710
+ },
+ {
+  "line": "fallire",
+  "text": "domani,",
+  "startMs": 7710,
+  "endMs": 8300
+ },
+ {
+  "line": "fallire",
+  "text": "però",
+  "startMs": 8300,
+  "endMs": 8840
+ },
+ {
+  "line": "fallire",
+  "text": "lo",
+  "startMs": 8840,
+  "endMs": 8960
+ },
+ {
+  "line": "fallire",
+  "text": "farò",
+  "startMs": 8960,
+  "endMs": 9300
+ },
+ {
+  "line": "freedom",
+  "text": "Freedom,",
+  "startMs": 9950,
+  "endMs": 11000
+ },
+ {
+  "line": "freedom",
+  "text": "freedom,",
+  "startMs": 11000,
+  "endMs": 12100
+ },
+ {
+  "line": "freedom",
+  "text": "freedom,",
+  "startMs": 12100,
+  "endMs": 12780
+ },
+ {
+  "line": "freedom",
+  "text": "freedom,",
+  "startMs": 12780,
+  "endMs": 14200
+ },
+ {
+  "line": "freedom",
+  "text": "freedom",
+  "startMs": 14200,
+  "endMs": 14850
+ },
+ {
+  "line": "sole",
+  "text": "Voglio",
+  "startMs": 15690,
+  "endMs": 16000
+ },
+ {
+  "line": "sole",
+  "text": "il",
+  "startMs": 16000,
+  "endMs": 16120
+ },
+ {
+  "line": "sole",
+  "text": "sole",
+  "startMs": 16120,
+  "endMs": 16430
+ },
+ {
+  "line": "sole",
+  "text": "ricopra",
+  "startMs": 16430,
+  "endMs": 16770
+ },
+ {
+  "line": "sole",
+  "text": "di",
+  "startMs": 16770,
+  "endMs": 17010
+ },
+ {
+  "line": "sole",
+  "text": "raggi",
+  "startMs": 17010,
+  "endMs": 17350
+ },
+ {
+  "line": "sole",
+  "text": "uno",
+  "startMs": 17350,
+  "endMs": 17530
+ },
+ {
+  "line": "sole",
+  "text": "del",
+  "startMs": 17530,
+  "endMs": 17709
+ },
+ {
+  "line": "sole",
+  "text": "Polo",
+  "startMs": 17709,
+  "endMs": 17940
+ },
+ {
+  "line": "sole",
+  "text": "Nord",
+  "startMs": 17940,
+  "endMs": 18150
+ },
+ {
+  "line": "chiami2",
+  "text": "Se",
+  "startMs": 19850,
+  "endMs": 20110
+ },
+ {
+  "line": "chiami2",
+  "text": "chiami,",
+  "startMs": 20110,
+  "endMs": 20300
+ },
+ {
+  "line": "chiami2",
+  "text": "guarda",
+  "startMs": 20300,
+  "endMs": 20710
+ },
+ {
+  "line": "chiami2",
+  "text": "i",
+  "startMs": 20710,
+  "endMs": 20920
+ },
+ {
+  "line": "chiami2",
+  "text": "fusi",
+  "startMs": 20920,
+  "endMs": 21200
+ },
+ {
+  "line": "chiami2",
+  "text": "orari,",
+  "startMs": 21200,
+  "endMs": 21740
+ },
+ {
+  "line": "chiami2",
+  "text": "ma",
+  "startMs": 21740,
+  "endMs": 22010
+ },
+ {
+  "line": "chiami2",
+  "text": "io",
+  "startMs": 22010,
+  "endMs": 22170
+ },
+ {
+  "line": "chiami2",
+  "text": "ci",
+  "startMs": 22170,
+  "endMs": 22340
+ },
+ {
+  "line": "chiami2",
+  "text": "sarò",
+  "startMs": 22340,
+  "endMs": 22660
+ }
+]
