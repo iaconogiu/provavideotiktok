@@ -4,3 +4,4 @@ node_modules/
 out/
 .DS_Store
 public/simba/audio.m4a
+public/simba/live.mov
