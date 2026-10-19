@@ -4,6 +4,7 @@ import {getAudioDurationInSeconds} from '@remotion/media-utils';
 import {PullmanVideo} from './PullmanVideo';
 import {FPS, H, W} from './lib/theme';
 import {SimbaV5} from './simba/SimbaV5';
+import {Avatar} from './Avatar';
 import {DURATION} from './simba/theme';
 
 export const RemotionRoot: React.FC = () => (
@@ -22,5 +23,6 @@ export const RemotionRoot: React.FC = () => (
     }}
   />
   <Composition id="Simba22Freedom" component={SimbaV5} width={W} height={H} fps={FPS} durationInFrames={Math.floor(DURATION * FPS)} />
+  <Composition id="Avatar" component={Avatar} width={1080} height={1080} fps={30} durationInFrames={1} defaultProps={{variant: 'blu' as const}} />
   </>
 );
