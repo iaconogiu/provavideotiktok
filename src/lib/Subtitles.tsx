@@ -12,12 +12,12 @@ const clean = (t: string) =>
     .replace(/[^\p{L}\p{N}']/gu, '')
     .trim();
 
-export const isKeyword = (t: string) => KEYWORDS.some((k) => clean(t).startsWith(k));
+export const isKeyword = (t: string, kws: string[] = KEYWORDS) => kws.some((k) => clean(t).startsWith(k));
 
 type Page = {startMs: number; endMs: number; words: Caption[]};
 
 /** Raggruppa le parole in "pagine" brevi (max 3 parole o ~16 caratteri), spezzando su pause e punteggiatura. */
-const toPages = (captions: Caption[]): Page[] => {
+const toPages = (captions: Caption[], kws: string[]): Page[] => {
   const pages: Page[] = [];
   let cur: Caption[] = [];
   const flush = () => {
@@ -29,9 +29,9 @@ const toPages = (captions: Caption[]): Page[] => {
     const prev = captions[i - 1];
     const chars = cur.reduce((a, w) => a + w.text.trim().length + 1, 0);
     const gap = prev ? c.startMs - prev.endMs : 0;
-    if (cur.length && (cur.length >= 3 || chars + c.text.trim().length > 16 || gap > 350 || isKeyword(c.text))) flush();
+    if (cur.length && (cur.length >= 3 || chars + c.text.trim().length > 16 || gap > 350 || isKeyword(c.text, kws))) flush();
     cur.push(c);
-    if (/[.,!?;:]$/.test(c.text.trim()) || isKeyword(c.text)) flush();
+    if (/[.,!?;:]$/.test(c.text.trim()) || isKeyword(c.text, kws)) flush();
   });
   flush();
   // ogni pagina resta visibile fino all'inizio della successiva (max +600ms)
@@ -41,11 +41,11 @@ const toPages = (captions: Caption[]): Page[] => {
   }));
 };
 
-const Word: React.FC<{w: Caption; ms: number; frame: number}> = ({w, ms, frame}) => {
+const Word: React.FC<{w: Caption; ms: number; frame: number; kws: string[]}> = ({w, ms, frame, kws}) => {
   const startF = (w.startMs / 1000) * FPS;
   const active = ms >= w.startMs && ms < w.endMs + 60;
   const spoken = ms >= w.startMs;
-  const key = isKeyword(w.text);
+  const key = isKeyword(w.text, kws);
   const enter = soft(frame, startF - 4, 16, 0.6);
   const kp = key ? pop(frame, startF - 2) : 0;
 
@@ -97,10 +97,10 @@ const Word: React.FC<{w: Caption; ms: number; frame: number}> = ({w, ms, frame})
   );
 };
 
-export const Subtitles: React.FC<{captions: Caption[]}> = ({captions}) => {
+export const Subtitles: React.FC<{captions: Caption[]; keywords?: string[]}> = ({captions, keywords = KEYWORDS}) => {
   const frame = useCurrentFrame();
   const ms = (frame / FPS) * 1000;
-  const pages = useMemo(() => toPages(captions), [captions]);
+  const pages = useMemo(() => toPages(captions, keywords), [captions, keywords]);
   const page = pages.find((p) => ms >= p.startMs - 80 && ms < p.endMs);
   if (!page) return null;
 
@@ -140,7 +140,7 @@ export const Subtitles: React.FC<{captions: Caption[]}> = ({captions}) => {
           }}
         >
           {page.words.map((w, i) => (
-            <Word key={i} w={w} ms={ms} frame={frame} />
+            <Word key={i} w={w} ms={ms} frame={frame} kws={keywords} />
           ))}
         </div>
       </div>

@@ -1,0 +1,1087 @@
+[
+  {
+    "text": "Perché",
+    "startMs": 120,
+    "endMs": 500,
+    "timestampMs": 340,
+    "confidence": 0.937936
+  },
+  {
+    "text": " il",
+    "startMs": 500,
+    "endMs": 640,
+    "timestampMs": 560,
+    "confidence": 0.999316
+  },
+  {
+    "text": " tappo",
+    "startMs": 640,
+    "endMs": 990,
+    "timestampMs": 700,
+    "confidence": 0.999417
+  },
+  {
+    "text": " della",
+    "startMs": 990,
+    "endMs": 1350,
+    "timestampMs": 1120,
+    "confidence": 0.999203
+  },
+  {
+    "text": " penna",
+    "startMs": 1350,
+    "endMs": 1840,
+    "timestampMs": 1340,
+    "confidence": 0.999207
+  },
+  {
+    "text": " ha",
+    "startMs": 1840,
+    "endMs": 1970,
+    "timestampMs": 2080,
+    "confidence": 0.993365
+  },
+  {
+    "text": " un",
+    "startMs": 1970,
+    "endMs": 1990,
+    "timestampMs": 2220,
+    "confidence": 0.999815
+  },
+  {
+    "text": " buco",
+    "startMs": 1990,
+    "endMs": 2260,
+    "timestampMs": 2360,
+    "confidence": 0.999668
+  },
+  {
+    "text": " in",
+    "startMs": 2260,
+    "endMs": 2420,
+    "timestampMs": 2700,
+    "confidence": 0.999815
+  },
+  {
+    "text": " cima?",
+    "startMs": 2420,
+    "endMs": 2960,
+    "timestampMs": 2980,
+    "confidence": 0.999964
+  },
+  {
+    "text": " Pensaci,",
+    "startMs": 2960,
+    "endMs": 3640,
+    "timestampMs": 3800,
+    "confidence": 0.997037
+  },
+  {
+    "text": " ce",
+    "startMs": 3640,
+    "endMs": 3790,
+    "timestampMs": 4620,
+    "confidence": 0.997284
+  },
+  {
+    "text": " l'hai",
+    "startMs": 3790,
+    "endMs": 4180,
+    "timestampMs": 4720,
+    "confidence": 0.999418
+  },
+  {
+    "text": " in",
+    "startMs": 4180,
+    "endMs": 4310,
+    "timestampMs": 4960,
+    "confidence": 0.998591
+  },
+  {
+    "text": " mano",
+    "startMs": 4310,
+    "endMs": 4590,
+    "timestampMs": 5120,
+    "confidence": 0.99995
+  },
+  {
+    "text": " da",
+    "startMs": 4590,
+    "endMs": 4930,
+    "timestampMs": 5260,
+    "confidence": 0.999981
+  },
+  {
+    "text": " quando",
+    "startMs": 4930,
+    "endMs": 5250,
+    "timestampMs": 5520,
+    "confidence": 0.999895
+  },
+  {
+    "text": " sei",
+    "startMs": 5250,
+    "endMs": 5450,
+    "timestampMs": 5720,
+    "confidence": 0.999794
+  },
+  {
+    "text": " bambino,",
+    "startMs": 5450,
+    "endMs": 6200,
+    "timestampMs": 5900,
+    "confidence": 0.999968
+  },
+  {
+    "text": " l'hai",
+    "startMs": 6200,
+    "endMs": 6560,
+    "timestampMs": 6580,
+    "confidence": 0.999878
+  },
+  {
+    "text": " mordicchiato,",
+    "startMs": 6560,
+    "endMs": 7590,
+    "timestampMs": 6840,
+    "confidence": 0.99972
+  },
+  {
+    "text": " perso,",
+    "startMs": 7590,
+    "endMs": 8170,
+    "timestampMs": 8020,
+    "confidence": 0.99906
+  },
+  {
+    "text": " ritrovato,",
+    "startMs": 8170,
+    "endMs": 8980,
+    "timestampMs": 8500,
+    "confidence": 0.999966
+  },
+  {
+    "text": " ma",
+    "startMs": 8980,
+    "endMs": 9130,
+    "timestampMs": 9500,
+    "confidence": 0.999969
+  },
+  {
+    "text": " quel",
+    "startMs": 9130,
+    "endMs": 9440,
+    "timestampMs": 9800,
+    "confidence": 0.999945
+  },
+  {
+    "text": " buchino",
+    "startMs": 9440,
+    "endMs": 9970,
+    "timestampMs": 9980,
+    "confidence": 0.966825
+  },
+  {
+    "text": " non",
+    "startMs": 9970,
+    "endMs": 10200,
+    "timestampMs": 10940,
+    "confidence": 0.824297
+  },
+  {
+    "text": " ti",
+    "startMs": 10200,
+    "endMs": 10350,
+    "timestampMs": 11060,
+    "confidence": 0.999977
+  },
+  {
+    "text": " sei",
+    "startMs": 10350,
+    "endMs": 10580,
+    "timestampMs": 11220,
+    "confidence": 0.999024
+  },
+  {
+    "text": " mai",
+    "startMs": 10580,
+    "endMs": 10950,
+    "timestampMs": 11380,
+    "confidence": 0.99999
+  },
+  {
+    "text": " chiesto",
+    "startMs": 10950,
+    "endMs": 11340,
+    "timestampMs": 11560,
+    "confidence": 0.999985
+  },
+  {
+    "text": " a",
+    "startMs": 11340,
+    "endMs": 11410,
+    "timestampMs": 11840,
+    "confidence": 0.999952
+  },
+  {
+    "text": " cosa",
+    "startMs": 11410,
+    "endMs": 11720,
+    "timestampMs": 12020,
+    "confidence": 0.999941
+  },
+  {
+    "text": " serve?",
+    "startMs": 11720,
+    "endMs": 12440,
+    "timestampMs": 12400,
+    "confidence": 0.999847
+  },
+  {
+    "text": " No,",
+    "startMs": 12440,
+    "endMs": 12740,
+    "timestampMs": 13160,
+    "confidence": 0.999924
+  },
+  {
+    "text": " non",
+    "startMs": 12740,
+    "endMs": 13070,
+    "timestampMs": 13660,
+    "confidence": 0.999947
+  },
+  {
+    "text": " è",
+    "startMs": 13070,
+    "endMs": 13120,
+    "timestampMs": 13820,
+    "confidence": 0.999962
+  },
+  {
+    "text": " per",
+    "startMs": 13120,
+    "endMs": 13350,
+    "timestampMs": 14000,
+    "confidence": 0.999987
+  },
+  {
+    "text": " far",
+    "startMs": 13350,
+    "endMs": 13580,
+    "timestampMs": 14180,
+    "confidence": 0.999645
+  },
+  {
+    "text": " asciugare",
+    "startMs": 13580,
+    "endMs": 14340,
+    "timestampMs": 14340,
+    "confidence": 0.998864
+  },
+  {
+    "text": " l'inchiostro.",
+    "startMs": 14340,
+    "endMs": 15300,
+    "timestampMs": 14780,
+    "confidence": 0.999985
+  },
+  {
+    "text": " E",
+    "startMs": 15300,
+    "endMs": 15420,
+    "timestampMs": 15720,
+    "confidence": 0.999928
+  },
+  {
+    "text": " non",
+    "startMs": 15420,
+    "endMs": 15600,
+    "timestampMs": 15920,
+    "confidence": 0.999937
+  },
+  {
+    "text": " è",
+    "startMs": 15600,
+    "endMs": 15740,
+    "timestampMs": 16100,
+    "confidence": 0.999969
+  },
+  {
+    "text": " un",
+    "startMs": 15740,
+    "endMs": 15930,
+    "timestampMs": 16280,
+    "confidence": 0.999996
+  },
+  {
+    "text": " errore",
+    "startMs": 15930,
+    "endMs": 16340,
+    "timestampMs": 16480,
+    "confidence": 0.999586
+  },
+  {
+    "text": " di",
+    "startMs": 16340,
+    "endMs": 16520,
+    "timestampMs": 16760,
+    "confidence": 0.999996
+  },
+  {
+    "text": " fabbrica,",
+    "startMs": 16520,
+    "endMs": 17260,
+    "timestampMs": 17020,
+    "confidence": 0.998782
+  },
+  {
+    "text": " perché",
+    "startMs": 17260,
+    "endMs": 17780,
+    "timestampMs": 17840,
+    "confidence": 0.999939
+  },
+  {
+    "text": " ogni",
+    "startMs": 17780,
+    "endMs": 18080,
+    "timestampMs": 18240,
+    "confidence": 0.999992
+  },
+  {
+    "text": " anno,",
+    "startMs": 18080,
+    "endMs": 18500,
+    "timestampMs": 18600,
+    "confidence": 0.999908
+  },
+  {
+    "text": " in",
+    "startMs": 18500,
+    "endMs": 18640,
+    "timestampMs": 18940,
+    "confidence": 0.999989
+  },
+  {
+    "text": " tutto",
+    "startMs": 18640,
+    "endMs": 19150,
+    "timestampMs": 19220,
+    "confidence": 0.999882
+  },
+  {
+    "text": " il",
+    "startMs": 19150,
+    "endMs": 19230,
+    "timestampMs": 19400,
+    "confidence": 0.999992
+  },
+  {
+    "text": " mondo,",
+    "startMs": 19230,
+    "endMs": 19720,
+    "timestampMs": 19680,
+    "confidence": 0.999954
+  },
+  {
+    "text": " qualcuno",
+    "startMs": 19720,
+    "endMs": 20350,
+    "timestampMs": 20240,
+    "confidence": 0.999983
+  },
+  {
+    "text": " ingoia",
+    "startMs": 20350,
+    "endMs": 20640,
+    "timestampMs": 20660,
+    "confidence": 0.99464
+  },
+  {
+    "text": " per",
+    "startMs": 20640,
+    "endMs": 20840,
+    "timestampMs": 21020,
+    "confidence": 0.998045
+  },
+  {
+    "text": " sbaglio",
+    "startMs": 20840,
+    "endMs": 21300,
+    "timestampMs": 21160,
+    "confidence": 0.999983
+  },
+  {
+    "text": " un",
+    "startMs": 21300,
+    "endMs": 21490,
+    "timestampMs": 21560,
+    "confidence": 0.999979
+  },
+  {
+    "text": " tappo",
+    "startMs": 21490,
+    "endMs": 21750,
+    "timestampMs": 21700,
+    "confidence": 0.999889
+  },
+  {
+    "text": " di",
+    "startMs": 21750,
+    "endMs": 21880,
+    "timestampMs": 21980,
+    "confidence": 0.999994
+  },
+  {
+    "text": " penna,",
+    "startMs": 21880,
+    "endMs": 22400,
+    "timestampMs": 22220,
+    "confidence": 0.999914
+  },
+  {
+    "text": " soprattutto",
+    "startMs": 22400,
+    "endMs": 23180,
+    "timestampMs": 23100,
+    "confidence": 0.999828
+  },
+  {
+    "text": " i",
+    "startMs": 23180,
+    "endMs": 23220,
+    "timestampMs": 23360,
+    "confidence": 0.999954
+  },
+  {
+    "text": " bambini,",
+    "startMs": 23220,
+    "endMs": 23780,
+    "timestampMs": 23500,
+    "confidence": 0.999994
+  },
+  {
+    "text": " che",
+    "startMs": 23780,
+    "endMs": 23940,
+    "timestampMs": 24200,
+    "confidence": 0.999987
+  },
+  {
+    "text": " lo",
+    "startMs": 23940,
+    "endMs": 24080,
+    "timestampMs": 24340,
+    "confidence": 0.999973
+  },
+  {
+    "text": " tengono",
+    "startMs": 24080,
+    "endMs": 24430,
+    "timestampMs": 24500,
+    "confidence": 0.996003
+  },
+  {
+    "text": " in",
+    "startMs": 24430,
+    "endMs": 24600,
+    "timestampMs": 24780,
+    "confidence": 0.999998
+  },
+  {
+    "text": " bocca",
+    "startMs": 24600,
+    "endMs": 24810,
+    "timestampMs": 24920,
+    "confidence": 0.999844
+  },
+  {
+    "text": " mentre",
+    "startMs": 24810,
+    "endMs": 25140,
+    "timestampMs": 25280,
+    "confidence": 0.99988
+  },
+  {
+    "text": " fanno",
+    "startMs": 25140,
+    "endMs": 25400,
+    "timestampMs": 25460,
+    "confidence": 0.999952
+  },
+  {
+    "text": " i",
+    "startMs": 25400,
+    "endMs": 25680,
+    "timestampMs": 25660,
+    "confidence": 0.99999
+  },
+  {
+    "text": " compiti.",
+    "startMs": 25680,
+    "endMs": 26080,
+    "timestampMs": 25920,
+    "confidence": 0.999842
+  },
+  {
+    "text": " Ed",
+    "startMs": 26080,
+    "endMs": 26230,
+    "timestampMs": 26680,
+    "confidence": 0.999085
+  },
+  {
+    "text": " ecco",
+    "startMs": 26230,
+    "endMs": 26530,
+    "timestampMs": 26860,
+    "confidence": 0.99988
+  },
+  {
+    "text": " il",
+    "startMs": 26530,
+    "endMs": 26710,
+    "timestampMs": 27020,
+    "confidence": 0.999987
+  },
+  {
+    "text": " trucco.",
+    "startMs": 26710,
+    "endMs": 27400,
+    "timestampMs": 27180,
+    "confidence": 0.999725
+  },
+  {
+    "text": " Se",
+    "startMs": 27400,
+    "endMs": 27540,
+    "timestampMs": 27880,
+    "confidence": 0.987931
+  },
+  {
+    "text": " il",
+    "startMs": 27540,
+    "endMs": 27700,
+    "timestampMs": 28000,
+    "confidence": 0.999983
+  },
+  {
+    "text": " tappo",
+    "startMs": 27700,
+    "endMs": 28030,
+    "timestampMs": 28120,
+    "confidence": 0.999886
+  },
+  {
+    "text": " si",
+    "startMs": 28030,
+    "endMs": 28220,
+    "timestampMs": 28420,
+    "confidence": 0.999989
+  },
+  {
+    "text": " blocca",
+    "startMs": 28220,
+    "endMs": 28620,
+    "timestampMs": 28600,
+    "confidence": 0.99984
+  },
+  {
+    "text": " in",
+    "startMs": 28620,
+    "endMs": 28730,
+    "timestampMs": 28880,
+    "confidence": 0.999966
+  },
+  {
+    "text": " gola,",
+    "startMs": 28730,
+    "endMs": 29180,
+    "timestampMs": 29020,
+    "confidence": 0.99922
+  },
+  {
+    "text": " quel",
+    "startMs": 29300,
+    "endMs": 29480,
+    "timestampMs": 29580,
+    "confidence": 0.99281
+  },
+  {
+    "text": " buco",
+    "startMs": 29480,
+    "endMs": 29810,
+    "timestampMs": 29780,
+    "confidence": 0.996253
+  },
+  {
+    "text": " lascia",
+    "startMs": 29810,
+    "endMs": 30110,
+    "timestampMs": 30280,
+    "confidence": 0.998841
+  },
+  {
+    "text": " passare",
+    "startMs": 30110,
+    "endMs": 30580,
+    "timestampMs": 30700,
+    "confidence": 0.999884
+  },
+  {
+    "text": " l'aria.",
+    "startMs": 30580,
+    "endMs": 31240,
+    "timestampMs": 31000,
+    "confidence": 0.999998
+  },
+  {
+    "text": " Quel",
+    "startMs": 31240,
+    "endMs": 31540,
+    "timestampMs": 31740,
+    "confidence": 0.999075
+  },
+  {
+    "text": " tanto",
+    "startMs": 31540,
+    "endMs": 31870,
+    "timestampMs": 32020,
+    "confidence": 0.99984
+  },
+  {
+    "text": " che",
+    "startMs": 31870,
+    "endMs": 32080,
+    "timestampMs": 32160,
+    "confidence": 0.999949
+  },
+  {
+    "text": " basta",
+    "startMs": 32080,
+    "endMs": 32460,
+    "timestampMs": 32460,
+    "confidence": 0.99991
+  },
+  {
+    "text": " per",
+    "startMs": 32460,
+    "endMs": 32640,
+    "timestampMs": 32660,
+    "confidence": 0.999989
+  },
+  {
+    "text": " respirare",
+    "startMs": 32640,
+    "endMs": 33280,
+    "timestampMs": 32960,
+    "confidence": 0.999918
+  },
+  {
+    "text": " e",
+    "startMs": 33280,
+    "endMs": 33400,
+    "timestampMs": 33720,
+    "confidence": 0.998308
+  },
+  {
+    "text": " arrivare",
+    "startMs": 33400,
+    "endMs": 33910,
+    "timestampMs": 34020,
+    "confidence": 0.999971
+  },
+  {
+    "text": " in",
+    "startMs": 33910,
+    "endMs": 34100,
+    "timestampMs": 34300,
+    "confidence": 0.999998
+  },
+  {
+    "text": " ospedale.",
+    "startMs": 34100,
+    "endMs": 34860,
+    "timestampMs": 34440,
+    "confidence": 0.999907
+  },
+  {
+    "text": " Ed",
+    "startMs": 34860,
+    "endMs": 35000,
+    "timestampMs": 35340,
+    "confidence": 0.999653
+  },
+  {
+    "text": " esiste",
+    "startMs": 35000,
+    "endMs": 35490,
+    "timestampMs": 35520,
+    "confidence": 0.999916
+  },
+  {
+    "text": " addirittura",
+    "startMs": 35490,
+    "endMs": 36140,
+    "timestampMs": 35900,
+    "confidence": 0.999924
+  },
+  {
+    "text": " una",
+    "startMs": 36140,
+    "endMs": 36340,
+    "timestampMs": 36520,
+    "confidence": 0.999868
+  },
+  {
+    "text": " norma",
+    "startMs": 36340,
+    "endMs": 36830,
+    "timestampMs": 36780,
+    "confidence": 0.999807
+  },
+  {
+    "text": " internazionale",
+    "startMs": 36830,
+    "endMs": 37720,
+    "timestampMs": 37100,
+    "confidence": 0.999971
+  },
+  {
+    "text": " che",
+    "startMs": 37720,
+    "endMs": 37910,
+    "timestampMs": 37920,
+    "confidence": 0.99999
+  },
+  {
+    "text": " dice",
+    "startMs": 37910,
+    "endMs": 38170,
+    "timestampMs": 38220,
+    "confidence": 0.999983
+  },
+  {
+    "text": " come",
+    "startMs": 38170,
+    "endMs": 38430,
+    "timestampMs": 38500,
+    "confidence": 0.999929
+  },
+  {
+    "text": " devono",
+    "startMs": 38430,
+    "endMs": 38810,
+    "timestampMs": 38700,
+    "confidence": 0.999847
+  },
+  {
+    "text": " essere",
+    "startMs": 38810,
+    "endMs": 39200,
+    "timestampMs": 39120,
+    "confidence": 0.999826
+  },
+  {
+    "text": " fatti",
+    "startMs": 39200,
+    "endMs": 39580,
+    "timestampMs": 39320,
+    "confidence": 0.999916
+  },
+  {
+    "text": " i",
+    "startMs": 39580,
+    "endMs": 39640,
+    "timestampMs": 39600,
+    "confidence": 0.999971
+  },
+  {
+    "text": " tappi,",
+    "startMs": 39640,
+    "endMs": 40000,
+    "timestampMs": 39700,
+    "confidence": 0.999931
+  },
+  {
+    "text": " proprio",
+    "startMs": 40000,
+    "endMs": 40400,
+    "timestampMs": 40520,
+    "confidence": 0.999979
+  },
+  {
+    "text": " per",
+    "startMs": 40400,
+    "endMs": 40630,
+    "timestampMs": 40740,
+    "confidence": 0.999979
+  },
+  {
+    "text": " questo.",
+    "startMs": 40630,
+    "endMs": 41100,
+    "timestampMs": 41080,
+    "confidence": 0.999975
+  },
+  {
+    "text": " E",
+    "startMs": 41100,
+    "endMs": 41220,
+    "timestampMs": 41620,
+    "confidence": 0.999834
+  },
+  {
+    "text": " non",
+    "startMs": 41220,
+    "endMs": 41430,
+    "timestampMs": 41760,
+    "confidence": 0.999973
+  },
+  {
+    "text": " è",
+    "startMs": 41430,
+    "endMs": 41580,
+    "timestampMs": 41880,
+    "confidence": 0.999985
+  },
+  {
+    "text": " finita.",
+    "startMs": 41580,
+    "endMs": 42340,
+    "timestampMs": 42100,
+    "confidence": 0.999926
+  },
+  {
+    "text": " Anche",
+    "startMs": 42340,
+    "endMs": 42650,
+    "timestampMs": 42860,
+    "confidence": 0.999771
+  },
+  {
+    "text": " la",
+    "startMs": 42650,
+    "endMs": 42770,
+    "timestampMs": 43040,
+    "confidence": 0.999996
+  },
+  {
+    "text": " penna",
+    "startMs": 42770,
+    "endMs": 43160,
+    "timestampMs": 43220,
+    "confidence": 0.99995
+  },
+  {
+    "text": " ha",
+    "startMs": 43160,
+    "endMs": 43200,
+    "timestampMs": 43480,
+    "confidence": 0.999784
+  },
+  {
+    "text": " un",
+    "startMs": 43200,
+    "endMs": 43320,
+    "timestampMs": 43600,
+    "confidence": 0.999987
+  },
+  {
+    "text": " buchino",
+    "startMs": 43320,
+    "endMs": 43760,
+    "timestampMs": 43660,
+    "confidence": 0.981045
+  },
+  {
+    "text": " sul",
+    "startMs": 43760,
+    "endMs": 43950,
+    "timestampMs": 44120,
+    "confidence": 0.999966
+  },
+  {
+    "text": " fianco.",
+    "startMs": 43950,
+    "endMs": 44580,
+    "timestampMs": 44320,
+    "confidence": 0.999447
+  },
+  {
+    "text": " Serve",
+    "startMs": 44580,
+    "endMs": 44920,
+    "timestampMs": 45140,
+    "confidence": 0.999523
+  },
+  {
+    "text": " a",
+    "startMs": 44920,
+    "endMs": 44980,
+    "timestampMs": 45260,
+    "confidence": 0.999973
+  },
+  {
+    "text": " far",
+    "startMs": 44980,
+    "endMs": 45210,
+    "timestampMs": 45440,
+    "confidence": 0.98796
+  },
+  {
+    "text": " entrare",
+    "startMs": 45210,
+    "endMs": 45650,
+    "timestampMs": 45660,
+    "confidence": 0.999394
+  },
+  {
+    "text": " l'aria,",
+    "startMs": 45650,
+    "endMs": 46220,
+    "timestampMs": 45980,
+    "confidence": 0.999998
+  },
+  {
+    "text": " così",
+    "startMs": 46220,
+    "endMs": 46550,
+    "timestampMs": 46740,
+    "confidence": 0.999725
+  },
+  {
+    "text": " l'inchiostro",
+    "startMs": 46550,
+    "endMs": 47330,
+    "timestampMs": 46920,
+    "confidence": 0.999969
+  },
+  {
+    "text": " scende",
+    "startMs": 47330,
+    "endMs": 47720,
+    "timestampMs": 47660,
+    "confidence": 0.999924
+  },
+  {
+    "text": " sempre",
+    "startMs": 47720,
+    "endMs": 48190,
+    "timestampMs": 48220,
+    "confidence": 0.999971
+  },
+  {
+    "text": " uguale.",
+    "startMs": 48190,
+    "endMs": 48760,
+    "timestampMs": 48440,
+    "confidence": 0.999819
+  },
+  {
+    "text": " Quindi,",
+    "startMs": 48760,
+    "endMs": 49250,
+    "timestampMs": 49320,
+    "confidence": 0.99996
+  },
+  {
+    "text": " la",
+    "startMs": 49250,
+    "endMs": 49390,
+    "timestampMs": 49660,
+    "confidence": 0.999956
+  },
+  {
+    "text": " prossima",
+    "startMs": 49390,
+    "endMs": 49860,
+    "timestampMs": 49980,
+    "confidence": 0.99999
+  },
+  {
+    "text": " volta",
+    "startMs": 49860,
+    "endMs": 50170,
+    "timestampMs": 50380,
+    "confidence": 0.99996
+  },
+  {
+    "text": " che",
+    "startMs": 50170,
+    "endMs": 50350,
+    "timestampMs": 50540,
+    "confidence": 0.999977
+  },
+  {
+    "text": " lo",
+    "startMs": 50350,
+    "endMs": 50530,
+    "timestampMs": 50660,
+    "confidence": 0.999533
+  },
+  {
+    "text": " mordicchi,",
+    "startMs": 50530,
+    "endMs": 51180,
+    "timestampMs": 50800,
+    "confidence": 0.999865
+  },
+  {
+    "text": " sappi",
+    "startMs": 51180,
+    "endMs": 51530,
+    "timestampMs": 51820,
+    "confidence": 0.998854
+  },
+  {
+    "text": " che",
+    "startMs": 51530,
+    "endMs": 51810,
+    "timestampMs": 52000,
+    "confidence": 0.999996
+  },
+  {
+    "text": " quel",
+    "startMs": 51810,
+    "endMs": 52020,
+    "timestampMs": 52260,
+    "confidence": 0.999935
+  },
+  {
+    "text": " buco",
+    "startMs": 52020,
+    "endMs": 52300,
+    "timestampMs": 52440,
+    "confidence": 0.99995
+  },
+  {
+    "text": " può",
+    "startMs": 52300,
+    "endMs": 52580,
+    "timestampMs": 52920,
+    "confidence": 0.995583
+  },
+  {
+    "text": " salvare",
+    "startMs": 52580,
+    "endMs": 53150,
+    "timestampMs": 53200,
+    "confidence": 0.999786
+  },
+  {
+    "text": " una",
+    "startMs": 53150,
+    "endMs": 53280,
+    "timestampMs": 53560,
+    "confidence": 0.999958
+  },
+  {
+    "text": " vita.",
+    "startMs": 53280,
+    "endMs": 53860,
+    "timestampMs": 53840,
+    "confidence": 0.999907
+  }
+]

@@ -5,6 +5,7 @@ import {PullmanVideo} from './PullmanVideo';
 import {FPS, H, W} from './lib/theme';
 import {SimbaV5} from './simba/SimbaV5';
 import {Avatar} from './Avatar';
+import {TappoVideo} from './tappo/TappoVideo';
 import {DURATION} from './simba/theme';
 import {INCHIOSTRO_FRAMES, Inchiostro} from './inchiostro/Inchiostro';
 import * as INK from './inchiostro/ink';
@@ -26,6 +27,15 @@ export const RemotionRoot: React.FC = () => (
     }}
   />
   <Composition id="Simba22Freedom" component={SimbaV5} width={W} height={H} fps={FPS} durationInFrames={Math.floor(DURATION * FPS)} />
+  <Composition
+    id="TappoPenna"
+    component={TappoVideo}
+    width={W}
+    height={H}
+    fps={FPS}
+    durationInFrames={FPS * 55}
+    calculateMetadata={async () => ({durationInFrames: Math.ceil((await getAudioDurationInSeconds(staticFile('tappo/voce.mp3'))) * FPS)})}
+  />
   <Composition id="Avatar" component={Avatar} width={1080} height={1080} fps={30} durationInFrames={1} defaultProps={{variant: 'blu' as const}} />
   <Composition id="Inchiostro" component={Inchiostro} width={INK.W} height={INK.H} fps={INK.FPS} durationInFrames={INCHIOSTRO_FRAMES} />
   <Composition id="Resta" component={Resta} width={INK.W} height={INK.H} fps={INK.FPS} durationInFrames={RESTA_FRAMES} />
