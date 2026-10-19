@@ -6,6 +6,7 @@ import {FPS, H, W} from './lib/theme';
 import {SimbaV5} from './simba/SimbaV5';
 import {Avatar} from './Avatar';
 import {TappoVideo} from './tappo/TappoVideo';
+import {Test3D} from './tappo/Test3D';
 import {DURATION} from './simba/theme';
 import {INCHIOSTRO_FRAMES, Inchiostro} from './inchiostro/Inchiostro';
 import * as INK from './inchiostro/ink';
@@ -36,6 +37,7 @@ export const RemotionRoot: React.FC = () => (
     durationInFrames={FPS * 55}
     calculateMetadata={async () => ({durationInFrames: Math.ceil((await getAudioDurationInSeconds(staticFile('tappo/voce.mp3'))) * FPS)})}
   />
+  <Composition id="Test3D" component={Test3D} width={1080} height={1920} fps={60} durationInFrames={120} defaultProps={{which: 'cap' as const}} />
   <Composition id="Avatar" component={Avatar} width={1080} height={1080} fps={30} durationInFrames={1} defaultProps={{variant: 'blu' as const}} />
   <Composition id="Inchiostro" component={Inchiostro} width={INK.W} height={INK.H} fps={INK.FPS} durationInFrames={INCHIOSTRO_FRAMES} />
   <Composition id="Resta" component={Resta} width={INK.W} height={INK.H} fps={INK.FPS} durationInFrames={RESTA_FRAMES} />
