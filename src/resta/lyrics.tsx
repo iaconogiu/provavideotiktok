@@ -42,7 +42,7 @@ const LH = SIZE * 1.16;
  * Riga corrente in basso: le parole compaiono quando vengono cantate,
  * la parola in corso ha sotto una pennellata corallo.
  */
-export const Lyrics: React.FC<{y?: number}> = ({y = 1430}) => {
+export const Lyrics: React.FC<{y?: number}> = ({y = 1450}) => {
   const frame = useCurrentFrame();
   const t = frame / FPS;
   const f = Math.floor(frame / 2) * 2;
@@ -66,7 +66,7 @@ export const Lyrics: React.FC<{y?: number}> = ({y = 1430}) => {
   const current = words.reduce((c, [, at], i) => (t >= at - 0.04 ? i : c), 0);
   let idx = 0;
   return (
-    <Riso seed="ly">
+    <Riso seed="ly" panel={false}>
       {rows.map((row, ri) => {
         const total = row.reduce((a, r) => a + r.width, 0) + space * (row.length - 1);
         let x = (W - total) / 2;

@@ -1,549 +1,627 @@
 import React from 'react';
 import {random} from 'remotion';
-import {Hand, Lei, Lui, Watch} from './people';
-import {Riso, S, Stars, TYPE, Tube, Txt, W, heartPath, pop, prog, sec, starPath, useStep} from './riso';
+import {PH, PW, Riso, S, Tube, ease, pop, prog, sec, useStep} from './riso';
+import {
+  Bands,
+  Boat,
+  Cat,
+  Cloud,
+  Flying,
+  Lantern,
+  LeiBack,
+  Lighthouse,
+  LuiBack,
+  Moon,
+  Perched,
+  Pole,
+  Pt,
+  Sea,
+  Skyline,
+  Sparkles,
+  quadD,
+  quadPt,
+  sparkPath,
+} from './world';
 
 /**
- * Una scena per frase. Ogni scena riceve l'istante d'inizio (secondi del brano)
- * e usa T(t) per convertire un tempo del brano nel suo fotogramma locale.
+ * Una scena per strofa, in coordinate della cornice (PW×PH). Le immagini non illustrano
+ * parola per parola: raccontano una piccola storia (città, mare, faro, tetto) che
+ * accompagna il senso del testo, con qualche aggancio preciso ai tempi della voce.
+ * T(t) converte un istante del brano nel fotogramma locale della scena.
  */
 type SceneProps = {start: number};
 const useT = (start: number) => (t: number) => sec(t - start);
 
-const Ground: React.FC<{y: number}> = ({y}) => (
-  <>
-    <S d={`M40 ${y} L${W - 40} ${y}`} />
-    {[120, 190, 860, 930].map((x) => (
-      <S key={x} d={`M${x} ${y} l-8 -24 M${x} ${y} l2 -30 M${x} ${y} l10 -22`} sw={5} />
-    ))}
-  </>
-);
-
-/** Fascia di carta in basso: taglia il disegno sopra la zona del testo */
-const Cut: React.FC<{y?: number}> = ({y = 1330}) => <S el="rect" x={-100} y={y} width={W + 200} height={900} fill="w" st={false} />;
-
-const Burst: React.FC<{x: number; y: number; r: number; s: number; n?: number}> = ({x, y, r, s, n = 8}) =>
-  s ? (
-    <g transform={`translate(${x} ${y}) scale(${s})`}>
-      {Array.from({length: n}, (_, i) => {
-        const a = (i / n) * Math.PI * 2;
-        return <S key={i} d={`M${Math.cos(a) * r} ${Math.sin(a) * r} L${Math.cos(a) * r * 1.6} ${Math.sin(a) * r * 1.6}`} st="a" sw={12} />;
-      })}
-    </g>
-  ) : null;
-
-// ── A · "E ti darò il mio tempo, insegnami il tatto" ──
-export const A: React.FC<SceneProps> = ({start}) => {
+// ── 1 · "E ti darò il mio tempo…" — la città passa dal tramonto alla notte ──
+export const City: React.FC<SceneProps> = ({start}) => {
   const f = useStep(2);
   const T = useT(start);
-  if (f < T(1.48)) {
-    const slide = (1 - prog(f, 0, 8)) * 260;
-    const lx = 400 - slide;
-    const rx = 690 + slide;
-    const swing = Math.sin(f / 4) * 14;
-    return (
-      <Riso zoom={1 + prog(f, 0, T(1.48)) * 0.05} seed="A">
-        <Stars seed="a1" n={10} area={[60, 140, 1020, 420]} />
-        <Tube d={`M-60 640 L${lx} 640`} w={64} fill="a" />
-        <g transform={`translate(${lx} 640) rotate(-90) scale(1.9)`}>
-          <Hand kind="mitt" />
-        </g>
-        <g transform={`translate(${lx + 70} 680) rotate(${swing})`}>
-          <S d="M0 0 L0 200" sw={6} strokeDasharray="10 12" />
-          <g transform="translate(0 290)">
-            <Watch f={f} r={80} />
-          </g>
-        </g>
-        <Tube d={`M${W + 60} 900 L${rx} 900`} w={64} fill="dots" />
-        <g transform={`translate(${rx} 900) rotate(90) scale(-1.9 1.9)`}>
-          <Hand kind="mitt" />
-        </g>
-      </Riso>
-    );
-  }
-  // indici che si avvicinano e si toccano su "tatto"
-  const touch = T(2.14);
-  const gap = (1 - prog(f, T(1.48), touch)) * 160;
-  const s = 2.2;
-  const lx = W / 2 - 120 * s - gap / 2;
-  const rx = W / 2 + 120 * s + gap / 2;
+  const end = T(4.4);
+  const pan = ease(prog(f, 0, end)) * 180;
+  const night = ease(prog(f, 8, end - 10));
+  const nightH = 80 + night * 560;
+  const sunY = 560 + ease(prog(f, 0, end - 30)) * 360;
   return (
-    <Riso zoom={1.04} seed="A2">
-      <Tube d={`M-60 760 L${lx} 760`} w={70} fill="a" />
-      <g transform={`translate(${lx} 760) rotate(-90) scale(${s})`}>
-        <Hand kind="point" />
+    <Riso zoom={1 + prog(f, 0, end) * 0.04} seed="city">
+      {/* cielo: tramonto corallo, la notte scende dall'alto */}
+      <g transform={`translate(${-pan * 0.3} 0)`}>
+        <Bands y0={300} y1={760} inks={['c1', 'c2', 'c3']} />
+        <S el="circle" cx={640} cy={sunY} r={110} fill="a" st={false} />
+        <Bands y1={nightH} inks={['t3', 't2', 't1']} />
+        <Sparkles f={f} seed="cs" n={22} area={[0, 20, 1200, 600]} maxY={nightH - 40} from={20} />
+        {night > 0.55 && <Moon x={200} y={190 - (night - 0.55) * 100} r={56} />}
       </g>
-      <Tube d={`M${W + 60} 760 L${rx} 760`} w={70} fill="dots" />
-      <g transform={`translate(${rx} 760) rotate(90) scale(${-s} ${s})`}>
-        <Hand kind="point" />
+      {/* skyline con la torre dell'orologio che corre */}
+      <g transform={`translate(${-pan} 0)`}>
+        <Skyline base={770} width={1200} seed="sky1" lit={night * 0.7} clockAt={420} clockF={f} minH={170} maxH={400} />
       </g>
-      <Burst x={W / 2} y={736} r={40} s={pop(f, touch, 4)} />
-      <S d={heartPath(50)} transform={`translate(${W / 2} 560) scale(${pop(f, touch + 2, 5)})`} fill="a" />
+      {/* fiume con i riflessi delle finestre */}
+      <g transform={`translate(${-pan} 0)`}>
+        <Sea y={770} f={f} glowX={night < 0.5 ? 640 + pan * 0.7 : undefined} />
+      </g>
+      {/* primo piano: parapetto e lampione (si muove più veloce: profondità) */}
+      <g transform={`translate(${-pan * 1.6} 0)`}>
+        <S el="rect" x={-100} y={1060} width={1600} height={140} fill="b" st={false} />
+        <S d="M-100 1000 L1500 1000" sw={10} />
+        {Array.from({length: 26}, (_, i) => (
+          <S key={i} d={`M${-80 + i * 60} 1000 L${-80 + i * 60} 1060`} sw={8} />
+        ))}
+        <Tube d="M160 1070 L160 520" w={18} fill="b" />
+        <S d="M120 520 L200 520 L180 470 L140 470 Z" fill="b" />
+        {night > 0.3 && <S el="circle" cx={160} cy={540} r={70} fill="g1" st={false} />}
+        <S el="circle" cx={160} cy={530} r={18} fill={night > 0.3 ? 'a' : 'w'} sw={5} />
+      </g>
     </Riso>
   );
 };
 
-// ── B · "Starò più attento, ti darò il mio impegno" — promessa col mignolo ──
-export const B: React.FC<SceneProps> = ({start}) => {
+// ── 2 · "Non ho mai visto l'amore che avevo" — il faro illumina tutto, tranne la barca ai suoi piedi ──
+export const Lookout: React.FC<SceneProps> = ({start}) => {
   const f = useStep(2);
   const T = useT(start);
-  const rise = (1 - prog(f, 0, 8)) * 500;
-  const shake = f >= T(3.24) ? (Math.floor(f / 6) % 2) * 22 : 0;
-  const y = rise + shake;
-  const Fist: React.FC<{x: number; mirror?: boolean}> = ({x, mirror}) => (
-    <g transform={`translate(${x} ${980 + y}) scale(${mirror ? -1 : 1} 1)`}>
-      <S el="ellipse" cx={0} cy={0} rx={110} ry={96} fill="p" />
-      <S d="M-60 -30 C-40 -50 -10 -50 10 -30 M-70 10 C-50 -6 -20 -6 0 10" sw={7} />
-    </g>
-  );
+  const beam = 262 + Math.sin(f / 7) * 62;
+  const bob = Math.sin(f / 5) * 6;
   return (
-    <Riso zoom={1 + prog(f, 0, 44) * 0.06} origin={[540, 860]} seed="B">
-      <S d={heartPath(300)} transform={`translate(540 760) scale(${pop(f, T(3.9), 6)})`} fill="dots" st={false} />
-      <Stars seed="b1" n={9} from={T(3.9)} area={[80, 160, 1000, 560]} />
-      <Tube d={`M150 1500 L400 ${1000 + y}`} w={110} fill="a" />
-      <Tube d={`M930 1500 L680 ${1000 + y}`} w={110} fill="dots" />
-      <Fist x={410} />
-      <Fist x={670} mirror />
-      {/* mignoli agganciati */}
-      <g transform={`translate(0 ${y})`}>
-        <Tube d="M470 920 C480 800 590 760 600 840" w={40} />
-        <Tube d="M610 920 C600 800 490 760 480 840" w={40} />
-        <Tube d="M482 850 C490 800 520 790 540 788" w={40} />
+    <Riso zoom={1.02 + prog(f, 0, T(6.2)) * 0.06} origin={[560, 760]} seed="look">
+      <Bands y1={700} inks={['t3', 't2', 't1']} />
+      <Sparkles f={f} seed="ls" n={26} area={[0, 20, PW, 640]} />
+      <Moon x={180} y={170} r={62} />
+      <Sea y={700} f={f} glowX={180} />
+      <Lighthouse x={720} base={830} beam={beam} spread={14} strong />
+      <g transform={`translate(430 ${812 + bob}) rotate(${Math.sin(f / 6) * 3}) scale(0.75)`}>
+        <Boat people={1} />
       </g>
+    </Riso>
+  );
+};
+
+// ── 3 · "Avevo troppa rabbia" — tempesta ──
+const wavePath = (y: number, amp: number, len: number) => {
+  let d = `M-200 ${y}`;
+  for (let x = -200; x <= PW + 600; x += len) d += ` Q${x + len / 4} ${y - amp} ${x + len / 2} ${y} T${x + len} ${y}`;
+  return `${d} L${PW + 600} ${PH + 100} L-200 ${PH + 100} Z`;
+};
+export const Storm: React.FC<SceneProps> = () => {
+  const f = useStep(2);
+  const flash = f % 8 < 2;
+  const ph = f * 10;
+  return (
+    <Riso shake={16} seed="storm">
+      <Bands y1={PH} inks={['c3', 'c3', 'c2']} />
+      {flash && <S d="M560 -20 L470 260 L540 260 L430 560 L620 220 L540 220 L620 -20 Z" fill="w" sw={6} />}
       {[0, 1, 2].map((i) => (
-        <S key={i} d={heartPath(26)} transform={`translate(${380 + i * 160} ${640 - (i % 2) * 60 + y}) scale(${pop(f, T(3.46) + i * 3, 4)})`} fill="a" st={false} />
+        <g key={i} transform={`translate(${((i * 380 + f * 6) % 1300) - 300} ${70 + i * 60})`}>
+          <S d="M-200 60 C-260 60 -250 -20 -180 -20 C-180 -100 -60 -110 -30 -50 C0 -120 140 -110 140 -30 C220 -40 240 60 160 60 Z" fill="b" />
+        </g>
       ))}
-      <Cut />
-    </Riso>
-  );
-};
-
-// ── C · "Non ho mai visto l'amore che avevo" — occhi coperti, il cuore alle spalle ──
-export const C: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const peek = f >= T(5.84);
-  const beat = Math.floor(f / 6) % 2 ? 1.08 : 1;
-  return (
-    <Riso zoom={1 + prog(f, 0, 44) * 0.05} origin={[540, 760]} seed="C">
-      <S d={heartPath(150)} transform={`translate(820 400) scale(${pop(f, T(4.94), 6) * beat}) rotate(12)`} fill="a" />
-      <Stars seed="c1" n={8} area={[60, 150, 520, 450]} />
-      <g transform="translate(540 820) scale(1.55)">
-        <Lui half armsFront eyes={peek ? 'wide' : 'closed'} look={peek ? 1 : 0} mouth={peek ? 'o' : 'flat'} armL={-158} armR={peek ? 130 : 158} />
+      <S
+        d={Array.from({length: 40}, (_, i) => {
+          const x = ((random(`rx${i}`) * 1300 + f * 30) % 1300) - 200;
+          const y = ((random(`ry${i}`) * 1300 + f * 70) % 1300) - 100;
+          return `M${x} ${y} l-30 70`;
+        }).join(' ')}
+        sw={6}
+      />
+      <g transform={`translate(${-(ph % 400)} 0)`}>
+        <S d={wavePath(760, 90, 400)} fill="t2" />
+      </g>
+      <g transform={`translate(480 ${720 + Math.sin(f / 3) * 40}) rotate(${Math.sin(f / 3.5) * 22}) scale(0.7)`}>
+        <Boat people={1} />
+      </g>
+      <g transform={`translate(${-((ph * 1.6) % 300)} 0)`}>
+        <S d={wavePath(900, 110, 300)} fill="b" />
       </g>
     </Riso>
   );
 };
 
-// ── D · "Avevo troppa rabbia" — sfondo corallo, fumo dalle orecchie ──
-export const D: React.FC<SceneProps> = () => {
+// ── 4 · "Adesso, se lo voglio, lo posso cantare" — all'alba gli uccelli si posano sui fili come note ──
+const WIRES = [380, 430, 480, 530, 580];
+const wireY = (y0: number, t: number) => y0 + 150 * t * (1 - t);
+const wireX = (t: number) => 90 + t * 780;
+export const Wires: React.FC<SceneProps> = ({start}) => {
   const f = useStep(2);
-  const puff = (side: number, i: number) => {
-    const k = (f / 2 + i * 3) % 9;
-    const x = side * (220 + k * 34);
-    const y = -k * 40;
-    const r = 26 + k * 6;
+  const T = useT(start);
+  const sunY = 940 - ease(prog(f, 0, T(9.16))) * 220;
+  const words = [7.2, 7.36, 7.62, 7.84, 8.02, 8.28, 8.48, 8.7];
+  const notes: [number, number][] = [
+    [2, 0.14],
+    [1, 0.24],
+    [0, 0.34],
+    [1, 0.44],
+    [3, 0.53],
+    [2, 0.62],
+    [4, 0.73],
+    [1, 0.84],
+  ];
+  return (
+    <Riso zoom={1.04 - prog(f, 0, T(9.16)) * 0.04} seed="wires">
+      <Bands y0={220} y1={960} inks={['c1', 'c2', 'c3']} />
+      <g transform={`translate(480 ${sunY})`}>
+        {Array.from({length: 12}, (_, i) => (
+          <S key={i} d="M0 0 L-60 -900 L60 -900 Z" transform={`rotate(${i * 30 + Math.floor(f / 4) * 2})`} fill="c1" st={false} />
+        ))}
+        <S el="circle" r={140} fill="a" st={false} />
+      </g>
+      {/* tetti */}
+      <S
+        d="M-20 960 L-20 860 L120 860 L120 800 L180 800 L180 860 L300 860 L360 800 L420 860 L560 860 L560 780 L700 780 L700 880 L820 880 L820 830 L980 830 L980 1200 L-20 1200 Z"
+        fill="b"
+        st={false}
+      />
+      <S d="M620 780 L620 700 M600 720 L640 720 M590 740 L650 740" sw={6} />
+      <Pole x={90} top={330} bottom={1200} />
+      <Pole x={870} top={330} bottom={1200} />
+      {WIRES.map((y) => (
+        <S key={y} d={`M90 ${y} Q480 ${y + 150} 870 ${y}`} sw={5} />
+      ))}
+      {words.map((t, i) => {
+        const t0 = T(t);
+        if (f < t0) return null;
+        const [wi, tt] = notes[i];
+        const px = wireX(tt);
+        const py = wireY(WIRES[wi], tt);
+        const k = prog(f, t0, t0 + 6);
+        const fx = PW + 80 + (px - PW - 80) * ease(k);
+        const fy = 120 + (py - 120) * ease(k) - Math.sin(k * Math.PI) * 60;
+        return (
+          <g key={i} transform={`translate(${fx} ${fy})`}>
+            {k < 1 ? <Flying up={Math.floor(f / 2) % 2 === 0} s={0.9} /> : <Perched flip={i % 3 === 0} />}
+          </g>
+        );
+      })}
+    </Riso>
+  );
+};
+
+// ── 5 · "Non son più schiavo, non lo son mai stato" — la gabbia sul davanzale, aperta ──
+export const Cage: React.FC<SceneProps> = ({start}) => {
+  const f = useStep(2);
+  const T = useT(start);
+  const open = prog(f, T(9.6), T(9.6) + 4);
+  const fly = prog(f, T(9.95), T(10.9));
+  const curtain = (side: number) => {
+    const w = Math.sin(f / 5) * 20;
+    const x0 = side < 0 ? 0 : PW;
+    const x1 = side < 0 ? 170 + w : PW - 170 - w;
+    return `M${x0} 0 L${x1} 0 C${x1 + side * -30} 300 ${x1 + side * 40} 600 ${x1 + side * -20} 1000 L${x0} 1000 Z`;
+  };
+  // percorso dell'uccellino: dalla gabbia fuori dalla finestra, sempre più piccolo
+  const bx = 480 + ease(fly) * 300 - Math.sin(fly * Math.PI) * 120;
+  const by = 760 - ease(fly) * 560;
+  const bs = 0.9 - fly * 0.6;
+  return (
+    <Riso zoom={1 + prog(f, 0, T(10.94)) * 0.05} origin={[480, 700]} seed="cage">
+      {/* fuori: mattina sui tetti */}
+      <Bands y0={120} y1={760} inks={['c1', 'c1', 'c2']} />
+      <S el="circle" cx={700} cy={330} r={80} fill="a" st={false} />
+      <Skyline base={780} width={PW} seed="cage" minH={60} maxH={220} ink="t2" />
+      <g transform="translate(300 220)">
+        <Cloud s={0.6} />
+      </g>
+      {/* parete interna e finestra */}
+      <S d={`M-50 -50 L${PW + 50} -50 L${PW + 50} ${PH + 50} L-50 ${PH + 50} Z M160 120 L160 800 L800 800 L800 120 Z`} fill="t1" fillRule="evenodd" st={false} />
+      <S el="rect" x={160} y={120} width={640} height={680} sw={22} />
+      <S d="M160 120 L60 60 L60 860 L160 800 Z" fill="w" />
+      <S d="M800 120 L900 60 L900 860 L800 800 Z" fill="w" />
+      <S d="M70 420 L150 440 M810 440 L890 420" sw={6} />
+      <S d={curtain(-1)} fill="c2" />
+      <S d={curtain(1)} fill="c2" />
+      {/* davanzale */}
+      <S el="rect" x={110} y={800} width={740} height={50} fill="p" />
+      {/* vaso con fiore */}
+      <S d="M660 800 L640 720 L740 720 L720 800 Z" fill="a" />
+      <S d="M690 720 L690 640 M690 680 C720 660 740 670 744 680" sw={6} />
+      <S el="circle" cx={690} cy={630} r={18} fill="w" sw={5} />
+      {/* gabbia */}
+      <g transform="translate(420 800)">
+        <S el="ellipse" cx={0} cy={-10} rx={130} ry={18} fill="b" />
+        {[-110, -70, -30, 10, 50, 90].map((x) => (
+          <S key={x} d={`M${x} -12 L${x} -230`} sw={5} />
+        ))}
+        <S d="M-130 -10 L-130 -230 C-130 -330 130 -330 130 -230 L130 -10" sw={7} />
+        <S d="M-130 -230 L130 -230" sw={7} />
+        <S d="M0 -312 L0 -350 C0 -380 30 -380 30 -360" sw={6} />
+        {/* sportello: si apre ruotando verso l'esterno */}
+        <g transform={`translate(50 -40) scale(${1 - open * 0.9} 1)`}>
+          <S el="rect" x={0} y={-130} width={70} height={130} fill="none" sw={7} />
+          <S d="M23 -130 L23 0 M46 -130 L46 0" sw={4} />
+        </g>
+      </g>
+      {fly <= 0 ? (
+        <g transform="translate(400 760) scale(0.9)">
+          <Perched />
+        </g>
+      ) : (
+        <g transform={`translate(${bx} ${by})`}>
+          <Flying up={Math.floor(f / 2) % 2 === 0} s={bs * 1.3} />
+        </g>
+      )}
+    </Riso>
+  );
+};
+
+// ── 6 · "Ma prima cercavo perlopiù di lottare" — due aquiloni che si scontrano nel vento ──
+const Kite: React.FC<{p: Pt; ink: 'a' | 'c2'; rot: number}> = ({p, ink, rot}) => (
+  <g transform={`translate(${p[0]} ${p[1]}) rotate(${rot})`}>
+    <S d="M0 90 C-30 160 30 200 0 260 C-30 320 20 360 0 400" sw={5} />
+    {[170, 250, 330].map((y) => (
+      <S key={y} d={`M-16 ${y - 10} L16 ${y + 10} M16 ${y - 10} L-16 ${y + 10}`} st="a" sw={8} />
+    ))}
+    <S d="M0 -110 L80 0 L0 90 L-80 0 Z" fill={ink} />
+    <S d="M0 -110 L0 90 M-80 0 L80 0" sw={5} />
+  </g>
+);
+export const Kites: React.FC<SceneProps> = ({start}) => {
+  const f = useStep(2);
+  const T = useT(start);
+  const hits = [11.15, 11.65, 12.16, 12.62].map(T);
+  let clash = 0;
+  for (const h of hits) {
+    const k = f - h;
+    if (k >= -4 && k < 6) clash = Math.max(clash, 1 - Math.abs(k) / 6);
+  }
+  const k1: Pt = [290 + clash * 140 + Math.sin(f / 6) * 40, 420 + Math.cos(f / 7) * 40];
+  const k2: Pt = [670 - clash * 140 + Math.cos(f / 5) * 40, 450 + Math.sin(f / 6) * 40];
+  const hand1: Pt = [190, 900];
+  const hand2: Pt = [780, 860];
+  return (
+    <Riso zoom={1.02} seed="kites">
+      <Bands y0={500} y1={900} inks={['c1', 'c1', 'c2']} />
+      {[0, 1].map((i) => (
+        <g key={i} transform={`translate(${((i * 620 + f * 4) % 1300) - 200} ${110 + i * 60})`}>
+          <Cloud s={0.5 + i * 0.12} />
+        </g>
+      ))}
+      {/* fili */}
+      <S d={`M${hand1[0]} ${hand1[1]} Q${(hand1[0] + k1[0]) / 2 + 60} ${(hand1[1] + k1[1]) / 2 + 80} ${k1[0]} ${k1[1] + 60}`} sw={4} />
+      <S d={`M${hand2[0]} ${hand2[1]} Q${(hand2[0] + k2[0]) / 2 - 60} ${(hand2[1] + k2[1]) / 2 + 80} ${k2[0]} ${k2[1] + 60}`} sw={4} />
+      <Kite p={k1} ink="a" rot={-12 + clash * 30} />
+      <Kite p={k2} ink="c2" rot={12 - clash * 30} />
+      {clash > 0.7 && (
+        <g transform={`translate(${(k1[0] + k2[0]) / 2} ${(k1[1] + k2[1]) / 2})`}>
+          {Array.from({length: 8}, (_, i) => {
+            const a = (i / 8) * Math.PI * 2;
+            return <S key={i} d={`M${Math.cos(a) * 50} ${Math.sin(a) * 50} L${Math.cos(a) * 90} ${Math.sin(a) * 90}`} st="a" sw={10} />;
+          })}
+        </g>
+      )}
+      {/* due colline lontane, una persona per collina */}
+      <S d="M-100 1200 L-100 980 C60 880 260 880 420 990 C480 1030 520 1100 540 1200 Z" fill="t2" />
+      <S d="M380 1200 C460 1000 620 870 820 880 C940 886 1020 940 1100 1000 L1100 1200 Z" fill="t1" />
+      <g transform="translate(170 934) scale(0.32)">
+        <S d="M-40 0 L-40 -140 L40 -140 L40 0 Z" fill="b" />
+        <S el="circle" cx={0} cy={-190} r={46} fill="p" />
+        <S d="M-48 -196 C-50 -260 50 -260 48 -196 Z" fill="a" />
+        <S d="M30 -120 L70 -150" sw={16} />
+      </g>
+      <g transform="translate(800 892) scale(0.32)">
+        <S d="M-60 0 L-36 -140 L36 -140 L60 0 Z" fill="a" />
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <S key={i} el="circle" cx={Math.cos((i / 7) * Math.PI * 2) * 34} cy={-190 + Math.sin((i / 7) * Math.PI * 2) * 34} r={28} fill="b" st={false} />
+        ))}
+        <S d="M-30 -120 L-70 -150" sw={16} />
+      </g>
+      {/* vento */}
+      {[0, 1, 2].map((i) => {
+        const x = ((f * 14 + i * 400) % 1400) - 300;
+        return <S key={i} d={`M${x} ${560 + i * 90} q60 -30 120 0 t120 0 q30 -40 0 -50`} sw={5} />;
+      })}
+    </Riso>
+  );
+};
+
+// ── 7 · "Perlopiù cercavo un difetto per collegarci" — le stelle si uniscono in un cuore, una è storta ──
+const HEART_PTS: Pt[] = Array.from({length: 16}, (_, i) => {
+  const t = (i / 16) * Math.PI * 2;
+  const x = 16 * Math.sin(t) ** 3;
+  const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+  return [480 + x * 19, 470 + y * 19];
+});
+export const Stars: React.FC<SceneProps> = ({start}) => {
+  const f = useStep(2);
+  const T = useT(start);
+  const ODD = 10;
+  const tLines = [T(13.1), T(14.4)];
+  const tFound = T(14.52);
+  const tFix = T(15.04);
+  const fix = ease(prog(f, tFix, tFix + 6));
+  const pts = HEART_PTS.map((p, i) => (i === ODD ? ([p[0] + 110 * (1 - fix), p[1] + 70 * (1 - fix)] as Pt) : p));
+  const drawn = prog(f, tLines[0], tLines[1]) * pts.length;
+  const shoot = prog(f, T(13.6), T(13.6) + 8);
+  return (
+    <Riso zoom={1 + prog(f, 0, T(15.84)) * 0.06} origin={[480, 520]} seed="stars">
+      <Bands y1={PH} inks={['t3', 't3', 't2', 't2', 't1']} />
+      <Sparkles f={f} seed="ss" n={40} area={[0, 20, PW, 900]} />
+      {fix >= 1 && <S d={quadD(pts)} fill="c1" st={false} transform={`translate(480 470) scale(${pop(f, tFix + 6, 6)}) translate(-480 -470)`} />}
+      {pts.map((p, i) => {
+        const q = pts[(i + 1) % pts.length];
+        // le linee verso la stella storta si chiudono solo quando torna al suo posto
+        const touchesOdd = i === ODD || (i + 1) % pts.length === ODD;
+        const amt = Math.min(1, Math.max(0, drawn - i));
+        if (amt <= 0 || (touchesOdd && fix < 1)) return null;
+        return <S key={i} d={`M${p[0]} ${p[1]} L${p[0] + (q[0] - p[0]) * amt} ${p[1] + (q[1] - p[1]) * amt}`} st="a" sw={6} />;
+      })}
+      {pts.map((p, i) => {
+        const odd = i === ODD;
+        const blink = odd && f >= tFound && f < tFix && Math.floor(f / 2) % 2 === 0 ? 1.5 : 1;
+        return <S key={`s${i}`} d={sparkPath(odd ? 24 : 16)} transform={`translate(${p[0]} ${p[1]}) scale(${blink})`} fill={odd ? 'a' : 'w'} st={false} />;
+      })}
+      {shoot > 0 && shoot < 1 && <S d={`M${880 - shoot * 400} ${80 + shoot * 160} l120 -50`} fill="none" st="a" sw={8} />}
+      {/* collina con due figure sedute che guardano in su */}
+      <S d="M-100 1200 L-100 1000 C200 920 700 920 1100 1010 L1100 1200 Z" fill="b" st={false} />
+      <g transform="translate(430 960) scale(0.32)">
+        <LuiBack />
+      </g>
+      <g transform="translate(540 962) scale(0.32)">
+        <LeiBack lean={f >= tFix ? 12 : 0} />
+      </g>
+    </Riso>
+  );
+};
+
+// ── 8 · "Dalle mie parti non credono agli angeli / né agli altri" — la strada si spegne finestra dopo finestra ──
+const LQ: [Pt, Pt, Pt, Pt] = [
+  [0, 0],
+  [330, 430],
+  [330, 720],
+  [0, 1060],
+];
+const RQ: [Pt, Pt, Pt, Pt] = [
+  [PW, 0],
+  [630, 430],
+  [630, 720],
+  [PW, 1060],
+];
+const facadeWins = (q: [Pt, Pt, Pt, Pt]) => {
+  const out: Pt[][] = [];
+  for (const u of [0.06, 0.32, 0.56, 0.76])
+    for (const v of [0.12, 0.34, 0.56]) {
+      const du = 0.13 - u * 0.05;
+      out.push([quadPt(q, u, v), quadPt(q, u + du, v), quadPt(q, u + du, v + 0.14), quadPt(q, u, v + 0.14)]);
+    }
+  return out;
+};
+export const Street: React.FC<SceneProps> = ({start}) => {
+  const f = useStep(2);
+  const T = useT(start);
+  const wins = React.useMemo(() => {
+    const all = [...facadeWins(LQ), ...facadeWins(RQ)];
+    for (const x of [360, 440, 520])
+      for (const y of [470, 560])
+        all.push([
+          [x, y],
+          [x + 50, y],
+          [x + 50, y + 60],
+          [x, y + 60],
+        ]);
+    const order = all.map((w, i) => ({w, r: random(`sw${i}`)})).sort((a, b) => a.r - b.r);
+    const t0 = sec(16.66 - start);
+    const t1 = sec(19.6 - start);
+    return order.map((o, i) => ({w: o.w, off: Math.round(t0 + (i / (order.length - 1)) * (t1 - t0))}));
+  }, [start]);
+  const walk = prog(f, 0, T(19.88));
+  const fy = 1150 - walk * 360;
+  const fs = 0.55 - walk * 0.3;
+  const bob = Math.floor(f / 4) % 2;
+  const lamps = [0.22, 0.6];
+  const lampsOff = T(18.6);
+  const feather = prog(f, 0, T(19.88));
+  return (
+    <Riso zoom={1 + prog(f, 0, T(19.88)) * 0.08} origin={[480, 640]} seed="street">
+      <Bands y1={440} inks={['t3', 't2']} />
+      <Sparkles f={f} seed="sts" n={12} area={[340, 20, 620, 360]} />
+      <Moon x={500} y={150} r={46} />
+      {/* fondo strada */}
+      <S el="rect" x={330} y={420} width={300} height={300} fill="p" />
+      <S d="M330 420 L380 380 L580 380 L630 420" fill="b" />
+      {/* facciate */}
+      <S d={quadD(LQ)} fill="p" />
+      <S d={quadD(RQ)} fill="p" />
+      {/* marciapiedi e strada */}
+      <S d="M0 1060 L330 720 L630 720 L960 1060 L960 1200 L0 1200 Z" fill="t1" />
+      {[0, 1, 2, 3, 4].map((i) => {
+        const a = i / 5;
+        const b = a + 0.1;
+        const y = (t: number) => 720 + (1200 - 720) * t * t;
+        const w = (t: number) => 4 + 20 * t;
+        return <S key={i} d={`M${480 - w(a)} ${y(a)} L${480 + w(a)} ${y(a)} L${480 + w(b)} ${y(b)} L${480 - w(b)} ${y(b)} Z`} fill="w" sw={3} />;
+      })}
+      {wins.map(({w, off}, i) => (
+        <S key={i} d={quadD(w)} fill={f >= off ? 'b' : 'a'} sw={4} />
+      ))}
+      {/* lampioni: si spengono */}
+      {lamps.map((u, i) =>
+        [LQ, RQ].map((q, side) => {
+          const base = quadPt(q, u, 1);
+          const s = 1 - u * 0.7;
+          const h = 360 * s;
+          const on = f < lampsOff + i * 4;
+          const lx = base[0] + (side ? -40 : 40) * s;
+          return (
+            <g key={`${i}${side}`}>
+              {on && <S el="circle" cx={lx} cy={base[1] - h} r={70 * s} fill="g2" st={false} />}
+              <S d={`M${base[0]} ${base[1]} L${base[0]} ${base[1] - h} L${lx} ${base[1] - h}`} sw={10 * s} />
+              <S el="circle" cx={lx} cy={base[1] - h + 8 * s} r={14 * s} fill={on ? 'a' : 'b'} sw={4} />
+            </g>
+          );
+        }),
+      )}
+      {/* lei che si allontana, con l'aureola */}
+      <g transform={`translate(480 ${fy - bob * 4}) scale(${fs})`}>
+        <S el="ellipse" cx={0} cy={-370} rx={60} ry={16} fill="none" st="a" sw={16} />
+        <S d="M-34 0 L-30 -150 M34 0 L30 -150" sw={22} transform={bob ? 'translate(0 -10)' : undefined} />
+        <S d="M-110 -150 L110 -150 L80 -300 L-80 -300 Z" fill="a" />
+        {Array.from({length: 9}, (_, i) => {
+          const a = (i / 9) * Math.PI * 2;
+          return <S key={i} el="circle" cx={Math.cos(a) * 50} cy={-330 + Math.sin(a) * 50} r={34} fill="b" />;
+        })}
+        <S el="circle" cx={0} cy={-330} r={52} fill="b" st={false} />
+      </g>
+      {/* una piuma che scende */}
+      <g transform={`translate(${300 + Math.sin(feather * 9) * 50} ${-40 + feather * 760}) rotate(${Math.sin(feather * 9) * 30})`}>
+        <S d="M0 -40 C24 -20 22 30 0 46 C-22 30 -24 -20 0 -40 Z" fill="w" sw={5} />
+        <S d="M0 -36 L0 60" sw={4} />
+      </g>
+    </Riso>
+  );
+};
+
+// ── 9 · "Resta con me, solo dell'amore non so sdebitarmi" — sul tetto, di spalle, davanti alla città ──
+const Garland: React.FC<{f: number; y0: number; y1: number}> = ({f, y0, y1}) => {
+  const sway = Math.sin(f / 8) * 10;
+  const n = 14;
+  const x0 = 40;
+  const x1 = PW + 20;
+  const pt = (t: number): Pt => [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + 160 * t * (1 - t) + sway * Math.sin(t * Math.PI)];
+  return (
+    <>
+      <S d={Array.from({length: 21}, (_, i) => `${i ? 'L' : 'M'}${pt(i / 20)[0]} ${pt(i / 20)[1]}`).join(' ')} sw={4} />
+      {Array.from({length: n}, (_, i) => {
+        const [x, y] = pt((i + 0.5) / n);
+        return (
+          <g key={i}>
+            <S d={`M${x} ${y} l0 14`} sw={4} />
+            <S el="circle" cx={x} cy={y + 26} r={12} fill={Math.floor((f + i * 2) / 6) % 5 === 0 ? 'c2' : 'a'} st={false} />
+          </g>
+        );
+      })}
+    </>
+  );
+};
+export const Rooftop: React.FC<SceneProps> = ({start}) => {
+  const f = useStep(2);
+  const T = useT(start);
+  const lean = ease(prog(f, T(20.3), T(20.3) + 6)) * 16;
+  const shoot = prog(f, T(21.8), T(21.8) + 10);
+  return (
+    <Riso zoom={1.06 - prog(f, 0, T(23.06)) * 0.06} origin={[480, 700]} seed="roof">
+      <Bands y1={760} inks={['t3', 't3', 't2', 't1']} />
+      <Sparkles f={f} seed="rs" n={28} area={[0, 20, PW, 560]} />
+      <Moon x={650} y={300} r={160} />
+      {shoot > 0 && shoot < 1 && <S d={`M${900 - shoot * 500} ${60 + shoot * 200} l140 -56`} fill="none" st="a" sw={8} />}
+      <Skyline base={900} width={PW} seed="roofsky" minH={120} maxH={300} ink="t2" lit={0.45} />
+      <Garland f={f} y0={240} y1={330} />
+      <S d="M40 240 L40 820" sw={10} />
+      {/* muretto */}
+      <S el="rect" x={-40} y={880} width={PW + 80} height={70} fill="p" />
+      <S el="rect" x={-40} y={950} width={PW + 80} height={300} fill="t2" />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <S key={i} d={`M${i * 160 + 40} 880 L${i * 160 + 40} 950`} sw={5} />
+      ))}
+      <g transform="translate(380 890) scale(1.05)">
+        <LuiBack />
+      </g>
+      <g transform={`translate(${610 - lean * 1.2} 890) scale(1.05)`}>
+        <LeiBack lean={lean} />
+      </g>
+      <g transform="translate(860 880) scale(0.7)">
+        <Cat f={f} />
+      </g>
+    </Riso>
+  );
+};
+
+// ── 10 · "Resta e ti darò, ti darò…" — lanterne che salgono, poi la città risponde ──
+export const Lanterns: React.FC<SceneProps> = ({start}) => {
+  const f = useStep(2);
+  const T = useT(start);
+  const ours = [23.15, 24.02, 24.56, 25.04, 25.5].map(T);
+  const others = Array.from({length: 14}, (_, i) => ({at: T(25.8) + i * 3, x: 60 + random(`lx${i}`) * 840, y: 820 + random(`ly${i}`) * 80}));
+  const lit = prog(f, T(25.8), T(27.2));
+  const rise = (t0: number, x0: number, y0: number, i: number, s0: number) => {
+    const k = f - t0;
+    if (k < 0) return null;
+    const x = x0 + Math.sin(k / 9 + i) * 30 + k * (i % 2 ? 2.4 : -2.4) * (1 + (i % 3) * 0.4);
+    const y = y0 - k * 9;
+    const s = s0 * (1 - Math.min(0.6, k / 160));
     return (
-      <g key={`${side}${i}`} transform={`translate(${x} ${y})`}>
-        <S el="circle" cx={0} cy={0} r={r} fill="p" sw={7} />
-        <S el="circle" cx={r * 0.8} cy={-r * 0.3} r={r * 0.7} fill="p" sw={7} />
+      <g key={`${t0}-${i}`} transform={`translate(${x} ${y}) scale(${pop(f, t0, 4)})`}>
+        <Lantern f={f} i={i} s={s} />
       </g>
     );
   };
   return (
-    <Riso shake={18} seed="D">
-      <S el="rect" x={-60} y={-60} width={W + 120} height={2100} fill="a" st={false} />
-      <g transform="translate(540 700) scale(1.9)">
-        {[0, 1, 2].map((i) => puff(-1, i))}
-        {[0, 1, 2].map((i) => puff(1, i))}
-        <S d="M-120 -240 l40 -40 l30 40 l40 -40 l30 40 l40 -40 l30 40 l40 -40" sw={9} transform={`translate(0 ${(f % 4) * 3})`} />
-        <Lui half face="dots" eyes="angry" mouth="grr" armL={30} armR={-30} handL="fist" handR="fist" />
+    <Riso zoom={1.0 + prog(f, 0, T(27.2)) * 0.05} origin={[480, 900]} seed="lan">
+      <Bands y1={880} inks={['t3', 't3', 't2', 't1']} />
+      <Sparkles f={f} seed="lns" n={30} area={[0, 20, PW, 700]} />
+      <Moon x={170} y={200} r={70} />
+      <Skyline base={960} width={PW} seed="lansky" minH={140} maxH={360} ink="b" lit={0.15 + lit * 0.8} />
+      {others.map((o, i) => rise(o.at, o.x, o.y, i + 5, 0.5))}
+      {/* il nostro tetto, in basso */}
+      <S el="rect" x={-40} y={1000} width={PW + 80} height={50} fill="p" />
+      <S el="rect" x={-40} y={1050} width={PW + 80} height={200} fill="t2" />
+      <g transform="translate(440 1004) scale(0.45)">
+        <LuiBack />
       </g>
+      <g transform="translate(540 1004) scale(0.45)">
+        <LeiBack lean={14} />
+      </g>
+      {ours.map((t0, i) => rise(t0, 490 + (i - 2) * 70, 880, i, 0.9))}
     </Riso>
   );
 };
 
-// ── E · "Adesso, se lo voglio, lo posso cantare" ──
-export const E: React.FC<SceneProps> = ({start}) => {
+// ── 11 · "Solo per sentirmi dire che bastavo io da anni" — all'alba il faro trova la barca ──
+export const Dawn: React.FC<SceneProps> = ({start}) => {
   const f = useStep(2);
   const T = useT(start);
-  const words = [7.2, 7.36, 7.62, 7.84, 8.02, 8.28, 8.48];
-  const mouthOpen = Math.floor(f / 4) % 2 === 0;
+  const sunY = 760 - ease(prog(f, 0, T(30))) * 170;
+  const beam = 205 - ease(prog(f, T(27.6), T(29.06))) * 70;
+  const strong = f >= T(29.06);
+  const boatX = 300 + ease(prog(f, 0, T(31.4))) * 120;
   return (
-    <Riso zoom={1 + prog(f, 0, 48) * 0.05} origin={[540, 760]} seed="E">
-      {/* raggi a retino che ruotano a scatti */}
-      <g transform={`translate(540 760) rotate(${Math.floor(f / 4) * 4})`}>
-        {Array.from({length: 10}, (_, i) => (
-          <S key={i} d="M0 0 L-90 -700 L90 -700 Z" transform={`rotate(${i * 36})`} fill="dots" st={false} />
-        ))}
+    <Riso zoom={1.1 - ease(prog(f, 0, T(31.4))) * 0.1} origin={[480, 700]} seed="dawn">
+      <Bands y0={160} y1={720} inks={['c1', 'c1', 'c2', 'c3']} />
+      <S el="circle" cx={420} cy={sunY} r={140} fill="a" st={false} />
+      <Sea y={720} f={f} glowX={420} />
+      <Lighthouse x={780} base={860} beam={beam} spread={10} strong={strong} />
+      <g transform={`translate(${boatX} ${830 + Math.sin(f / 5) * 5}) rotate(${Math.sin(f / 6) * 2}) scale(0.8)`}>
+        <Boat people={2} sail="a" />
       </g>
-      <g transform="translate(540 820) scale(1.5)">
-        <Lui half armsFront eyes="closed" mouth={mouthOpen ? 'sing' : 'o'} armL={-52} armR={-150} />
-      </g>
-      {words.map((t, i) => {
-        const t0 = T(t);
-        if (f < t0) return null;
-        const k = f - t0;
-        const side = i % 2 ? 1 : -1;
-        const x = 540 + side * (80 + k * 9) + Math.sin(k / 3 + i) * 30;
-        const y = 900 - k * 22;
+      {[0, 1, 2].map((i) => {
+        const k = f - i * 10;
+        if (k < 0) return null;
         return (
-          <g key={i} transform={`translate(${x} ${y}) rotate(${side * 12}) scale(${pop(f, t0, 4)})`}>
-            <S el="ellipse" cx={0} cy={0} rx={30} ry={22} fill="a" transform="rotate(-20)" />
-            <S d="M26 -6 L26 -110 Q60 -90 56 -60" sw={8} />
+          <g key={i} transform={`translate(${-60 + k * 6 + i * 60} ${300 - i * 50 - k * 1.5})`}>
+            <Flying up={Math.floor((f + i) / 2) % 2 === 0} s={0.8} />
           </g>
         );
       })}
-      <Cut />
-    </Riso>
-  );
-};
-
-// ── F · "Non son più schiavo, non lo son mai stato" — la catena si spezza ──
-export const F: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const br = T(9.68);
-  const free = prog(f, br, br + 10);
-  const lx = 420 - free * 150;
-  const rx = 660 + free * 150;
-  const y = 1000 - free * 300;
-  const links = 7;
-  return (
-    <Riso zoom={1 + prog(f, 0, 42) * 0.05} seed="F">
-      <Stars seed="f1" n={12} from={T(10.46)} area={[60, 140, 1020, 520]} />
-      <Tube d={`M300 1500 L${lx} ${y + 60}`} w={100} fill="a" />
-      <Tube d={`M780 1500 L${rx} ${y + 60}`} w={100} fill="dots" />
-      {[lx, rx].map((x, i) => (
-        <g key={i}>
-          <S el="rect" x={x - 70} y={y + 30} width={140} height={44} rx={10} fill="p" />
-          <S el="ellipse" cx={x} cy={y - 40} rx={84} ry={90} fill="p" />
-          <S d={`M${x - 50} ${y - 70} C${x - 30} ${y - 90} ${x} ${y - 90} ${x + 20} ${y - 70} M${x - 56} ${y - 30} C${x - 36} ${y - 46} ${x - 6} ${y - 46} ${x + 14} ${y - 30}`} sw={7} />
-        </g>
-      ))}
-      {Array.from({length: links}, (_, i) => {
-        const t = (i + 0.5) / links;
-        const mid = Math.abs(i - (links - 1) / 2) < 0.6;
-        if (mid && f >= br) return null;
-        const left = i < links / 2;
-        // prima appesa tra i polsi, dopo la rottura ogni metà vola via con il suo polso e cade
-        const baseX = 420 + 70 + t * (660 - 420 - 140);
-        const sag = Math.sin(t * Math.PI) * 60;
-        const fall = free * (left ? -1 : 1);
-        const x = baseX + fall * (150 + (left ? (links / 2 - i) : (i - links / 2)) * 30);
-        const yy = 1050 + sag + (f >= br ? (f - br) * (f - br) * 0.8 : 0) * (0.3 + Math.abs(t - 0.5));
-        return <S key={i} el="ellipse" cx={x} cy={yy} rx={26} ry={16} transform={`rotate(${i % 2 ? 60 : 0} ${x} ${yy})`} fill="none" sw={10} />;
-      })}
-      <Burst x={W / 2} y={1050} r={60} s={pop(f, br, 4) * (f < br + 8 ? 1 : 0)} n={10} />
-      <Burst x={lx} y={y - 40} r={120} s={pop(f, T(10.46), 4)} />
-      <Burst x={rx} y={y - 40} r={120} s={pop(f, T(10.46), 4)} />
-      <Cut />
-    </Riso>
-  );
-};
-
-// ── G · "Ma prima cercavo perlopiù di lottare" — guantone e sacco ──
-export const G: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const hits = [11.15, 11.65, 12.16, 12.62].map(T);
-  let ext = 0;
-  let ang = 0;
-  let hitNow = false;
-  for (const h of hits) {
-    const k = f - h;
-    if (k >= 0 && k < 2) ext = Math.max(ext, 1);
-    else if (k >= 2 && k < 8) ext = Math.max(ext, 1 - (k - 2) / 6);
-    if (k >= 0) ang += 16 * Math.exp(-k / 9) * Math.sin(k / 3.2 + 0.2);
-    if (k >= 0 && k < 4) hitNow = true;
-  }
-  const gx = 180 + ext * 170;
-  return (
-    <Riso zoom={1.02} seed="G" shake={hitNow ? 10 : 0}>
-      <g transform={`rotate(${ang} 600 80)`}>
-        <S d="M600 80 L600 380" sw={8} strokeDasharray="14 10" />
-        <S el="rect" x={480} y={380} width={240} height={560} rx={70} fill="a" />
-        <S d="M480 520 L720 520 M480 800 L720 800" sw={7} />
-        <S el="rect" x={540} y={420} width={40} height={340} rx={20} fill="p" st={false} />
-      </g>
-      <Tube d={`M-80 760 L${gx - 60} 760`} w={80} fill="dots" />
-      <g transform={`translate(${gx} 760)`}>
-        <S d="M-70 -90 C40 -130 140 -80 140 0 C140 80 40 120 -70 90 Z" fill="b" />
-        <S d="M0 -70 C50 -80 90 -56 100 -28" sw={10} />
-        <S el="rect" x={-110} y={-80} width={60} height={160} rx={14} fill="p" />
-      </g>
-      {hitNow && <S d={starPath(90)} transform={`translate(${gx + 170} 740) rotate(${f * 7})`} fill="a" st={false} />}
-    </Riso>
-  );
-};
-
-// ── H · "Perlopiù cercavo un difetto per collegarci" — lente, crepa, cerotto ──
-export const H: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const path: [number, number][] = [
-    [280, 480],
-    [780, 600],
-    [380, 920],
-    [600, 820],
-  ];
-  const tFound = T(14.52);
-  const tFix = T(15.04);
-  const p = prog(f, 4, tFound) * (path.length - 1);
-  const seg = Math.min(path.length - 2, Math.floor(p));
-  const u = p - seg;
-  let mx = path[seg][0] + (path[seg + 1][0] - path[seg][0]) * u;
-  let my = path[seg][1] + (path[seg + 1][1] - path[seg][1]) * u;
-  const away = prog(f, tFix + 4, tFix + 14);
-  mx += away * 520;
-  my += away * 600;
-  const crack = prog(f, tFound, tFound + 6);
-  const CR = 'M560 640 L610 720 L570 790 L630 860 L590 930';
-  return (
-    <Riso zoom={1 + prog(f, 0, 66) * 0.05} origin={[540, 760]} seed="H">
-      <S d={heartPath(300)} transform={`translate(540 800) scale(${f >= tFix ? pop(f, tFix, 6) : 1})`} fill="dots" />
-      {crack > 0 && <S d={CR} sw={12} strokeDasharray={420} strokeDashoffset={420 * (1 - crack)} />}
-      {f >= tFix && (
-        <g transform={`translate(595 790) rotate(-28) scale(${pop(f, tFix, 4)})`}>
-          <S el="rect" x={-150} y={-46} width={300} height={92} rx={46} fill="p" />
-          <S el="rect" x={-50} y={-34} width={100} height={68} rx={10} fill="dots" />
-          <S d="M-110 -12 L-108 -10 M-110 12 L-108 14 M110 -12 L112 -10 M110 12 L112 14" sw={8} />
-        </g>
-      )}
-      {/* lente d'ingrandimento */}
-      <g transform={`translate(${mx} ${my})`}>
-        <Tube d="M80 80 L210 210" w={34} fill="b" />
-        <S el="circle" r={120} fill="none" sw={22} />
-        <S d="M-70 -40 A80 80 0 0 1 -30 -78" sw={10} />
-      </g>
-      {f >= tFound && f < tFix + 4 && (
-        <g transform={`translate(${mx + 40} ${my - 220}) scale(${pop(f, tFound, 4)})`}>
-          <S d="M0 -70 L0 10" sw={22} />
-          <S el="circle" cx={0} cy={50} r={13} fill="b" st={false} />
-        </g>
-      )}
-    </Riso>
-  );
-};
-
-// ── I · "Che dalle mie parti non credono agli angeli / E non credono agli altri" ──
-type Win = {x: number; y: number; at: number; who: boolean};
-const buildWindows = (T: (t: number) => number): Win[] => {
-  const cols: [number[], number[]][] = [
-    [[150, 290], [520, 670, 820, 970]],
-    [[465, 600], [400, 550, 700, 850, 1000]],
-    [[765, 900], [620, 770, 920]],
-  ];
-  const all: {x: number; y: number}[] = [];
-  for (const [xs, ys] of cols) for (const x of xs) for (const y of ys) all.push({x, y});
-  // ordine di chiusura casuale ma fisso, tra "non credono" e la fine della frase dopo
-  const order = all.map((w, i) => ({...w, r: random(`win${i}`)})).sort((a, b) => a.r - b.r);
-  const t0 = T(16.66);
-  const t1 = T(19.6);
-  return order.map((w, i) => ({x: w.x, y: w.y, at: Math.round(t0 + (i / (order.length - 1)) * (t1 - t0)), who: i % 3 === 1}));
-};
-
-export const I: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const wins = React.useMemo(() => buildWindows(T), [start]);
-  const walk = prog(f, 0, T(19.88));
-  const lx = 140 + walk * 800;
-  const bob = Math.floor(f / 4) % 2;
-  return (
-    <Riso zoom={1 + prog(f, 0, 96) * 0.04} origin={[540, 900]} seed="I">
-      <S d="M140 260 C60 300 60 420 150 450 C110 400 110 300 140 260 Z" fill="a" st={false} />
-      <Stars seed="i1" n={8} area={[220, 120, 1000, 280]} />
-      {/* palazzi */}
-      <S d="M80 420 L400 420 L400 1250 L80 1250 Z" fill="p" />
-      <S el="rect" x={280} y={350} width={70} height={70} fill="dots" />
-      <S d="M400 300 L550 210 L700 300 L700 1250 L400 1250 Z" fill="p" />
-      <S d="M700 520 L1000 520 L1000 1250 L700 1250 Z" fill="dots" />
-      <S el="rect" x={900} y={440} width={44} height={80} fill="p" />
-      {wins.map((w, i) => {
-        const k = f - w.at;
-        const close = k < 0 ? 0 : k < 2 ? 0.5 : 1;
-        const sw = 35;
-        const show = w.who && f >= T(18.2) && close < 1;
-        return (
-          <g key={i}>
-            <S el="rect" x={w.x} y={w.y} width={70} height={90} fill="p" sw={7} />
-            {show && (
-              <>
-                <S el="circle" cx={w.x + 35} cy={w.y + 40} r={18} fill="b" st={false} />
-                <S d={`M${w.x + 8} ${w.y + 90} Q${w.x + 35} ${w.y + 50} ${w.x + 62} ${w.y + 90} Z`} fill="b" st={false} />
-              </>
-            )}
-            {/* persiane: aperte ai lati, poi si chiudono */}
-            <S el="rect" x={w.x - sw + close * sw} y={w.y} width={sw} height={90} fill="a" sw={5} />
-            <S el="rect" x={w.x + 70 - close * sw} y={w.y} width={sw} height={90} fill="a" sw={5} />
-          </g>
-        );
-      })}
-      <S d="M40 1250 L1040 1250" />
-      {/* l'angelo che passa */}
-      <g transform={`translate(${lx} ${962 - bob * 6}) scale(0.42)`}>
-        <S el="ellipse" cx={-120} cy={160} rx={90} ry={50} fill="p" transform="rotate(-30 -120 160)" />
-        <S el="ellipse" cx={120} cy={160} rx={90} ry={50} fill="p" transform="rotate(30 120 160)" />
-        <Lei halo legPhase={bob} mouth={f >= T(18.2) ? 'sad' : 'smile'} look={f >= T(16.66) ? 1 : 0} />
-      </g>
-    </Riso>
-  );
-};
-
-// ── J · "Resta con me, solo dell'amore non so sdebitarmi" — panchina e scontrino ──
-export const J: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const lean = f >= T(20.34) ? -9 : 0;
-  const hearts = [20.62, 20.9, 21.16, 21.5].map(T);
-  const rec = prog(f, T(21.82), T(22.9));
-  const recH = 80 + rec * 860;
-  return (
-    <Riso zoom={1 + prog(f, 0, 76) * 0.04} origin={[620, 900]} seed="J">
-      {/* lampione */}
-      <S d="M960 380 L700 1240 L1040 1240 L1040 380 Z" fill="dots" st={false} opacity={0.9} />
-      <Tube d="M960 1250 L960 360" w={22} fill="b" />
-      <S d="M900 360 L1020 360 L990 300 L930 300 Z" fill="b" />
-      {/* schienale */}
-      <S el="rect" x={300} y={900} width={680} height={36} rx={8} fill="p" />
-      <S el="rect" x={300} y={960} width={680} height={36} rx={8} fill="p" />
-      <g transform="translate(520 800) scale(0.85)">
-        <Lui half eyes="happy" armL={8} armR={-8} />
-      </g>
-      <g transform={`rotate(${lean} 780 1080)`}>
-        <g transform="translate(780 808) scale(0.85)">
-          <Lei half eyes={f >= T(20.34) ? 'closed' : 'open'} armL={8} armR={-8} />
-        </g>
-      </g>
-      {/* seduta e gambe */}
-      <S d="M450 1090 L450 1220 M590 1090 L590 1220" sw={44} />
-      <S d="M740 1090 L740 1220 M820 1090 L820 1220" sw={12} />
-      <S el="rect" x={280} y={1060} width={720} height={44} rx={8} fill="b" />
-      <S d="M320 1104 L320 1250 M960 1104 L960 1250" sw={14} />
-      <Ground y={1250} />
-      {hearts.map((t, i) => {
-        if (f < t) return null;
-        const k = f - t;
-        return <S key={i} d={heartPath(28)} transform={`translate(${650 + Math.sin(k / 3 + i) * 30} ${760 - k * 14}) scale(${pop(f, t, 4)})`} fill="a" st={false} />;
-      })}
-      {/* lo scontrino dell'amore, infinito */}
-      {rec > 0 && (
-        <g>
-          <S
-            d={`M70 -20 L330 -20 L330 ${recH} ${Array.from({length: 9}, (_, i) => `L${330 - (i + 0.5) * 28.9} ${recH + (i % 2 ? 0 : 18)}`).join(' ')} L70 ${recH} Z`}
-            fill="p"
-            sw={6}
-          />
-          {['GRAZIE', 'tempo .... ♥', 'tatto .... ♥', 'impegno .. ♥', 'amore .... ♥', '- - - - - -', 'TOTALE  ∞'].map((row, i) => {
-            const ry = 60 + i * 120;
-            if (ry > recH - 30) return null;
-            return <Txt key={i} x={200} y={ry} text={row} size={i === 0 || i === 6 ? 40 : 30} font={TYPE} ink={i === 6 ? 'a' : 'b'} />;
-          })}
-        </g>
-      )}
-    </Riso>
-  );
-};
-
-// ── K · "Resta e ti darò, ti darò, ti darò, ti darò" — la torre di regali ──
-export const K: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const gifts = [24.02, 24.56, 25.04, 25.5].map(T);
-  const n = gifts.filter((g) => f >= g).length;
-  const wob = f >= T(25.74) ? Math.sin(f / 3) * (3 + prog(f, T(25.74), T(27.2)) * 6) : n ? Math.sin(f / 4) * 2 : 0;
-  const scared = f >= T(26.2);
-  const items = [
-    // regalo
-    <g key="g">
-      <S el="rect" x={-90} y={-130} width={180} height={130} fill="a" />
-      <S d="M0 -130 L0 0 M-90 -70 L90 -70" sw={14} />
-      <S d="M0 -130 C-50 -190 -80 -140 0 -130 C80 -140 50 -190 0 -130" fill="p" sw={7} />
-    </g>,
-    // fiore
-    <g key="f">
-      <S d="M0 0 L0 -110" sw={10} />
-      <S d="M0 -50 C30 -80 70 -70 70 -50 C40 -40 20 -40 0 -50 Z" fill="b" />
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <S key={i} el="ellipse" cx={0} cy={-150} rx={20} ry={36} transform={`rotate(${i * 60} 0 -120)`} fill="p" sw={7} />
-      ))}
-      <S el="circle" cx={0} cy={-120} r={20} fill="a" />
-    </g>,
-    // orologio (ritorna dalla prima scena)
-    <g key="w" transform="translate(0 -80) scale(0.85)">
-      <Watch f={f} r={70} />
-    </g>,
-    // cuore
-    <S key="h" d={heartPath(80)} transform="translate(0 -84)" fill="a" />,
-  ];
-  const heights = [140, 160, 170, 150];
-  let base = 0;
-  return (
-    <Riso zoom={1 + prog(f, 0, 100) * 0.05} origin={[540, 900]} seed="K">
-      <Stars seed="k1" n={10} area={[60, 120, 1020, 360]} from={T(25.5)} />
-      <Ground y={1300} />
-      <g transform="translate(470 620) scale(0.94)">
-        <Lui eyes={scared ? 'wide' : 'happy'} mouth={scared ? 'o' : 'smile'} armL={-80} armR={-120} look={scared ? 1 : 0} />
-      </g>
-      <g transform={`translate(620 790) rotate(${wob})`}>
-        {items.slice(0, n).map((it, i) => {
-          const y = base;
-          base -= heights[i];
-          return (
-            <g key={i} transform={`translate(${(i % 2 ? 1 : -1) * 10} ${y}) scale(${pop(f, gifts[i], 4)})`}>
-              {it}
-            </g>
-          );
-        })}
-      </g>
-      {scared && (
-        <g transform="translate(470 620) scale(0.94)">
-          <S d="M120 -60 C140 -30 130 0 120 0 C110 0 100 -30 120 -60 Z" fill="p" sw={6} transform={`translate(0 ${(f % 8) * 4})`} />
-        </g>
-      )}
-    </Riso>
-  );
-};
-
-// ── L · "Solo per sentirmi dire che bastavo io da anni" ──
-export const L: React.FC<SceneProps> = ({start}) => {
-  const f = useStep(2);
-  const T = useT(start);
-  const bub = pop(f, T(28.46), 5);
-  const big = f >= T(29.06) ? (Math.floor(f / 6) % 2 ? 1.6 : 1.45) : 1;
-  return (
-    <Riso zoom={1.08 - prog(f, 0, T(31.4)) * 0.08} origin={[540, 800]} seed="L">
-      <S el="circle" cx={540} cy={560} r={300} fill="dots" />
-      <Stars seed="l1" n={16} area={[60, 120, 1020, 1100]} />
-      <Ground y={1290} />
-      <g transform="translate(410 700) scale(0.86)">
-        <Lui eyes="happy" armL={8} armR={-62} />
-      </g>
-      <g transform="translate(670 712) scale(0.86)">
-        <Lei eyes="happy" armL={62} armR={-10} />
-      </g>
-      {bub > 0 && (
-        <g transform={`translate(850 330) scale(${bub})`}>
-          <S d="M-150 0 C-150 -110 150 -110 150 0 C150 90 40 110 -20 100 L-90 170 L-70 92 C-120 76 -150 50 -150 0 Z" fill="p" />
-          <S d={heartPath(40)} transform={`translate(0 -4) scale(${big})`} fill="a" st={false} />
-        </g>
-      )}
     </Riso>
   );
 };
 
 export const SCENES: [React.FC<SceneProps>, number][] = [
-  [A, 0],
-  [B, 2.6],
-  [C, 4.4],
-  [D, 6.2],
-  [E, 7.2],
-  [F, 9.16],
-  [G, 10.94],
-  [H, 13.04],
-  [I, 15.84],
-  [J, 19.88],
-  [K, 23.06],
-  [L, 27.2],
+  [City, 0],
+  [Lookout, 4.4],
+  [Storm, 6.2],
+  [Wires, 7.2],
+  [Cage, 9.16],
+  [Kites, 10.94],
+  [Stars, 13.04],
+  [Street, 15.84],
+  [Rooftop, 19.88],
+  [Lanterns, 23.06],
+  [Dawn, 27.2],
 ];
