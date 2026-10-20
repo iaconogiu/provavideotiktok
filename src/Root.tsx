@@ -8,6 +8,7 @@ import {DURATION} from './simba/theme';
 import {INCHIOSTRO_FRAMES, Inchiostro} from './inchiostro/Inchiostro';
 import * as INK from './inchiostro/ink';
 import {RESTA_FRAMES, Resta} from './resta/Resta';
+import {FPS as UNO_FPS, UNO_FRAMES, Uno} from './uno/Uno';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -27,5 +28,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Simba22Freedom" component={SimbaV5} width={W} height={H} fps={FPS} durationInFrames={Math.floor(DURATION * FPS)} />
   <Composition id="Inchiostro" component={Inchiostro} width={INK.W} height={INK.H} fps={INK.FPS} durationInFrames={INCHIOSTRO_FRAMES} />
   <Composition id="Resta" component={Resta} width={INK.W} height={INK.H} fps={INK.FPS} durationInFrames={RESTA_FRAMES} />
+  <Composition id="Uno" component={Uno} width={1080} height={1920} fps={UNO_FPS} durationInFrames={UNO_FRAMES} />
   </>
 );
