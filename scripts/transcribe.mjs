@@ -17,7 +17,10 @@ await downloadWhisperModel({model: MODEL, folder: whisperPath});
 
 // whisper.cpp vuole WAV 16kHz mono
 fs.mkdirSync('tmp', {recursive: true});
-execSync('ffmpeg -y -loglevel error -i voce.mp3 -ar 16000 -ac 1 tmp/voce.wav', {stdio: 'inherit'});
+// uso: node scripts/transcribe.mjs [audio] [output.json]
+const input = process.argv[2] ?? 'voce.mp3';
+const output = process.argv[3] ?? 'src/transcript.json';
+execSync(`ffmpeg -y -loglevel error -i "${input}" -ar 16000 -ac 1 tmp/voce.wav`, {stdio: 'inherit'});
 
 const whisperOutput = await transcribe({
   model: MODEL,
@@ -30,5 +33,5 @@ const whisperOutput = await transcribe({
 });
 
 const {captions} = toCaptions({whisperCppOutput: whisperOutput});
-fs.writeFileSync('src/transcript.json', JSON.stringify(captions, null, 2));
+fs.writeFileSync(output, JSON.stringify(captions, null, 2));
 console.log(captions.map((c) => `${(c.startMs / 1000).toFixed(2)} ${c.text}`).join('\n'));
