@@ -1,9 +1,9 @@
-import '@fontsource/anton';
 import React, {useMemo} from 'react';
 import {AbsoluteFill, Audio, Sequence, random, staticFile, useCurrentFrame} from 'remotion';
 import * as THREE from 'three';
 import {Dust, FPS, Figure, Floor, Glow, HOTRED, Lamp, Maze, Rig, Stage, Star, ease, easeOut, lerp3, makeMaze, pathAt, prog} from './kit';
 import {Africa, Compass, Corridor, Question, Rings} from './objects';
+import {Lyrics, RingTunnel, type Token} from './style';
 
 /**
  * "Dall'angolo": stesso linguaggio di One of One (3D rosso/nero/oro, bagliore, testo
@@ -13,9 +13,8 @@ import {Africa, Compass, Corridor, Question, Rings} from './objects';
 export const DURATION = 20.63;
 export const ANGOLO_FRAMES = Math.round(DURATION * FPS);
 
-type Kind = 'solid' | 'outline' | 'ghost';
 // [testo, inizio in secondi, stile]: tempi da Whisper, ritoccati sugli attacchi della voce
-const TOKENS: [string, number, Kind][] = [
+const TOKENS: Token[] = [
   ['EH', 0.4, 'solid'],
   ['EH OH', 0.95, 'solid'],
   ["DALL'ANGOLO", 2.12, 'outline'],
@@ -236,49 +235,7 @@ const S9: React.FC<SP> = ({start}) => {
 };
 
 // ── 10 · "oddio": tunnel di scritte ad anelli (2D, come il "CASO" di One of One) ──
-const S10: React.FC<SP> = () => {
-  const f = useCurrentFrame();
-  const zoom = 1 + f * 0.012;
-  const shake = Math.exp(-f / 12) * 30;
-  const sx = (random(`ox${f}`) - 0.5) * shake;
-  const sy = (random(`oy${f}`) - 0.5) * shake;
-  return (
-    <AbsoluteFill style={{background: 'radial-gradient(40% 50% at 50% 50%, #3a0303 0%, #000 70%)', overflow: 'hidden'}}>
-      <AbsoluteFill style={{transform: `translate(${sx}px, ${sy}px) scale(${zoom})`}}>
-        {Array.from({length: 7}, (_, r) => {
-          const R = 170 + r * 150;
-          const fs = 60 + r * 12;
-          const n = Math.floor((2 * Math.PI * R) / (fs * 2.9));
-          const rot = (r % 2 ? 1 : -1) * f * (0.6 - r * 0.05);
-          const red = r % 3 === 1;
-          return (
-            <div key={r} style={{position: 'absolute', left: '50%', top: '50%', transform: `rotate(${rot}deg)`}}>
-              {Array.from({length: n}, (_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    position: 'absolute',
-                    fontFamily: '"Anton", Impact, sans-serif',
-                    fontSize: fs,
-                    lineHeight: 1,
-                    whiteSpace: 'nowrap',
-                    color: red ? 'rgba(227,20,27,0.85)' : 'transparent',
-                    WebkitTextStroke: red ? undefined : '2px rgba(180,180,180,0.55)',
-                    transform: `rotate(${(i / n) * 360}deg) translateY(${-R}px) translateX(-50%)`,
-                    transformOrigin: '0 0',
-                  }}
-                >
-                  ODDIO
-                </div>
-              ))}
-            </div>
-          );
-        })}
-        <AbsoluteFill style={{background: 'radial-gradient(12% 18% at 50% 50%, rgba(255,80,40,0.9) 0%, rgba(255,40,20,0.3) 40%, transparent 70%)'}} />
-      </AbsoluteFill>
-    </AbsoluteFill>
-  );
-};
+const S10: React.FC<SP> = () => <RingTunnel word="ODDIO" />;
 
 // ── 11 · "non sempre lo si trova": torna il labirinto, la figurina resta in mezzo ──
 const S11: React.FC<SP> = ({start}) => {
@@ -314,53 +271,6 @@ const SCENES: [React.FC<SP>, number][] = [
   [S11, 18.26],
 ];
 
-// larghezza approssimata dei glifi di Anton (em)
-const textW = (s: string) => [...s].reduce((a, ch) => a + ('MW'.includes(ch) ? 0.62 : "I1'".includes(ch) ? 0.27 : ch === ' ' ? 0.24 : ch === '?' ? 0.45 : 0.5), 0);
-
-/** testo bianco graffiato al centro, una o due parole alla volta */
-const Lyrics: React.FC = () => {
-  const frame = useCurrentFrame();
-  const t = frame / FPS;
-  let idx = -1;
-  TOKENS.forEach(([, at], i) => {
-    if (t >= at - 0.02) idx = i;
-  });
-  if (idx < 0) return null;
-  const [text, at, kind] = TOKENS[idx];
-  const lf = Math.floor((t - at) * FPS);
-  const size = Math.min(230, 1400 / textW(text));
-  const flick = lf < 6 ? [1, 0.25, 1, 0.6, 1, 1][lf] : 1;
-  const sc = 1 + Math.max(0, 1 - lf / 10) * 0.08;
-  const big = text === 'ODDIO';
-  const common: React.CSSProperties = {
-    fontFamily: '"Anton", Impact, sans-serif',
-    fontSize: size * (big ? 1.25 : 1),
-    lineHeight: 1,
-    letterSpacing: size * 0.01,
-    whiteSpace: 'nowrap',
-  };
-  const fill: React.CSSProperties =
-    kind === 'outline'
-      ? {color: 'transparent', WebkitTextStroke: '3px rgba(255,255,255,0.95)'}
-      : kind === 'ghost'
-        ? {color: 'rgba(120,110,130,0.75)', WebkitTextStroke: '2px #FFFFFF'}
-        : {
-            backgroundImage: `url(${staticFile('angolo/grunge.png')})`,
-            backgroundSize: '520px',
-            backgroundPosition: `${(idx * 137) % 500}px ${(idx * 211) % 500}px`,
-            WebkitBackgroundClip: 'text',
-            backgroundClip: 'text',
-            color: 'transparent',
-          };
-  return (
-    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', opacity: flick}}>
-      <div style={{transform: `scale(${sc}, ${sc * 1.12})`, filter: 'drop-shadow(0 6px 18px rgba(0,0,0,0.65)) drop-shadow(0 0 22px rgba(255,90,60,0.25))'}}>
-        <div style={{...common, ...fill, padding: '0.18em 0.05em 0.05em'}}>{text}</div>
-      </div>
-    </AbsoluteFill>
-  );
-};
-
 export const Angolo: React.FC = () => {
   const frame = useCurrentFrame();
   const cuts = SCENES.map(([, s]) => Math.round(s * FPS));
@@ -378,7 +288,7 @@ export const Angolo: React.FC = () => {
           </Sequence>
         );
       })}
-      <Lyrics />
+      <Lyrics tokens={TOKENS} big={['ODDIO']} />
       <AbsoluteFill style={{background: '#FFF', opacity: flash, mixBlendMode: 'screen'}} />
       <AbsoluteFill style={{background: '#000', opacity: end}} />
       <Audio src={staticFile('angolo/audio.m4a')} />
