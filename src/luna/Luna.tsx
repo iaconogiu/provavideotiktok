@@ -73,7 +73,7 @@ const S1: React.FC<SP> = ({start}) => {
   const k = ease(prog(f, 0, T(3.94)));
   return (
     <Stage near={6} far={24}>
-      <Rig pos={lerp3([0, 3.0, 12], [-0.6, 2.6, 10], k)} look={[0, 2.3, 0]} />
+      <Rig pos={lerp3([0, 2.9, 9.2], [0.3, 2.6, 7.8], k)} look={[0, 2.1, 0]} />
       <Floor />
       <Scale tilt={tilt} />
       <spotLight position={[0, 9, 3]} angle={0.45} penumbra={0.7} intensity={40} color="#DCE8FF" />
@@ -96,7 +96,7 @@ const S2: React.FC<SP> = ({start}) => {
       <Rig pos={lerp3([0, 2.6, 8.5], [0.4, 2.4, 7.2], ease(prog(f, 0, T(6.3))))} look={[0, 2.4, 0]} />
       <group position={[0, y, 0]} rotation={[0, f * 0.01, sway]}>
         <Moon scale={1.25} />
-        <Chain len={9} position={[0, 1.4, 0]} />
+        <Chain len={9} link={1.2} position={[0, 1.44, 0]} />
       </group>
       <pointLight position={[2, y + 1, 4]} intensity={10} distance={10} color="#E8F0FF" />
       <pointLight position={[-4, 1, -3]} intensity={40} distance={12} color={HOT} />
@@ -186,10 +186,10 @@ const S5: React.FC<SP> = ({start}) => {
     <Stage fog="#020614" near={5} far={22} bloom={0.75 + pulse * 0.8}>
       <Rig pos={lerp3([0, 2.8, 7.5], [0.5, 2.4, 6], ease(prog(f, 0, T(19.35))))} look={[0, 2.3, 0]} shake={pulse * 0.06} />
       <group position={[0, 2.3, 0]} rotation={[0, Math.sin(f * 0.02) * 0.5, 0]}>
-        <Heart scale={1.05} glow={0.12 + pulse * 0.5} />
+        <Heart scale={1.05} glow={0.12 + pulse * 0.5} bail />
         <Thorns tight={tight} rotation={[0.25, 0, 0]} />
+        <Chain len={6} link={1.1} position={[0, 0.69, 0]} />
       </group>
-      <Chain len={6} position={[0, 3.35, 0]} />
       <spotLight position={[2, 7, 5]} angle={0.5} penumbra={0.7} intensity={30} color="#E2ECFF" />
       <pointLight position={[0, 2, -2.5]} intensity={40 + pulse * 120} distance={10} color={HOT} />
       <Dust n={160} center={[0, 2.5, 0]} box={[10, 6, 6]} seed="l5" />
@@ -237,9 +237,9 @@ const S8: React.FC<SP> = ({start}) => {
     <Stage fog="#010309" near={5} far={20} bloom={0.75 * fade}>
       <Rig pos={lerp3([0, 2.4, 6], [0, 2.4, 8.5], ease(prog(f, 0, T(DURATION))))} look={[0, 2.4, 0]} />
       <group position={[0, 2.4, 0]} rotation={[0, f * 0.012, Math.sin(f * 0.03) * 0.05]}>
-        <Heart scale={0.7} glow={0.15 * fade} />
+        <Heart scale={0.7} glow={0.15 * fade} bail />
+        <Chain len={6} position={[0, 0.46, 0]} />
       </group>
-      <Chain len={6} position={[0, 3.05, 0]} />
       <spotLight position={[0, 7, 4]} angle={0.45} penumbra={0.8} intensity={30 * fade} color="#E2ECFF" />
       <pointLight position={[0, 2, -2.5]} intensity={30 * fade} distance={10} color={HOT} />
       <Dust n={Math.round(140 * fade) + 1} center={[0, 2.5, 0]} box={[9, 6, 6]} seed="l8" />
