@@ -1,7 +1,7 @@
 import '@fontsource/anton';
 import React from 'react';
 import {AbsoluteFill, random, staticFile, useCurrentFrame} from 'remotion';
-import {FPS} from './kit';
+import {FPS, usePal} from './kit';
 
 /** Linguaggio grafico condiviso dei video 3D (One of One, Dall'angolo, …) */
 
@@ -11,12 +11,13 @@ export type Token = [string, number, Kind];
 /** Tunnel di scritte ad anelli che girano (2D), con zoom e scossa iniziale */
 export const RingTunnel: React.FC<{word: string}> = ({word}) => {
   const f = useCurrentFrame();
+  const {css} = usePal();
   const zoom = 1 + f * 0.012;
   const shake = Math.exp(-f / 12) * 30;
   const sx = (random(`ox${f}`) - 0.5) * shake;
   const sy = (random(`oy${f}`) - 0.5) * shake;
   return (
-    <AbsoluteFill style={{background: 'radial-gradient(40% 50% at 50% 50%, #3a0303 0%, #000 70%)', overflow: 'hidden'}}>
+    <AbsoluteFill style={{background: `radial-gradient(40% 50% at 50% 50%, ${css.bg} 0%, #000 70%)`, overflow: 'hidden'}}>
       <AbsoluteFill style={{transform: `translate(${sx}px, ${sy}px) scale(${zoom})`}}>
         {Array.from({length: 7}, (_, r) => {
           const R = 170 + r * 150;
@@ -35,7 +36,7 @@ export const RingTunnel: React.FC<{word: string}> = ({word}) => {
                     fontSize: fs,
                     lineHeight: 1,
                     whiteSpace: 'nowrap',
-                    color: red ? 'rgba(227,20,27,0.85)' : 'transparent',
+                    color: red ? `rgba(${css.ink},0.85)` : 'transparent',
                     WebkitTextStroke: red ? undefined : '2px rgba(180,180,180,0.55)',
                     transform: `rotate(${(i / n) * 360}deg) translateY(${-R}px) translateX(-50%)`,
                     transformOrigin: '0 0',
@@ -47,7 +48,7 @@ export const RingTunnel: React.FC<{word: string}> = ({word}) => {
             </div>
           );
         })}
-        <AbsoluteFill style={{background: 'radial-gradient(12% 18% at 50% 50%, rgba(255,80,40,0.9) 0%, rgba(255,40,20,0.3) 40%, transparent 70%)'}} />
+        <AbsoluteFill style={{background: `radial-gradient(12% 18% at 50% 50%, rgba(${css.glow},0.9) 0%, rgba(${css.glow},0.3) 40%, transparent 70%)`}} />
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -59,6 +60,7 @@ export const textW = (s: string) => [...s].reduce((a, ch) => a + ('MW'.includes(
 /** testo bianco graffiato al centro, una o due parole alla volta ('soft' = dissolvenza lenta) */
 export const Lyrics: React.FC<{tokens: Token[]; big?: string[]}> = ({tokens, big: bigWords = []}) => {
   const frame = useCurrentFrame();
+  const {css} = usePal();
   const t = frame / FPS;
   let idx = -1;
   tokens.forEach(([, at], i) => {
@@ -93,7 +95,7 @@ export const Lyrics: React.FC<{tokens: Token[]; big?: string[]}> = ({tokens, big
           };
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', opacity: flick}}>
-      <div style={{transform: `scale(${sc}, ${sc * 1.12})`, filter: `${kind === 'soft' ? `blur(${Math.max(0, 6 - lf / 8)}px) ` : ''}drop-shadow(0 6px 18px rgba(0,0,0,0.65)) drop-shadow(0 0 22px rgba(255,90,60,0.25))`}}>
+      <div style={{transform: `scale(${sc}, ${sc * 1.12})`, filter: `${kind === 'soft' ? `blur(${Math.max(0, 6 - lf / 8)}px) ` : ''}drop-shadow(0 6px 18px rgba(0,0,0,0.65)) drop-shadow(0 0 22px rgba(${css.glow},0.25))`}}>
         <div style={{...common, ...fill, padding: '0.18em 0.05em 0.05em'}}>{text}</div>
       </div>
     </AbsoluteFill>

@@ -1,18 +1,19 @@
 import React, {useMemo} from 'react';
 import type {ThreeElements} from '@react-three/fiber';
 import * as THREE from 'three';
-import {Glow, Gold, HOTRED, Red} from './kit';
+import {Glow, Gold, Red, usePal} from './kit';
 
 type G = ThreeElements['group'];
 
 /** Corridoio rosso con porte d'oro chiuse ai lati e una luce in fondo */
 export const Corridor: React.FC<{len?: number; open?: number} & G> = ({len = 40, open = 0, ...g}) => {
+  const pal = usePal();
   const doors = Math.floor(len / 4);
   return (
     <group {...g}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -len / 2]}>
         <planeGeometry args={[6, len + 10]} />
-        <meshStandardMaterial color="#160303" metalness={0.6} roughness={0.28} />
+        <meshStandardMaterial color={pal.floor} metalness={0.6} roughness={0.28} />
       </mesh>
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 5, -len / 2]}>
         <planeGeometry args={[6, len + 10]} />
@@ -60,9 +61,9 @@ export const Corridor: React.FC<{len?: number; open?: number} & G> = ({len = 40,
       {/* la luce in fondo */}
       <mesh position={[0, 2.5, -len - 2]}>
         <planeGeometry args={[6, 5]} />
-        <Glow color="#FF6A3A" k={1.6 + open * 3} />
+        <Glow color={pal.warm} k={1.6 + open * 3} />
       </mesh>
-      <pointLight position={[0, 3, -len]} intensity={80} distance={30} color="#FF4A2A" />
+      <pointLight position={[0, 3, -len]} intensity={80} distance={30} color={pal.warm} />
     </group>
   );
 };
@@ -98,7 +99,9 @@ export const Question: React.FC<{glow?: number} & G> = ({glow = 0.2, ...g}) => {
 };
 
 /** Due anelli intrecciati */
-export const Rings: React.FC<{spin: number} & G> = ({spin, ...g}) => (
+export const Rings: React.FC<{spin: number} & G> = ({spin, ...g}) => {
+  const pal = usePal();
+  return (
   <group {...g}>
     <group rotation={[0.3, spin, 0.2]} position={[-0.55, 0, 0]}>
       <mesh>
@@ -114,11 +117,12 @@ export const Rings: React.FC<{spin: number} & G> = ({spin, ...g}) => (
       {/* pietra sul secondo anello */}
       <mesh position={[0, 1.13, 0]}>
         <octahedronGeometry args={[0.2, 0]} />
-        <Glow color={HOTRED} k={3} />
+        <Glow color={pal.hot} k={3} />
       </mesh>
     </group>
   </group>
-);
+  );
+};
 
 // contorno dell'Africa (longitudine, latitudine) semplificato, più il Madagascar
 const AFRICA: [number, number][] = [
@@ -150,7 +154,9 @@ export const Africa: React.FC<{glow?: number} & G> = ({glow = 0.1, ...g}) => {
 };
 
 /** Bussola d'oro; needle = angolo dell'ago in radianti */
-export const Compass: React.FC<{needle: number} & G> = ({needle, ...g}) => (
+export const Compass: React.FC<{needle: number} & G> = ({needle, ...g}) => {
+  const pal = usePal();
+  return (
   <group {...g}>
     <mesh rotation={[Math.PI / 2, 0, 0]}>
       <cylinderGeometry args={[2, 2.1, 0.45, 96]} />
@@ -185,7 +191,7 @@ export const Compass: React.FC<{needle: number} & G> = ({needle, ...g}) => (
     <group position={[0, 0, 0.42]} rotation={[0, 0, needle]}>
       <mesh position={[0, 0.62, 0]}>
         <coneGeometry args={[0.16, 1.25, 4]} />
-        <Glow color={HOTRED} k={2.4} />
+        <Glow color={pal.hot} k={2.4} />
       </mesh>
       <mesh position={[0, -0.62, 0]} rotation={[0, 0, Math.PI]}>
         <coneGeometry args={[0.16, 1.25, 4]} />
@@ -202,4 +208,5 @@ export const Compass: React.FC<{needle: number} & G> = ({needle, ...g}) => (
       <meshPhysicalMaterial color="#ffffff" transparent opacity={0.08} roughness={0.05} metalness={0} clearcoat={1} />
     </mesh>
   </group>
-);
+  );
+};

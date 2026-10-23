@@ -49,7 +49,7 @@ export const Moon: React.FC<G> = (g) => (
   <group {...g}>
     <mesh>
       <sphereGeometry args={[1, 64, 64]} />
-      <meshStandardMaterial color="#F3E2C0" roughness={0.9} emissive="#FFDCA0" emissiveIntensity={0.12} />
+      <meshStandardMaterial color="#E6ECF5" roughness={0.9} emissive="#CFE0FF" emissiveIntensity={0.12} />
     </mesh>
     {[
       [0.35, 0.3, 0.88, 0.2],
@@ -59,7 +59,7 @@ export const Moon: React.FC<G> = (g) => (
     ].map(([x, y, z, r], i) => (
       <mesh key={i} position={[x, y, z]}>
         <sphereGeometry args={[r, 24, 24]} />
-        <meshStandardMaterial color="#C9B48E" roughness={1} emissive="#7a5a30" emissiveIntensity={0.3} />
+        <meshStandardMaterial color="#AEB8C8" roughness={1} emissive="#30405a" emissiveIntensity={0.3} />
       </mesh>
     ))}
     {/* anello di aggancio */}
@@ -186,7 +186,7 @@ export const Curtains: React.FC<{open: number; f: number} & G> = ({open, f, ...g
 };
 
 /** Cono di riflettore volumetrico (dall'alto verso target) */
-export const SpotCone: React.FC<{from: [number, number, number]; to: [number, number, number]; on: number; color?: string}> = ({from, to, on, color = '#FFE2B8'}) => {
+export const SpotCone: React.FC<{from: [number, number, number]; to: [number, number, number]; on: number; color?: string}> = ({from, to, on, color = '#D6E6FF'}) => {
   const dir = new THREE.Vector3(...to).sub(new THREE.Vector3(...from));
   const len = dir.length();
   const mid = new THREE.Vector3(...from).add(dir.clone().multiplyScalar(0.5));

@@ -17,6 +17,30 @@ export const GOLD = '#FFB547';
 export const RED = '#7A0B0B';
 export const HOTRED = '#FF2414';
 
+/** Palette della scena: il rosso di One of One o un blu notte per i pezzi più chill */
+export type Palette = {wall: string; hot: string; fog: string; floor: string; dust: string; warm: string; css: {bg: string; ink: string; glow: string}};
+export const RED_PALETTE: Palette = {
+  wall: RED,
+  hot: HOTRED,
+  fog: '#050000',
+  floor: '#1a0303',
+  dust: '#FFC56B',
+  warm: '#FF6A3A',
+  css: {bg: '#3a0303', ink: '227,20,27', glow: '255,90,60'},
+};
+export const BLUE_PALETTE: Palette = {
+  wall: '#0C1C4D',
+  hot: '#3D7BFF',
+  fog: '#01030A',
+  floor: '#040A1C',
+  dust: '#BFD8FF',
+  warm: '#7FB0FF',
+  css: {bg: '#06123a', ink: '70,130,255', glow: '90,150,255'},
+};
+const PalCtx = React.createContext<Palette>(RED_PALETTE);
+export const PaletteProvider = PalCtx.Provider;
+export const usePal = () => React.useContext(PalCtx);
+
 export const prog = (f: number, a: number, b: number) => Math.min(1, Math.max(0, (f - a) / (b - a)));
 export const ease = (t: number) => t * t * (3 - 2 * t);
 export const easeOut = (t: number) => 1 - (1 - t) ** 3;
@@ -39,8 +63,9 @@ export const Rig: React.FC<{pos: number[]; look: number[]; shake?: number; fov?:
 };
 
 /** Riflessi d'ambiente (servono all'oro) + nebbia scura */
-const Env: React.FC<{fog?: string; near?: number; far?: number}> = ({fog = '#050000', near = 8, far = 40}) => {
+const Env: React.FC<{fog?: string; near?: number; far?: number}> = ({fog: fogIn, near = 8, far = 40}) => {
   const {gl, scene} = useThree();
+  const fog = fogIn ?? usePal().fog;
   useMemo(() => {
     const pmrem = new THREE.PMREMGenerator(gl);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -75,29 +100,40 @@ const BloomFX: React.FC<{strength: number}> = ({strength}) => {
 };
 
 /** Una scena 3D a tutto schermo con bagliore, vignetta e grana */
-export const Stage: React.FC<{children: React.ReactNode; fog?: string; near?: number; far?: number; bloom?: number}> = ({children, fog, near, far, bloom = 0.75}) => (
+export const Stage: React.FC<{children: React.ReactNode; fog?: string; near?: number; far?: number; bloom?: number}> = ({children, fog, near, far, bloom = 0.75}) => {
+  // la palette viene ripassata dentro la tela 3D, che ha un suo albero React
+  const pal = usePal();
+  return (
   <ThreeCanvas width={W} height={H} camera={{position: [0, 2, 10], fov: 38, near: 0.1, far: 200}} gl={{antialias: true, preserveDrawingBuffer: true}}>
+    <PaletteProvider value={pal}>
     <Env fog={fog} near={near} far={far} />
     {children}
+    </PaletteProvider>
     <BloomFX strength={bloom} />
   </ThreeCanvas>
-);
+  );
+};
 
 export const Gold: React.FC<{glow?: number; env?: number}> = ({glow = 0, env = 1.4}) => (
   <meshStandardMaterial color={GOLD} metalness={1} roughness={0.22} envMapIntensity={env} emissive="#FF8A1A" emissiveIntensity={glow} />
 );
-export const Red: React.FC<{glow?: number; rough?: number}> = ({glow = 0, rough = 0.55}) => (
-  <meshStandardMaterial color={RED} metalness={0.15} roughness={rough} emissive={HOTRED} emissiveIntensity={glow} />
-);
+/** Materiale delle pareti (rosso o blu secondo la palette) */
+export const Red: React.FC<{glow?: number; rough?: number}> = ({glow = 0, rough = 0.55}) => {
+  const pal = usePal();
+  return <meshStandardMaterial color={pal.wall} metalness={0.15} roughness={rough} emissive={pal.hot} emissiveIntensity={glow} />;
+};
 export const Glow: React.FC<{color?: string; k?: number}> = ({color = '#FFFFFF', k = 3}) => <meshStandardMaterial color="#000" emissive={color} emissiveIntensity={k} toneMapped={false} />;
 
 /** Pavimento lucido scuro */
-export const Floor: React.FC<{y?: number; color?: string; size?: number}> = ({y = 0, color = '#1a0303', size = 200}) => (
+export const Floor: React.FC<{y?: number; color?: string; size?: number}> = ({y = 0, color: colorIn, size = 200}) => {
+  const color = colorIn ?? usePal().floor;
+  return (
   <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]}>
     <planeGeometry args={[size, size]} />
     <meshStandardMaterial color={color} metalness={0.5} roughness={0.35} envMapIntensity={0.12} />
   </mesh>
-);
+  );
+};
 
 /** Pulviscolo dorato che fluttua */
 export const Dust: React.FC<{n?: number; box?: [number, number, number]; center?: [number, number, number]; seed?: string; size?: number; color?: string}> = ({
@@ -106,8 +142,9 @@ export const Dust: React.FC<{n?: number; box?: [number, number, number]; center?
   center = [0, 3, 0],
   seed = 'd',
   size = 0.025,
-  color = '#FFC56B',
+  color: colorIn,
 }) => {
+  const color = colorIn ?? usePal().dust;
   const f = useCurrentFrame();
   const ref = React.useRef<THREE.InstancedMesh>(null);
   const m = useMemo(() => new THREE.Matrix4(), []);
@@ -296,6 +333,7 @@ export const makeMaze = (n: number, seed: string) => {
 
 export const Maze: React.FC<{maze: ReturnType<typeof makeMaze>; cell?: number; h?: number; edge?: number}> = ({maze, cell = 1.2, h = 0.9, edge = 2.2}) => {
   const {walls, n} = maze;
+  const hot = usePal().hot;
   const off = ((n - 1) * cell) / 2;
   const t = 0.12;
   const segs: [number, number, number, number][] = []; // x, z, lunghezza, orientamento (0 = lungo x)
@@ -317,7 +355,7 @@ export const Maze: React.FC<{maze: ReturnType<typeof makeMaze>; cell?: number; h
           </mesh>
           <mesh position={[0, h / 2 + 0.005, 0]}>
             <boxGeometry args={o ? [t * 1.05, 0.02, l] : [l, 0.02, t * 1.05]} />
-            <Glow color={HOTRED} k={edge} />
+            <Glow color={hot} k={edge} />
           </mesh>
         </group>
       ))}

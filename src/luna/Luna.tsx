@@ -1,13 +1,16 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
-import {Dust, FPS, Figure, Floor, Glow, HOTRED, Rig, Stage, ease, easeOut, lerp3, prog} from '../angolo/kit';
+import {BLUE_PALETTE, Dust, FPS, Figure, Floor, Glow, PaletteProvider, Rig, Stage, ease, easeOut, lerp3, prog} from '../angolo/kit';
+
+// pezzo chill: blu notte al posto del rosso, l'oro resta per gli oggetti
+const HOT = BLUE_PALETTE.hot;
 import {Corridor} from '../angolo/objects';
 import {Lyrics, RingTunnel, type Token} from '../angolo/style';
 import {Chain, Curtains, Heart, Moon, Scale, SpotCone, Thorns} from './objects';
 
 /**
  * "Ne varrà la pena": stesso linguaggio di One of One (il pendente, il palco, il tunnel
- * di scritte), oggetti nuovi per questo testo. L'ultima frase sfuma nel buio.
+ * di scritte) in blu notte, oggetti nuovi per questo testo. L'ultima frase sfuma nel buio.
  */
 
 export const DURATION = 29.4;
@@ -73,9 +76,9 @@ const S1: React.FC<SP> = ({start}) => {
       <Rig pos={lerp3([0, 3.0, 12], [-0.6, 2.6, 10], k)} look={[0, 2.3, 0]} />
       <Floor />
       <Scale tilt={tilt} />
-      <spotLight position={[0, 9, 3]} angle={0.45} penumbra={0.7} intensity={45} color="#FFD8A8" />
-      <pointLight position={[-4, 2, -3]} intensity={40} distance={12} color={HOTRED} />
-      <pointLight position={[4, 2, -3]} intensity={30} distance={12} color={HOTRED} />
+      <spotLight position={[0, 9, 3]} angle={0.45} penumbra={0.7} intensity={40} color="#DCE8FF" />
+      <pointLight position={[-4, 2, -3]} intensity={40} distance={12} color={HOT} />
+      <pointLight position={[4, 2, -3]} intensity={30} distance={12} color={HOT} />
       <Dust n={160} center={[0, 3, 0]} box={[12, 7, 6]} seed="l1" />
     </Stage>
   );
@@ -89,14 +92,14 @@ const S2: React.FC<SP> = ({start}) => {
   const y = 8 - drop * 5.6;
   const sway = Math.sin(f * 0.05) * 0.06;
   return (
-    <Stage fog="#0f0101" near={6} far={26}>
+    <Stage fog="#01040f" near={6} far={26}>
       <Rig pos={lerp3([0, 2.6, 8.5], [0.4, 2.4, 7.2], ease(prog(f, 0, T(6.3))))} look={[0, 2.4, 0]} />
       <group position={[0, y, 0]} rotation={[0, f * 0.01, sway]}>
         <Moon scale={1.25} />
         <Chain len={9} position={[0, 1.4, 0]} />
       </group>
-      <pointLight position={[2, y + 1, 4]} intensity={10} distance={10} color="#FFE0B0" />
-      <pointLight position={[-4, 1, -3]} intensity={40} distance={12} color={HOTRED} />
+      <pointLight position={[2, y + 1, 4]} intensity={10} distance={10} color="#E8F0FF" />
+      <pointLight position={[-4, 1, -3]} intensity={40} distance={12} color={HOT} />
       <Dust n={220} center={[0, 3, 0]} box={[14, 8, 8]} seed="l2" />
     </Stage>
   );
@@ -113,7 +116,7 @@ const S3: React.FC<SP> = ({start}) => {
     <Stage near={3} far={28} bloom={0.8 + out * 0.6}>
       <Rig pos={[0.4, 2.0, z + 5.5]} look={[0, 1.6, z - 8]} />
       <Corridor len={40} open={out * 3} />
-      <ambientLight intensity={0.05 + out * 0.2} color="#ff3020" />
+      <ambientLight intensity={0.05 + out * 0.2} color={HOT} />
       {[-0.32, 0.32].map((x, i) => (
         <Figure key={i} position={[x, 0, z]} rotation={[0, Math.PI, 0]} walk={f * 0.22 + i * Math.PI} glow={1.1} scale={0.95} />
       ))}
@@ -147,7 +150,7 @@ const S4: React.FC<SP> = ({start}) => {
   return (
     <Stage near={6} far={30}>
       <Rig pos={lerp3([0, 3.0, 13], [0, 2.4, 9.5], k)} look={[0, 2.6, 0]} />
-      <Floor color="#120202" />
+      <Floor />
       <Curtains open={open} f={f} position={[0, 0, -1]} />
       <Figure position={target} glow={2.8} />
       {/* sagome scure ai lati, come in One of One */}
@@ -155,11 +158,11 @@ const S4: React.FC<SP> = ({start}) => {
         <group key={i} position={[x, 0, 0.6]} scale={0.95}>
           <mesh position={[0, 1.55, 0]}>
             <sphereGeometry args={[0.2, 16, 16]} />
-            <meshStandardMaterial color="#1a0505" roughness={0.9} />
+            <meshStandardMaterial color="#05081a" roughness={0.9} />
           </mesh>
           <mesh position={[0, 0.85, 0]}>
             <capsuleGeometry args={[0.22, 0.9, 6, 12]} />
-            <meshStandardMaterial color="#1a0505" roughness={0.9} />
+            <meshStandardMaterial color="#05081a" roughness={0.9} />
           </mesh>
         </group>
       ))}
@@ -167,7 +170,7 @@ const S4: React.FC<SP> = ({start}) => {
         const on = f >= onAt[i] ? (f >= offAt[i] ? 0 : Math.min(1, (f - onAt[i]) / 4)) : 0;
         return <SpotCone key={i} from={p} to={target} on={on} />;
       })}
-      <ambientLight intensity={0.06} color="#ff3020" />
+      <ambientLight intensity={0.06} color={HOT} />
     </Stage>
   );
 };
@@ -180,15 +183,15 @@ const S5: React.FC<SP> = ({start}) => {
   const tight = ease(prog(f, hurt - 6, hurt + 10));
   const pulse = f >= hurt ? Math.exp(-(f - hurt) / 18) : 0;
   return (
-    <Stage fog="#120101" near={5} far={22} bloom={0.75 + pulse * 0.8}>
+    <Stage fog="#020614" near={5} far={22} bloom={0.75 + pulse * 0.8}>
       <Rig pos={lerp3([0, 2.8, 7.5], [0.5, 2.4, 6], ease(prog(f, 0, T(19.35))))} look={[0, 2.3, 0]} shake={pulse * 0.06} />
       <group position={[0, 2.3, 0]} rotation={[0, Math.sin(f * 0.02) * 0.5, 0]}>
         <Heart scale={1.05} glow={0.12 + pulse * 0.5} />
         <Thorns tight={tight} rotation={[0.25, 0, 0]} />
       </group>
       <Chain len={6} position={[0, 3.35, 0]} />
-      <spotLight position={[2, 7, 5]} angle={0.5} penumbra={0.7} intensity={30} color="#FFD0A0" />
-      <pointLight position={[0, 2, -2.5]} intensity={40 + pulse * 120} distance={10} color={HOTRED} />
+      <spotLight position={[2, 7, 5]} angle={0.5} penumbra={0.7} intensity={30} color="#E2ECFF" />
+      <pointLight position={[0, 2, -2.5]} intensity={40 + pulse * 120} distance={10} color={HOT} />
       <Dust n={160} center={[0, 2.5, 0]} box={[10, 6, 6]} seed="l5" />
     </Stage>
   );
@@ -215,11 +218,11 @@ const S7: React.FC<SP> = ({start}) => {
       {pull > 0 && (
         <mesh position={[0, 1.1, 0.16]}>
           <sphereGeometry args={[0.1 * (1 - pull) + 0.02, 12, 12]} />
-          <Glow color={HOTRED} k={3} />
+          <Glow color={HOT} k={3} />
         </mesh>
       )}
-      <pointLight position={[1, 2, 2.5]} intensity={10} distance={6} color="#FFC890" />
-      <pointLight position={[-3, 2, -3]} intensity={40} distance={12} color={HOTRED} />
+      <pointLight position={[1, 2, 2.5]} intensity={10} distance={6} color="#D8E6FF" />
+      <pointLight position={[-3, 2, -3]} intensity={40} distance={12} color={HOT} />
       <Dust n={Math.round(80 + pull * 160)} center={[0, 1.6, 1]} box={[6, 4, 5]} seed="l7" />
     </Stage>
   );
@@ -231,14 +234,14 @@ const S8: React.FC<SP> = ({start}) => {
   const T = useT(start);
   const fade = 1 - ease(prog(f, T(27.8), T(DURATION - 0.1)));
   return (
-    <Stage fog="#080000" near={5} far={20} bloom={0.75 * fade}>
+    <Stage fog="#010309" near={5} far={20} bloom={0.75 * fade}>
       <Rig pos={lerp3([0, 2.4, 6], [0, 2.4, 8.5], ease(prog(f, 0, T(DURATION))))} look={[0, 2.4, 0]} />
       <group position={[0, 2.4, 0]} rotation={[0, f * 0.012, Math.sin(f * 0.03) * 0.05]}>
         <Heart scale={0.7} glow={0.15 * fade} />
       </group>
       <Chain len={6} position={[0, 3.05, 0]} />
-      <spotLight position={[0, 7, 4]} angle={0.45} penumbra={0.8} intensity={30 * fade} color="#FFD0A0" />
-      <pointLight position={[0, 2, -2.5]} intensity={30 * fade} distance={10} color={HOTRED} />
+      <spotLight position={[0, 7, 4]} angle={0.45} penumbra={0.8} intensity={30 * fade} color="#E2ECFF" />
+      <pointLight position={[0, 2, -2.5]} intensity={30 * fade} distance={10} color={HOT} />
       <Dust n={Math.round(140 * fade) + 1} center={[0, 2.5, 0]} box={[9, 6, 6]} seed="l8" />
     </Stage>
   );
@@ -264,6 +267,7 @@ export const Luna: React.FC = () => {
   const flash = sinceCut < 4 && frame > 2 && frame - sinceCut !== lastCut ? (4 - sinceCut) * 0.08 : 0;
   const end = Math.min(1, Math.max(0, (frame / FPS - (DURATION - 0.5)) / 0.5));
   return (
+    <PaletteProvider value={BLUE_PALETTE}>
     <AbsoluteFill style={{background: '#000'}}>
       {SCENES.map(([Scene, s], i) => {
         const from = Math.round(s * FPS);
@@ -279,6 +283,7 @@ export const Luna: React.FC = () => {
       <AbsoluteFill style={{background: '#000', opacity: end}} />
       <Audio src={staticFile('luna/audio.m4a')} />
     </AbsoluteFill>
+    </PaletteProvider>
   );
 };
 
