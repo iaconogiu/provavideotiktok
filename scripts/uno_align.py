@@ -1,12 +1,15 @@
-"""Allinea il testo corretto di "Uno" ai tempi parola-per-parola di Whisper (tmp/uno_words.json).
+"""Allinea il testo corretto di un brano ai tempi parola-per-parola di Whisper.
+Uso: python3 scripts/uno_align.py [testo.txt parole_whisper.json audio16k.wav uscita.json]
+(senza argomenti lavora su "Uno").
 Le parole riconosciute prendono il tempo di Whisper; le altre vengono interpolate in base alle
 sillabe tra le vicine. Gli ad-lib tra parentesi vengono messi nella pausa a fine verso.
 Uscita: src/uno/words.json + beat del brano."""
-import json, re, difflib
+import json, re, difflib, sys
 import numpy as np, librosa
 
-LYRICS = open('scripts/uno_testo.txt', encoding='utf-8').read().strip().split('\n')
-W = json.load(open('tmp/uno_words.json'))
+TXT, WJ, WAV, OUT = sys.argv[1:5] if len(sys.argv) >= 5 else ('scripts/uno_testo.txt', 'tmp/uno_words.json', 'tmp/uno16.wav', 'src/uno/words.json')
+LYRICS = open(TXT, encoding='utf-8').read().strip().split('\n')
+W = json.load(open(WJ))
 
 norm = lambda s: re.sub(r"[^a-zàèéìòù0-9]", '', s.lower().replace('е', 'e'))
 def syl(w):
@@ -42,7 +45,7 @@ while i < n:
         j = i
         while j < n and times[j] is None: j += 1
         t0 = times[i - 1][1] if i > 0 else 0.0
-        t1 = times[j][0] if j < n else 41.4
+        t1 = times[j][0] if j < n else len(librosa.load(WAV, sr=16000)[0]) / 16000
         syls = [syl(words[main_idx[k]]['text']) for k in range(i, j)]
         tot = sum(syls); acc = 0
         for k, s in zip(range(i, j), syls):
@@ -64,7 +67,7 @@ for li in range(len(LYRICS)):
         a['start'] = round(end, 2)
         a['end'] = round(max(end + 0.3, gap_end), 2)
 
-y, sr = librosa.load('tmp/uno16.wav', sr=16000)
+y, sr = librosa.load(WAV, sr=16000)
 # Whisper attacca la prima parola di ogni segmento alla fine del precedente:
 # la sposto sul primo attacco reale (onset) prima della parola successiva
 ons = librosa.onset.onset_detect(y=y, sr=sr, hop_length=160, units='time', backtrack=False)
@@ -82,6 +85,6 @@ tempo, bf = librosa.beat.beat_track(y=y, sr=sr, hop_length=256)
 beats = [round(float(t), 3) for t in librosa.frames_to_time(bf, sr=sr, hop_length=256)]
 onset_env = librosa.onset.onset_strength(y=y, sr=sr, hop_length=256)
 json.dump({'tempo': float(np.atleast_1d(tempo)[0]), 'beats': beats, 'words': words, 'duration': round(len(y) / sr, 2)},
-          open('src/uno/words.json', 'w'), ensure_ascii=False, indent=1)
+          open(OUT, 'w'), ensure_ascii=False, indent=1)
 print('tempo', tempo, 'beats', len(beats))
 for w in words: print(f"{w['start']:6.2f} {'*' if w['adlib'] else ' '} {w['text']}")
