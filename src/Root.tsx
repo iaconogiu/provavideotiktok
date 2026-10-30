@@ -16,6 +16,7 @@ import {ANGOLO_FRAMES, Angolo} from './angolo/Angolo';
 import {FPS as ANG_FPS} from './angolo/kit';
 import {LUNA_FRAMES, Luna} from './luna/Luna';
 import {TOSSICO_FRAMES, Tossico} from './tossico/Tossico';
+import {FIERO_FRAMES, Fiero} from './fiero/Fiero';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -50,5 +51,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Angolo" component={Angolo} width={1920} height={1080} fps={ANG_FPS} durationInFrames={ANGOLO_FRAMES} />
   <Composition id="Luna" component={Luna} width={1920} height={1080} fps={ANG_FPS} durationInFrames={LUNA_FRAMES} />
   <Composition id="Tossico" component={Tossico} width={1920} height={1080} fps={ANG_FPS} durationInFrames={TOSSICO_FRAMES} />
+  <Composition id="Fiero" component={Fiero} width={1920} height={1080} fps={ANG_FPS} durationInFrames={FIERO_FRAMES} />
   </>
 );

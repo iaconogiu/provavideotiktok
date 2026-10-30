@@ -1,0 +1,361 @@
+{
+ "tempo": 91.46341463414635,
+ "beats": [
+  0.096,
+  0.736,
+  1.408,
+  2.064,
+  2.704,
+  3.248,
+  4.032,
+  4.672,
+  5.36,
+  6.016,
+  6.688,
+  7.44,
+  8.08,
+  8.816,
+  9.536,
+  10.208,
+  10.944,
+  11.584,
+  12.256,
+  12.848,
+  13.488,
+  14.176,
+  14.832,
+  15.504
+ ],
+ "words": [
+  {
+   "text": "Muori",
+   "line": 0,
+   "adlib": false,
+   "start": 0.0,
+   "end": 0.5
+  },
+  {
+   "text": "fiero",
+   "line": 0,
+   "adlib": false,
+   "start": 0.5,
+   "end": 0.88
+  },
+  {
+   "text": "nonostante",
+   "line": 0,
+   "adlib": false,
+   "start": 0.88,
+   "end": 1.8
+  },
+  {
+   "text": "dican",
+   "line": 0,
+   "adlib": false,
+   "start": 1.8,
+   "end": 2.22
+  },
+  {
+   "text": "come",
+   "line": 0,
+   "adlib": false,
+   "start": 2.22,
+   "end": 2.6
+  },
+  {
+   "text": "comportarti",
+   "line": 0,
+   "adlib": false,
+   "start": 2.6,
+   "end": 4.1
+  },
+  {
+   "text": "A",
+   "line": 1,
+   "adlib": false,
+   "start": 4.1,
+   "end": 4.1
+  },
+  {
+   "text": "me",
+   "line": 1,
+   "adlib": false,
+   "start": 4.1,
+   "end": 4.46
+  },
+  {
+   "text": "non",
+   "line": 1,
+   "adlib": false,
+   "start": 4.46,
+   "end": 4.76
+  },
+  {
+   "text": "mi",
+   "line": 1,
+   "adlib": false,
+   "start": 4.76,
+   "end": 4.9
+  },
+  {
+   "text": "fotti,",
+   "line": 1,
+   "adlib": false,
+   "start": 4.9,
+   "end": 5.12
+  },
+  {
+   "text": "ti",
+   "line": 1,
+   "adlib": false,
+   "start": 5.12,
+   "end": 5.32
+  },
+  {
+   "text": "giuro",
+   "line": 1,
+   "adlib": false,
+   "start": 5.32,
+   "end": 5.72
+  },
+  {
+   "text": "Ah,",
+   "line": 2,
+   "adlib": false,
+   "start": 5.72,
+   "end": 6.42
+  },
+  {
+   "text": "e",
+   "line": 2,
+   "adlib": false,
+   "start": 6.5,
+   "end": 6.56
+  },
+  {
+   "text": "nemmeno",
+   "line": 2,
+   "adlib": false,
+   "start": 6.56,
+   "end": 6.86
+  },
+  {
+   "text": "il",
+   "line": 2,
+   "adlib": false,
+   "start": 6.86,
+   "end": 7.0
+  },
+  {
+   "text": "futuro",
+   "line": 2,
+   "adlib": false,
+   "start": 7.0,
+   "end": 7.36
+  },
+  {
+   "text": "Nah,",
+   "line": 3,
+   "adlib": false,
+   "start": 7.55,
+   "end": 8.06
+  },
+  {
+   "text": "non",
+   "line": 3,
+   "adlib": false,
+   "start": 8.32,
+   "end": 8.32
+  },
+  {
+   "text": "lo",
+   "line": 3,
+   "adlib": false,
+   "start": 8.32,
+   "end": 8.44
+  },
+  {
+   "text": "uso",
+   "line": 3,
+   "adlib": false,
+   "start": 8.44,
+   "end": 8.54
+  },
+  {
+   "text": "come",
+   "line": 3,
+   "adlib": false,
+   "start": 8.54,
+   "end": 8.8
+  },
+  {
+   "text": "scudo",
+   "line": 3,
+   "adlib": false,
+   "start": 8.8,
+   "end": 9.22
+  },
+  {
+   "text": "Che",
+   "line": 4,
+   "adlib": false,
+   "start": 9.22,
+   "end": 9.76
+  },
+  {
+   "text": "se",
+   "line": 4,
+   "adlib": false,
+   "start": 9.76,
+   "end": 10.06
+  },
+  {
+   "text": "ne",
+   "line": 4,
+   "adlib": false,
+   "start": 10.06,
+   "end": 10.16
+  },
+  {
+   "text": "è",
+   "line": 4,
+   "adlib": false,
+   "start": 10.16,
+   "end": 10.16
+  },
+  {
+   "text": "andato",
+   "line": 4,
+   "adlib": false,
+   "start": 10.16,
+   "end": 10.46
+  },
+  {
+   "text": "qualcuno",
+   "line": 4,
+   "adlib": false,
+   "start": 10.46,
+   "end": 11.0
+  },
+  {
+   "text": "Per",
+   "line": 5,
+   "adlib": false,
+   "start": 11.0,
+   "end": 11.66
+  },
+  {
+   "text": "chi",
+   "line": 5,
+   "adlib": false,
+   "start": 11.66,
+   "end": 11.82
+  },
+  {
+   "text": "mi",
+   "line": 5,
+   "adlib": false,
+   "start": 11.82,
+   "end": 12.0
+  },
+  {
+   "text": "hai",
+   "line": 5,
+   "adlib": false,
+   "start": 12.0,
+   "end": 12.06
+  },
+  {
+   "text": "preso",
+   "line": 5,
+   "adlib": false,
+   "start": 12.06,
+   "end": 12.38
+  },
+  {
+   "text": "tu?",
+   "line": 5,
+   "adlib": false,
+   "start": 12.38,
+   "end": 12.6
+  },
+  {
+   "text": "Per",
+   "line": 6,
+   "adlib": false,
+   "start": 13.32,
+   "end": 13.32
+  },
+  {
+   "text": "chi",
+   "line": 6,
+   "adlib": false,
+   "start": 13.32,
+   "end": 13.56
+  },
+  {
+   "text": "mi",
+   "line": 6,
+   "adlib": false,
+   "start": 13.56,
+   "end": 13.7
+  },
+  {
+   "text": "hai",
+   "line": 6,
+   "adlib": false,
+   "start": 13.7,
+   "end": 13.7
+  },
+  {
+   "text": "preso",
+   "line": 6,
+   "adlib": false,
+   "start": 13.7,
+   "end": 14.12
+  },
+  {
+   "text": "tu?",
+   "line": 6,
+   "adlib": false,
+   "start": 14.12,
+   "end": 14.34
+  },
+  {
+   "text": "Per",
+   "line": 7,
+   "adlib": false,
+   "start": 15.12,
+   "end": 15.2
+  },
+  {
+   "text": "chi",
+   "line": 7,
+   "adlib": false,
+   "start": 15.2,
+   "end": 15.36
+  },
+  {
+   "text": "mi",
+   "line": 7,
+   "adlib": false,
+   "start": 15.36,
+   "end": 15.48
+  },
+  {
+   "text": "hai",
+   "line": 7,
+   "adlib": false,
+   "start": 15.48,
+   "end": 15.48
+  },
+  {
+   "text": "preso?",
+   "line": 7,
+   "adlib": false,
+   "start": 15.48,
+   "end": 16.16
+  }
+ ],
+ "duration": 18.02
+}
