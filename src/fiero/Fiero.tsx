@@ -2,17 +2,17 @@ import React from 'react';
 import {AbsoluteFill, Audio, OffthreadVideo, Sequence, random, staticFile, useCurrentFrame} from 'remotion';
 import {FPS} from '../angolo/kit';
 import {Lyrics, RingTunnel, type Kind, type Token} from '../angolo/style';
-import shots from '../tossico/shots.json';
+import shots from './shots.json';
 import data from './words.json';
 
 /**
- * "Muori fiero": edit sui videoclip di 22simba (Tipo Tossico, Roccia, Arricchiti, 20 Anni)
+ * "Muori fiero": edit sui videoclip di 22simba (Crash Test, Spoiler, No Retail, Fammi Un Sorriso, 4 Zeri)
  * nello stile del video da 110k: immagini scure virate al rosso, testo bianco graffiato al
  * centro, tunnel di scritte negli stacchi forti. Stacchi a tempo sul beat.
  */
 
 type Word = {text: string; line: number; adlib: boolean; start: number; end: number};
-type Src = 'tossico' | 'roccia' | 'arricchiti' | 'ventianni';
+type Src = 'crashtest' | 'spoiler' | 'noretail' | 'sorriso' | '4zeri';
 const WORDS = (data.words as Word[]).filter((w) => !w.adlib);
 const BEATS = data.beats as number[];
 const SHOTS = shots as Record<Src, [number, number, number][]>;
@@ -41,14 +41,14 @@ const TOKENS: Token[] = (() => {
 // ── montaggio: per ogni parte del testo, da quale video pescare ──
 type Section = {from: number; pool: {src: Src; min?: number; max?: number; dark?: number}[]; every?: number};
 const SECTIONS: Section[] = [
-  {from: 0, pool: [{src: 'arricchiti', min: 100}, {src: 'roccia', max: 100}]}, // "muori fiero": macchine e soldi
-  {from: 4.1, pool: [{src: 'roccia', min: 100}]}, // "a me non mi fotti": la folla
-  {from: 5.72, pool: [{src: 'tossico', max: 70, dark: 45}]}, // "nemmeno il futuro": il mare scuro
-  {from: 7.55, pool: [{src: 'arricchiti'}]}, // "non lo uso come scudo"
-  {from: 9.22, pool: [{src: 'ventianni'}]}, // "se ne è andato qualcuno": la coppia
-  {from: 11.0, pool: [{src: 'roccia', min: 100}, {src: 'tossico', min: 60}], every: 1}, // "per chi mi hai preso tu?"
-  {from: 13.25, pool: [{src: 'arricchiti', min: 100}, {src: 'roccia', max: 100}], every: 1},
-  {from: 15.12, pool: [{src: 'tossico', max: 70}], every: 2}, // l'ultima domanda, sul mare
+  {from: 0, pool: [{src: 'crashtest', min: 8, max: 40}]}, // "muori fiero": lui sulla barca
+  {from: 4.1, pool: [{src: 'spoiler', min: 28, max: 100}]}, // "a me non mi fotti": la banda di notte
+  {from: 5.72, pool: [{src: 'noretail', min: 55, max: 86}]}, // "nemmeno il futuro": da solo sul mare al tramonto
+  {from: 7.55, pool: [{src: '4zeri', min: 41}]}, // "non lo uso come scudo"
+  {from: 9.22, pool: [{src: 'crashtest', min: 118, max: 160}]}, // "se ne è andato qualcuno": lei sulla barca
+  {from: 11.0, pool: [{src: 'sorriso'}, {src: 'spoiler', min: 50}], every: 1}, // "per chi mi hai preso tu?": la folla
+  {from: 13.25, pool: [{src: 'noretail', min: 100, max: 135}, {src: 'spoiler', min: 100}], every: 1},
+  {from: 15.12, pool: [{src: 'crashtest', min: 40, max: 64}], every: 2}, // l'ultima domanda: la barca nel lago
 ];
 // il tunnel di scritte sui due "tu?"
 const TUNNELS: [number, number][] = [
@@ -92,8 +92,8 @@ const Shot: React.FC<{slot: Slot; i: number}> = ({slot, i}) => {
   const t = slot.at + f / FPS;
   const len = (slot.end - slot.at) * FPS;
   const push = 1.06 + (f / Math.max(1, len)) * 0.06 + beatPulse(t) * 0.035;
-  // "20 Anni" ha i sottotitoli impressi in basso: ingrandisco tenendo l'alto; "Tipo Tossico" ha le bande nere
-  const crop = slot.src === 'ventianni' ? 1.22 : slot.src === 'tossico' ? 1.2 : 1;
+  // "Fammi Un Sorriso" e "4 Zeri" sono 4:3 con le bande nere ai lati
+  const crop = slot.src === 'sorriso' || slot.src === '4zeri' ? 1.34 : 1;
   const whip = i % 4 === 0 && f < 3 ? (3 - f) * 10 : 0;
   const dx = (random(`dx${i}`) - 0.5) * 40;
   return (
@@ -101,11 +101,11 @@ const Shot: React.FC<{slot: Slot; i: number}> = ({slot, i}) => {
       <AbsoluteFill
         style={{
           transform: `translateX(${whip * 6 + (f / Math.max(1, len)) * dx}px) scale(${push * crop})`,
-          transformOrigin: slot.src === 'ventianni' ? '50% 20%' : '50% 50%',
+          transformOrigin: '50% 50%',
           filter: `contrast(1.28) saturate(0.8) brightness(0.68)${whip ? ` blur(${whip / 3}px)` : ''}`,
         }}
       >
-        <OffthreadVideo src={staticFile(`tossico/clip/${slot.src}.mp4`)} trimBefore={Math.round(slot.t0 * FPS)} muted style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+        <OffthreadVideo src={staticFile(`fiero/clip/${slot.src}.mp4`)} trimBefore={Math.round(slot.t0 * FPS)} muted style={{width: '100%', height: '100%', objectFit: 'cover'}} />
       </AbsoluteFill>
     </AbsoluteFill>
   );
