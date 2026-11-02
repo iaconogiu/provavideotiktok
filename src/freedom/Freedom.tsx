@@ -5,9 +5,9 @@ import data from './words.json';
 /**
  * "Freedom": edit "da After Effects" su oggetti generati (cuore, lupo, pillola, mare, telefono,
  * colomba, gabbia, aquila, salto, iceberg) più la copertina. Testo serif condensato che vive
- * dentro la scena, oggetti ritagliati tra due strati di testo, stacchi in negativo / bianco /
- * nero, lente che deforma, scacchiera invertita e bicromia sullo strobo di "freedom",
- * sole con raggi che sorge dietro l'iceberg.
+ * nella scena, oggetti davanti alle parole (che restano sempre leggibili), stacchi in negativo /
+ * bianco / nero, lente, scacchiera invertita e bicromia sullo strobo di "freedom", sole con
+ * raggi che sorge dietro l'iceberg.
  */
 
 export const FPS = 60;
@@ -37,7 +37,9 @@ const hit = (g: number, at: number, k = 12) => (g >= at ? Math.exp(-(g - at) * k
 
 const SERIF = '"FBodoni", "Bodoni Moda", serif';
 const SANS = '"FOswald", "Oswald", sans-serif';
-const GLOW = '0 0 14px rgba(255,255,255,0.55), 0 0 46px rgba(255,214,170,0.35)';
+const SERIF_X = 0.74; // condensato
+const SANS_Y = 1.4; // allungato
+const GLOW = '0 0 14px rgba(255,255,255,0.5), 0 0 46px rgba(255,214,170,0.3), 0 4px 22px rgba(0,0,0,0.7)';
 
 /** carica i font prima di renderizzare */
 const useFonts = () => {
@@ -52,6 +54,16 @@ const useFonts = () => {
   }, [handle]);
 };
 
+// misura reale della parola: la riduce finché sta nella larghezza data
+let ctx: CanvasRenderingContext2D | null = null;
+const fit = (text: string, size: number, sans: boolean | undefined, maxW: number) => {
+  ctx ??= document.createElement('canvas').getContext('2d');
+  if (!ctx) return size;
+  ctx.font = sans ? `600 ${size}px ${SANS}` : `800 ${size}px ${SERIF}`;
+  const w = ctx.measureText(text).width * (sans ? 1 : SERIF_X);
+  return w > maxW ? (size * maxW) / w : size;
+};
+
 // ── testo ──
 type Wd = {
   text: string;
@@ -61,39 +73,38 @@ type Wd = {
   size: number;
   until?: number;
   sans?: boolean;
-  outline?: boolean;
   dim?: boolean;
   align?: 'left' | 'center';
+  max?: number;
 };
 
 /** una parola che entra sfocata e ingrandita, come una scritta che "atterra" nella scena */
 const Word: React.FC<{w: Wd; g: number; vanish?: number}> = ({w, g, vanish = 0}) => {
   if (g < w.at - 0.001 || (w.until !== undefined && g >= w.until)) return null;
   const p = easeOut(prog(g, w.at, w.at + 0.14));
-  const letters = [...w.text];
+  const left = w.align === 'left';
+  const size = fit(w.text, w.size, w.sans, w.max ?? (left ? W - w.x - 120 : 1640));
   return (
     <div
       style={{
         position: 'absolute',
         left: w.x,
         top: w.y,
-        transform: `translate(${w.align === 'left' ? 0 : -50}%, -50%) scale(${1.28 - 0.28 * p}) ${w.sans ? 'scaleY(1.35)' : 'scaleX(0.74)'}`,
-        transformOrigin: w.align === 'left' ? '0% 50%' : '50% 50%',
-        opacity: p * (w.dim ? 0.55 : 1),
-        filter: p < 1 ? `blur(${(1 - p) * 14}px)` : undefined,
+        transform: `translate(${left ? 0 : -50}%, -50%) scale(${1.22 - 0.22 * p}) ${w.sans ? `scaleY(${SANS_Y})` : `scaleX(${SERIF_X})`}`,
+        transformOrigin: left ? '0% 50%' : '50% 50%',
+        opacity: p * (w.dim ? 0.7 : 1),
+        filter: p < 1 ? `blur(${(1 - p) * 12}px)` : undefined,
         fontFamily: w.sans ? SANS : SERIF,
         fontWeight: w.sans ? 600 : 800,
-        fontSize: w.size,
+        fontSize: size,
         lineHeight: 1,
         whiteSpace: 'nowrap',
-        letterSpacing: w.sans ? '-0.01em' : '0.005em',
-        color: w.outline ? 'transparent' : '#FFFFFF',
-        WebkitTextStroke: w.outline ? `${Math.max(2, w.size / 90)}px #FFFFFF` : undefined,
+        color: '#FFFFFF',
         textShadow: GLOW,
       }}
     >
       {vanish > 0
-        ? letters.map((ch, i) => (
+        ? [...w.text].map((ch, i) => (
             <span key={i} style={{opacity: random(`v${w.text}${i}`) < vanish ? 0 : 1}}>
               {ch}
             </span>
@@ -110,48 +121,45 @@ const Words: React.FC<{ws: Wd[]; g: number; vanish?: number}> = ({ws, g, vanish}
   </>
 );
 
-/** l'ultima parola uscita in un elenco, enorme dietro (o davanti) all'oggetto */
-const BigWord: React.FC<{list: [string, number][]; g: number; size: number; y?: number; sans?: boolean; clip?: string; outline?: boolean}> = ({
+/** l'ultima parola uscita in un elenco, grande; sempre intera dentro lo schermo */
+const BigWord: React.FC<{list: [string, number][]; g: number; size: number; x?: number; y?: number; sans?: boolean; max?: number}> = ({
   list,
   g,
   size,
+  x = W / 2,
   y = H / 2,
   sans,
-  clip,
-  outline,
+  max = 1700,
 }) => {
   let cur: [string, number] | null = null;
   for (const it of list) if (g >= it[1]) cur = it;
   if (!cur) return null;
   const p = easeOut(prog(g, cur[1], cur[1] + 0.12));
   return (
-    <AbsoluteFill style={{clipPath: clip}}>
-      <div
-        style={{
-          position: 'absolute',
-          left: W / 2,
-          top: y,
-          transform: `translate(-50%, -50%) scale(${1.18 - 0.18 * p}) ${sans ? 'scaleY(1.45)' : 'scaleX(0.7)'}`,
-          fontFamily: sans ? SANS : SERIF,
-          fontWeight: sans ? 600 : 800,
-          fontSize: size,
-          lineHeight: 1,
-          whiteSpace: 'nowrap',
-          color: outline ? 'transparent' : '#FFFFFF',
-          WebkitTextStroke: outline ? '4px #FFFFFF' : undefined,
-          textShadow: GLOW,
-          opacity: p,
-          filter: p < 1 ? `blur(${(1 - p) * 16}px)` : undefined,
-        }}
-      >
-        {cur[0]}
-      </div>
-    </AbsoluteFill>
+    <div
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        transform: `translate(-50%, -50%) scale(${1.15 - 0.15 * p}) ${sans ? `scaleY(${SANS_Y})` : `scaleX(${SERIF_X})`}`,
+        fontFamily: sans ? SANS : SERIF,
+        fontWeight: sans ? 600 : 800,
+        fontSize: fit(cur[0], size, sans, max),
+        lineHeight: 1,
+        whiteSpace: 'nowrap',
+        color: '#FFFFFF',
+        textShadow: GLOW,
+        opacity: p,
+        filter: p < 1 ? `blur(${(1 - p) * 14}px)` : undefined,
+      }}
+    >
+      {cur[0]}
+    </div>
   );
 };
 
-const Cut: React.FC<{name: string; style?: React.CSSProperties; w?: number}> = ({name, style, w = W}) => (
-  <Img src={src(`cut/${name}.png`)} style={{position: 'absolute', width: w, left: (W - w) / 2, top: (H - (w * 2) / 3) / 2, ...style}} />
+const Cut: React.FC<{name: string; style?: React.CSSProperties; w?: number; dy?: number}> = ({name, style, w = W, dy = 0}) => (
+  <Img src={src(`cut/${name}.png`)} style={{position: 'absolute', width: w, left: (W - w) / 2, top: (H - (w * 2) / 3) / 2 + dy, ...style}} />
 );
 const Full: React.FC<{name: string; style?: React.CSSProperties}> = ({name, style}) => (
   <Img src={src(name)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', ...style}} />
@@ -161,27 +169,27 @@ const Full: React.FC<{name: string; style?: React.CSSProperties}> = ({name, styl
 type SP = {start: number; end: number};
 const useG = (start: number) => start + useCurrentFrame() / FPS;
 
-/** A. la copertina: la camera entra nel campo, l'albero col muretto si stacca dal cielo */
+/** A. la copertina: lo sfondo ricostruito resta dietro, albero e muretto avanzano appena */
 const SCover: React.FC<SP> = ({start, end}) => {
   const g = useG(start);
   const p = ease(prog(g, start, end));
-  const whip = easeIn(prog(g, end - 0.12, end));
-  const cam = (k: number) => `scale(${(1.1 + k * p) * (1 + whip * 2.2)})`;
+  const whip = easeIn(prog(g, end - 0.14, end));
+  const cam = (k: number) => `scale(${(1.08 + k * p) * (1 + whip * 2.2)})`;
   return (
     <AbsoluteFill style={{filter: whip > 0 ? `blur(${whip * 18}px)` : undefined}}>
-      <AbsoluteFill style={{transform: cam(0.06), transformOrigin: '50% 60%'}}>
-        <Full name="cover.webp" />
+      <AbsoluteFill style={{transform: cam(0.05), transformOrigin: '50% 62%'}}>
+        <Full name="plate-cover.jpg" />
       </AbsoluteFill>
-      <AbsoluteFill style={{transform: cam(0.22), transformOrigin: '50% 60%'}}>
+      <AbsoluteFill style={{transform: cam(0.1), transformOrigin: '50% 62%'}}>
         <Full name="cut/cover.png" />
       </AbsoluteFill>
-      <AbsoluteFill style={{transform: `scale(${1 + p * 0.04 + whip * 2})`, transformOrigin: '50% 60%'}}>
+      <AbsoluteFill style={{opacity: 1 - whip}}>
         <Words
           g={g}
           ws={[
-            {text: 'E A VOLTE', at: 0.0, x: 90, y: 300, size: 104, align: 'left'},
-            {text: 'QUESTA MIA', at: 0.58, x: 90, y: 420, size: 104, align: 'left'},
-            {text: 'RABBIA', at: 1.06, x: 1600, y: 360, size: 190},
+            {text: 'E A VOLTE', at: 0.0, x: 110, y: 290, size: 96, align: 'left', max: 420},
+            {text: 'QUESTA MIA', at: 0.58, x: 110, y: 400, size: 96, align: 'left', max: 420},
+            {text: 'RABBIA', at: 1.06, x: 1590, y: 345, size: 170, max: 520},
           ]}
         />
       </AbsoluteFill>
@@ -189,32 +197,32 @@ const SCover: React.FC<SP> = ({start, end}) => {
   );
 };
 
-/** B. il cuore di vetro tra le parole, batte sul beat */
+/** B. il cuore di vetro sopra la parola, batte sul beat */
 const SHeart: React.FC<SP> = ({start, end}) => {
   const g = useG(start);
   const p = prog(g, start, end);
   const beat = beatPulse(g);
-  const list: [string, number][] = [
-    ['MANGIA', 1.32],
-    ['ANCORA', 1.6],
-    ['IL CUORE', 1.76],
-  ];
-  const heart = (
-    <div style={{position: 'absolute', inset: 0, transform: `scale(${0.95 + p * 0.1 + beat * 0.06}) rotate(${-3 + p * 6}deg)`}}>
-      <Cut name="1-cuore" w={1450} style={{filter: `drop-shadow(0 0 ${30 + beat * 50}px rgba(255,70,20,${0.35 + beat * 0.4})) brightness(${1 + beat * 0.35})`}} />
-    </div>
-  );
   return (
-    <AbsoluteFill style={{background: 'radial-gradient(60% 60% at 50% 50%, #3a0806 0%, #0b0101 70%, #000 100%)'}}>
-      <BigWord list={list} g={g} size={440} />
-      {heart}
-      {/* la metà bassa della parola torna davanti: il cuore resta incastrato nel testo */}
-      <BigWord list={list} g={g} size={440} clip="inset(56% 0 0 0)" />
+    <AbsoluteFill style={{background: 'radial-gradient(60% 60% at 50% 45%, #3a0806 0%, #0b0101 70%, #000 100%)'}}>
+      <BigWord
+        list={[
+          ['MANGIA', 1.32],
+          ['ANCORA', 1.6],
+          ['IL CUORE', 1.76],
+        ]}
+        g={g}
+        size={330}
+        y={850}
+        max={1640}
+      />
+      <div style={{position: 'absolute', inset: 0, transform: `scale(${0.95 + p * 0.08 + beat * 0.06}) rotate(${-3 + p * 6}deg)`, transformOrigin: '50% 40%'}}>
+        <Cut name="1-cuore" w={1080} dy={-95} style={{filter: `drop-shadow(0 0 ${30 + beat * 50}px rgba(255,70,20,${0.35 + beat * 0.4})) brightness(${1 + beat * 0.35})`}} />
+      </div>
     </AbsoluteFill>
   );
 };
 
-/** C. il lupo entra da destra; su "reale" la parola esplode dietro di lui */
+/** C. il lupo entra da destra; su "reale" la parola esplode accanto a lui */
 const SWolf: React.FC<SP> = ({start}) => {
   const g = useG(start);
   const inP = easeOut(prog(g, start, start + 0.3));
@@ -227,12 +235,12 @@ const SWolf: React.FC<SP> = ({start}) => {
     <Cut
       name="2-lupo"
       w={1500}
-      style={{left: 560 + (1 - inP) * 700 + x + (real ? -180 : 0), transform: `scale(${real ? 1.18 + (g - 3.98) * 0.08 : 1})`, filter, mixBlendMode: blend}}
+      style={{left: 560 + (1 - inP) * 700 + x + (real ? 250 : 0), transform: `scale(${real ? 1.1 + (g - 3.98) * 0.08 : 1})`, filter, mixBlendMode: blend}}
     />
   );
   return (
     <AbsoluteFill style={{background: 'radial-gradient(70% 70% at 65% 45%, #0b1d48 0%, #030714 65%, #000 100%)', transform: `translate(${sx}px, ${sy}px)`}}>
-      {real && <BigWord list={[['REALE', 3.98]]} g={g} size={560} />}
+      {real && <BigWord list={[['REALE', 3.98]]} g={g} size={520} x={620} max={1000} />}
       <AbsoluteFill style={{filter: inP < 1 ? `blur(${(1 - inP) * 10}px)` : undefined}}>
         {split > 1 && wolf(-split, 'sepia(1) saturate(6) hue-rotate(-50deg) brightness(0.9)', 'screen')}
         {split > 1 && wolf(split, 'sepia(1) saturate(6) hue-rotate(170deg) brightness(0.9)', 'screen')}
@@ -241,53 +249,55 @@ const SWolf: React.FC<SP> = ({start}) => {
       <Words
         g={g}
         ws={[
-          {text: 'E A VOLTE', at: 2.47, x: 140, y: 300, size: 96, align: 'left', until: 3.98},
-          {text: 'QUELLA', at: 2.84, x: 140, y: 410, size: 96, align: 'left', until: 3.98},
-          {text: 'MINACCIA', at: 3.08, x: 140, y: 560, size: 170, align: 'left', until: 3.98},
-          {text: 'DIVENTA', at: 3.6, x: 140, y: 715, size: 96, align: 'left', until: 3.98, outline: true},
+          {text: 'E A VOLTE', at: 2.47, x: 140, y: 300, size: 96, align: 'left', until: 3.98, max: 560},
+          {text: 'QUELLA', at: 2.84, x: 140, y: 410, size: 96, align: 'left', until: 3.98, max: 560},
+          {text: 'MINACCIA', at: 3.08, x: 140, y: 560, size: 170, align: 'left', until: 3.98, max: 620},
+          {text: 'DIVENTA', at: 3.6, x: 140, y: 715, size: 96, align: 'left', until: 3.98, max: 560},
         ]}
       />
     </AbsoluteFill>
   );
 };
 
-/** D. la capsula si apre in due, la polvere cade */
+/** D. la capsula aperta con la sua polvere vera, che scivola giù */
 const SPill: React.FC<SP> = ({start, end}) => {
   const g = useG(start);
   const p = ease(prog(g, start, end));
-  const d = 40 + p * 150;
-  const half = (left: boolean) => (
-    <div style={{position: 'absolute', inset: 0, transform: `translateX(${left ? -d : d}px) rotate(${left ? -p * 7 : p * 7}deg)`}}>
-      <Cut name="3-pillola" w={1650} style={{clipPath: left ? 'inset(0 50% 0 0)' : 'inset(0 0 0 50%)'}} />
-    </div>
-  );
+  const k = g - start;
+  // la polvere dell'immagine originale: una copia mascherata che scende piano
+  const powder = 'radial-gradient(9% 20% at 49% 76%, #000 30%, transparent 100%)';
   return (
-    <AbsoluteFill style={{background: 'radial-gradient(55% 55% at 50% 55%, #1c0404 0%, #000 75%)', transform: `scale(${1 + p * 0.08})`}}>
-      <BigWord list={[['CALMA', 5.0]]} g={g} size={380} outline />
-      {half(true)}
-      {half(false)}
-      {/* polvere */}
-      {Array.from({length: 70}, (_, i) => {
-        const t0 = start + random(`pt${i}`) * 1.2;
-        const k = g - t0;
-        if (k < 0) return null;
-        const x = W / 2 + (random(`px${i}`) - 0.5) * 300 + (random(`pv${i}`) - 0.5) * 160 * k;
-        const y = 600 + 320 * k * k + 60 * k;
-        const r = 2 + random(`pr${i}`) * 6;
-        return <div key={i} style={{position: 'absolute', left: x, top: y, width: r, height: r, borderRadius: r, background: '#F4EEE8', opacity: Math.max(0, 0.9 - k * 0.5)}} />;
-      })}
+    <AbsoluteFill style={{background: 'radial-gradient(55% 55% at 50% 45%, #1c0404 0%, #000 75%)'}}>
+      <AbsoluteFill style={{transform: `scale(${0.92 + p * 0.1}) rotate(${-2 + p * 4}deg)`, transformOrigin: '50% 40%'}}>
+        <Img src={src('3-pillola.webp')} style={{position: 'absolute', width: 1500, left: (W - 1500) / 2, top: -40, mixBlendMode: 'lighten'}} />
+        <Img
+          src={src('3-pillola.webp')}
+          style={{
+            position: 'absolute',
+            width: 1500,
+            left: (W - 1500) / 2,
+            top: -40 + k * 45,
+            mixBlendMode: 'lighten',
+            opacity: 0.85,
+            WebkitMaskImage: powder,
+            maskImage: powder,
+          }}
+        />
+        <Img src={src('cut/3-pillola.png')} style={{position: 'absolute', width: 1500, left: (W - 1500) / 2, top: -40}} />
+      </AbsoluteFill>
       <Words
         g={g}
         ws={[
-          {text: "NON C'È", at: 4.65, x: W / 2, y: 190, size: 120},
-          {text: "NON C'È CURA", at: 5.84, x: W / 2, y: 930, size: 60, dim: true, sans: true},
+          {text: "NON C'È", at: 4.65, x: W / 2, y: 140, size: 110},
+          {text: 'CALMA', at: 5.0, x: W / 2, y: 900, size: 260},
+          {text: "(NON C'È CURA)", at: 5.84, x: W / 2, y: 225, size: 46, dim: true, sans: true},
         ]}
       />
     </AbsoluteFill>
   );
 };
 
-/** E. il tramonto che diventa alba: le parole stanno sul mare */
+/** E. il tramonto che diventa alba: "l'alba" sdraiata sul mare */
 const SSea: React.FC<SP> = ({start, end}) => {
   const g = useG(start);
   const p = ease(prog(g, start, end));
@@ -296,7 +306,6 @@ const SSea: React.FC<SP> = ({start, end}) => {
   return (
     <AbsoluteFill style={{transform: `scale(${1.04 + p * 0.1})`, transformOrigin: '50% 55%'}}>
       <Full name="4a-tramonto.webp" />
-      {/* l'alba sale dall'orizzonte verso l'alto */}
       <Full
         name="4b-alba.webp"
         style={{
@@ -308,17 +317,16 @@ const SSea: React.FC<SP> = ({start, end}) => {
       <Words
         g={g}
         ws={[
-          {text: 'MA DOPO', at: 6.14, x: W / 2, y: 190, size: 96, until: 7.7},
-          {text: 'UN TRAMONTO', at: 6.34, x: W / 2, y: 300, size: 140, until: 7.7},
-          {text: 'SI IMPARA', at: 6.82, x: 520, y: 430, size: 80, until: 7.7, outline: true},
-          {text: 'AD APPREZZARE', at: 7.22, x: 1400, y: 430, size: 80, until: 7.7, outline: true},
+          {text: 'MA DOPO', at: 6.14, x: W / 2, y: 170, size: 90, until: 7.7},
+          {text: 'UN TRAMONTO', at: 6.34, x: W / 2, y: 280, size: 140, until: 7.7},
+          {text: 'SI IMPARA', at: 6.82, x: W / 2, y: 390, size: 78, until: 7.22},
+          {text: 'AD APPREZZARE', at: 7.22, x: W / 2, y: 390, size: 78, until: 7.7},
         ]}
       />
-      {/* "l'alba" sdraiata sull'acqua, con il riflesso */}
       {g >= 7.7 && (
         <div style={{position: 'absolute', left: 0, top: 560, width: W, height: 520, perspective: 700}}>
           <div style={{position: 'absolute', inset: 0, transform: 'rotateX(58deg)', transformOrigin: '50% 0%'}}>
-            <Words g={g} ws={[{text: "L'ALBA", at: 7.7, x: W / 2, y: 230, size: 330}]} />
+            <Words g={g} ws={[{text: "L'ALBA", at: 7.7, x: W / 2, y: 230, size: 330, max: 1500}]} />
           </div>
         </div>
       )}
@@ -326,7 +334,7 @@ const SSea: React.FC<SP> = ({start, end}) => {
   );
 };
 
-/** F. "ah-ah": la lente deforma il sole, specchio, negativi */
+/** F. "ah-ah": la lente gonfia il sole, poi il mare si specchia nel cielo */
 const SAh: React.FC<SP> = ({start, end}) => {
   const g = useG(start);
   // la lente: copie concentriche sempre più ingrandite verso il centro (bombatura a gradini, sfumata dal mosso)
@@ -353,19 +361,19 @@ const SAh: React.FC<SP> = ({start, end}) => {
     <AbsoluteFill style={{background: '#000'}}>
       <AbsoluteFill style={{transform: `scale(${punch * (1 + out * 1.5)}) rotate(${out * 25}deg)`, filter: `blur(${k * 3 + out * 20}px)${out > 0 ? ` brightness(${1 - out * 0.8})` : ''}`}}>
         {img}
-        {/* specchio: dopo il secondo "ah" il mare si riflette nel cielo */}
         {g >= 9.4 && <AbsoluteFill style={{clipPath: 'inset(0 0 55% 0)', transform: 'scaleY(-1)', transformOrigin: '50% 50%'}}>{img}</AbsoluteFill>}
       </AbsoluteFill>
     </AbsoluteFill>
   );
 };
 
-/** G. il telefono che squilla, gli anelli dei fusi orari, "ci sarò" */
+/** G. il telefono che squilla dentro gli anelli dei fusi orari */
 const CITIES = 'ROMA 03:00 · NEW YORK 21:00 · TOKYO 11:00 · LOS ANGELES 18:00 · DUBAI 06:00 · SYDNEY 12:00 · LONDRA 02:00 · ';
+const PHONE_Y = H / 2 - 90;
 const Ring: React.FC<{r: number; rot: number; size: number; color: string; id: string; outline?: boolean}> = ({r, rot, size, color, id, outline}) => (
-  <svg width={W} height={H} style={{position: 'absolute', inset: 0, transform: `rotate(${rot}deg)`}}>
+  <svg width={W} height={H} style={{position: 'absolute', inset: 0, transform: `rotate(${rot}deg)`, transformOrigin: `50% ${(PHONE_Y / H) * 100}%`}}>
     <defs>
-      <path id={id} d={`M ${W / 2 - r} ${H / 2} a ${r} ${r} 0 1 1 ${2 * r} 0 a ${r} ${r} 0 1 1 ${-2 * r} 0`} />
+      <path id={id} d={`M ${W / 2 - r} ${PHONE_Y} a ${r} ${r} 0 1 1 ${2 * r} 0 a ${r} ${r} 0 1 1 ${-2 * r} 0`} />
     </defs>
     <text
       fontFamily={SANS}
@@ -390,56 +398,68 @@ const SPhone: React.FC<SP> = ({start, end}) => {
   // "ma io": la camera si tuffa nel disco del telefono, poi torna indietro su "ci sarò"
   const dive = easeIn(prog(g, 12.66, 12.9)) * (1 - easeOut(prog(g, 12.9, 13.3)));
   const after = g >= 12.9;
-  const list: [string, number][] = after
-    ? [
-        ['CI', 12.9],
-        ['CI SARÒ', 13.16],
-      ]
-    : [
-        ['SE CHIAMI', 10.5],
-        ['GUARDA', 11.66],
-        ['I FUSI ORARI', 11.88],
-        ['MA IO', 12.66],
-      ];
-  const phone = (
-    <div style={{position: 'absolute', inset: 0, transform: `scale(${(after ? 0.78 + (g - 12.9) * 0.05 : 0.9 + p * 0.1) * (1 + dive * 3)}) rotate(${ring}deg)`, transformOrigin: '44% 52%'}}>
-      <Cut name="5-telefono" w={1250} style={{filter: 'drop-shadow(0 0 40px rgba(255,190,90,0.25))'}} />
-    </div>
-  );
   return (
-    <AbsoluteFill style={{background: 'radial-gradient(60% 60% at 50% 50%, #241808 0%, #070401 70%, #000 100%)', filter: dive > 0.05 ? `blur(${dive * 12}px)` : undefined}}>
-      <AbsoluteFill style={{opacity: rings * 0.85}}>
-        <Ring id="r1" r={470} rot={-g * 14} size={34} color="#E8C27A" />
-        <Ring id="r2" r={395} rot={g * 22} size={26} color="#E8C27A" outline />
+    <AbsoluteFill style={{background: 'radial-gradient(60% 60% at 50% 42%, #241808 0%, #070401 70%, #000 100%)'}}>
+      <AbsoluteFill style={{filter: dive > 0.05 ? `blur(${dive * 12}px)` : undefined}}>
+        <AbsoluteFill style={{opacity: rings * 0.8}}>
+          <Ring id="r1" r={420} rot={-g * 14} size={30} color="#E8C27A" />
+          <Ring id="r2" r={350} rot={g * 22} size={22} color="#E8C27A" outline />
+        </AbsoluteFill>
+        <div style={{position: 'absolute', inset: 0, transform: `scale(${(after ? 0.62 + (g - 12.9) * 0.04 : 0.72 + p * 0.06) * (1 + dive * 3)}) rotate(${ring}deg)`, transformOrigin: `44% ${(PHONE_Y / H) * 100}%`}}>
+          <Cut name="5-telefono" w={1250} dy={-90} style={{filter: 'drop-shadow(0 0 40px rgba(255,190,90,0.25))'}} />
+        </div>
       </AbsoluteFill>
-      <BigWord list={list} g={g} size={after ? 470 : 330} sans={!after} />
-      {phone}
-      <BigWord list={list} g={g} size={after ? 470 : 330} sans={!after} clip="inset(60% 0 0 0)" />
+      {after ? (
+        <BigWord
+          list={[
+            ['CI', 12.9],
+            ['CI SARÒ', 13.16],
+          ]}
+          g={g}
+          size={300}
+          y={890}
+          max={1500}
+        />
+      ) : (
+        <BigWord
+          list={[
+            ['SE CHIAMI', 10.5],
+            ['GUARDA', 11.66],
+            ['I FUSI ORARI', 11.88],
+            ['MA IO', 12.66],
+          ]}
+          g={g}
+          size={190}
+          y={930}
+          sans
+          max={1500}
+        />
+      )}
     </AbsoluteFill>
   );
 };
 
-/** H. il salto: "fallire" cade a pezzi, "lo farò" resta */
+/** H. il salto: "fallire" cade a pezzi dietro di lui, "lo farò" resta */
 const SJump: React.FC<SP> = ({start, end}) => {
   const g = useG(start);
   const p = ease(prog(g, start, end));
   const word = 'FALLIRE';
+  const size = fit(word, 400, false, 1500);
   return (
     <AbsoluteFill style={{background: '#000'}}>
-      <AbsoluteFill style={{transform: `scale(${1.06 + p * 0.06}) translateY(${p * 20}px)`}}>
-        <Full name="6d-salto.webp" style={{filter: 'sepia(0.35) contrast(1.15) brightness(0.8)'}} />
+      <AbsoluteFill style={{transform: `scale(${1.06 + p * 0.05})`}}>
+        <Full name="plate-6d-salto.jpg" style={{filter: 'sepia(0.35) contrast(1.15) brightness(0.8)'}} />
       </AbsoluteFill>
-      {/* FALLIRE: dietro l'uomo, poi le lettere cadono una a una */}
       {g >= 15.92 && (
         <div
           style={{
             position: 'absolute',
             left: W / 2,
-            top: 520,
-            transform: 'translate(-50%, -50%) scaleX(0.7)',
+            top: 600,
+            transform: `translate(-50%, -50%) scaleX(${SERIF_X})`,
             fontFamily: SERIF,
             fontWeight: 800,
-            fontSize: 430,
+            fontSize: size,
             lineHeight: 1,
             color: '#fff',
             textShadow: GLOW,
@@ -458,23 +478,23 @@ const SJump: React.FC<SP> = ({start, end}) => {
           })}
         </div>
       )}
-      <AbsoluteFill style={{transform: `scale(${1.06 + p * 0.16}) translateY(${-p * 30}px)`}}>
-        <Full name="cut/6d-salto.png" />
+      <AbsoluteFill style={{transform: `scale(${1.06 + p * 0.1}) translateY(${-p * 20}px)`}}>
+        <Full name="cut/6d-salto.png" style={{filter: 'sepia(0.35) contrast(1.15) brightness(0.8)'}} />
       </AbsoluteFill>
       <Words
         g={g}
         ws={[
-          {text: 'E POTRÒ', at: 14.9, x: W / 2, y: 170, size: 110, until: 16.3},
-          {text: 'UN DOMANI', at: 16.3, x: W / 2, y: 170, size: 110, until: 17.02, outline: true},
-          {text: 'PERÒ', at: 17.02, x: W / 2, y: 300, size: 150, until: 17.32},
-          {text: 'LO FARÒ', at: 17.32, x: W / 2, y: 820, size: 300},
+          {text: 'E POTRÒ', at: 14.9, x: 1560, y: 200, size: 110, until: 16.3, max: 560},
+          {text: 'UN DOMANI', at: 16.3, x: 1560, y: 200, size: 110, until: 17.02, max: 560},
+          {text: 'PERÒ', at: 17.02, x: 1560, y: 200, size: 130, until: 17.32, max: 560},
+          {text: 'LO FARÒ', at: 17.32, x: W / 2, y: 850, size: 280, max: 1300},
         ]}
       />
     </AbsoluteFill>
   );
 };
 
-/** I. FREEDOM: bicromia, scacchiera invertita, strobo, scritta-finestra, griglia */
+/** I. FREEDOM: bicromia, scacchiera invertita, strobo, griglia; la scritta resta sempre leggibile */
 const HITS = [18.57, 19.42, 20.7, 21.48, 22.54];
 const IMGS = ['6b-gabbia.webp', '6a-colomba.webp', '6e-aquila.webp', '6d-salto.webp'];
 const Duo: React.FC = () => (
@@ -493,23 +513,19 @@ const checker = (size: number, off: number) => {
   const m = `repeating-conic-gradient(#000 0% 25%, transparent 0% 50%) ${off}px ${off}px / ${size}px ${size}px`;
   return {WebkitMask: m, mask: m} as React.CSSProperties;
 };
-const FreedomText: React.FC<{fill?: string; outline?: boolean; scale?: number; diff?: boolean}> = ({fill, outline, scale = 1, diff}) => (
-  <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', mixBlendMode: diff ? 'difference' : undefined}}>
+const FreedomText: React.FC<{scale?: number}> = ({scale = 1}) => (
+  <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
     <div
       style={{
         fontFamily: SANS,
         fontWeight: 600,
-        fontSize: 470,
+        fontSize: fit('FREEDOM', 420, true, 1720),
         lineHeight: 1,
-        letterSpacing: '-0.02em',
-        transform: `scale(${scale}) scaleY(1.75)`,
+        transform: `scale(${scale}) scaleY(1.7)`,
         whiteSpace: 'nowrap',
-        ...(fill
-          ? {backgroundImage: `url(${src(fill)})`, backgroundSize: 'cover', backgroundPosition: 'center', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'url(#duo) contrast(1.2)'}
-          : outline
-            ? {color: 'transparent', WebkitTextStroke: '5px #FFF3DC'}
-            : {color: '#FFF3DC', textShadow: '0 0 40px rgba(255,200,120,0.5)'}),
-        ...(diff ? {color: '#FFFFFF', textShadow: 'none', WebkitTextStroke: undefined} : {}),
+        color: '#FFF3DC',
+        WebkitTextStroke: '3px #120A02',
+        textShadow: '0 0 30px rgba(0,0,0,0.85), 0 0 60px rgba(255,180,90,0.45)',
       }}
     >
       FREEDOM
@@ -527,24 +543,26 @@ const SFreedom: React.FC<SP> = ({start, end}) => {
   const strobe = Math.floor(f / 5) % 2 === 0;
   const off = Math.floor(g / 0.55) * 60;
   const zoom = 1 + hit(g, HITS[ph], 7) * 0.15 + beat * 0.03;
-  const base = (name: string, extra?: React.CSSProperties) => <Full name={name} style={{filter: 'url(#duo) contrast(1.25)', ...extra}} />;
+  const base = (name: string) => <Full name={name} style={{filter: 'url(#duo) contrast(1.25)'}} />;
   const white = easeIn(prog(g, end - 0.5, end));
+  // quando c'è la scritta lo sfondo si abbassa, così FREEDOM si legge
+  let text = false;
   let scene: React.ReactNode = null;
   if (ph === 0) {
+    text = strobe;
     scene = (
       <>
         {base(IMGS[0])}
         <AbsoluteFill style={{...checker(270, off), filter: 'invert(1)'}}>{base(IMGS[0])}</AbsoluteFill>
-        {strobe && <FreedomText fill={IMGS[1]} />}
       </>
     );
   } else if (ph === 1) {
+    text = true;
     const a = strobe ? IMGS[1] : IMGS[0];
     scene = (
       <>
         {base(a)}
         <AbsoluteFill style={{...checker(180, off), filter: 'invert(1)'}}>{base(a)}</AbsoluteFill>
-        <FreedomText diff />
       </>
     );
   } else if (ph === 2) {
@@ -553,67 +571,64 @@ const SFreedom: React.FC<SP> = ({start, end}) => {
       <AbsoluteFill style={{transform: `scale(${z})`, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(3, 1fr)'}}>
         {Array.from({length: 9}, (_, i) => (
           <div key={i} style={{position: 'relative', overflow: 'hidden', filter: (i + Math.floor(f / 6)) % 2 ? 'invert(1)' : undefined}}>
-            <Full name={IMGS[2]} style={{filter: 'url(#duo) contrast(1.25)'}} />
+            {base(IMGS[2])}
           </div>
         ))}
       </AbsoluteFill>
     );
   } else if (ph === 3) {
-    const img = (
-      <AbsoluteFill>
-        {base(strobe ? IMGS[3] : IMGS[2])}
-      </AbsoluteFill>
-    );
+    text = true;
+    const img = <AbsoluteFill>{base(strobe ? IMGS[3] : IMGS[2])}</AbsoluteFill>;
     scene = (
       <>
         {img}
         <AbsoluteFill style={{clipPath: 'inset(0 0 0 50%)', transform: 'scaleX(-1)'}}>{img}</AbsoluteFill>
-        <FreedomText fill={IMGS[1]} />
       </>
     );
   } else {
+    text = true;
     const cyc = Math.floor(f / 4);
     scene = (
-      <>
-        <AbsoluteFill style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(4, 1fr)'}}>
-          {Array.from({length: 16}, (_, i) => (
-            <div key={i} style={{position: 'relative', overflow: 'hidden', filter: (i + cyc) % 3 === 0 ? 'invert(1)' : undefined}}>
-              <Full name={IMGS[(i + cyc) % 4]} style={{filter: 'url(#duo) contrast(1.25)'}} />
-            </div>
-          ))}
-        </AbsoluteFill>
-        <FreedomText scale={1 + prog(g, HITS[4], end) * 0.6} />
-      </>
+      <AbsoluteFill style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(4, 1fr)'}}>
+        {Array.from({length: 16}, (_, i) => (
+          <div key={i} style={{position: 'relative', overflow: 'hidden', filter: (i + cyc) % 3 === 0 ? 'invert(1)' : undefined}}>
+            {base(IMGS[(i + cyc) % 4])}
+          </div>
+        ))}
+      </AbsoluteFill>
     );
   }
   return (
     <AbsoluteFill style={{background: '#000'}}>
       <Duo />
-      <AbsoluteFill style={{transform: `scale(${zoom})`, filter: `brightness(${1 + beat * 0.3})`}}>{scene}</AbsoluteFill>
+      <AbsoluteFill style={{transform: `scale(${zoom})`, filter: `brightness(${(text ? 0.42 : 1) + beat * 0.25})`}}>{scene}</AbsoluteFill>
+      {text && <FreedomText scale={ph === 4 ? 1 + prog(g, HITS[4], end) * 0.06 : 1} />}
       <AbsoluteFill style={{background: '#FFF6E6', opacity: white}} />
     </AbsoluteFill>
   );
 };
 
-/** J. il sole sorge dietro l'iceberg e lo scalda, le parole si sciolgono */
+/** J. il sole sorge dietro l'iceberg: la notte blu diventa oro */
 const SIce: React.FC<SP> = ({start, end}) => {
   const g = useG(start);
   const p = ease(prog(g, start, end));
   const rise = easeOut(prog(g, start + 0.1, 27.2));
   const sunY = 760 - rise * 420;
-  const warm = ease(prog(g, 24.5, 27.4));
+  const sy = (sunY / H) * 100;
+  const warm = ease(prog(g, 24.4, 27.2));
   const vanish = prog(g, 27.0, 27.9);
   return (
     <AbsoluteFill style={{background: '#000'}}>
       <AbsoluteFill style={{transform: `scale(${1.05 + p * 0.08})`, transformOrigin: '54% 60%'}}>
-        <Full name="7-iceberg.webp" style={{filter: `brightness(${0.85 + warm * 0.2}) saturate(${1 - warm * 0.5})`}} />
-        {/* raggi e sole, dietro l'iceberg */}
+        {/* cielo e mare: aurora portata sul blu notte, poi scaldata dall'oro */}
+        <Full name="7-iceberg.webp" style={{filter: `hue-rotate(${50 - warm * 30}deg) saturate(${0.75 - warm * 0.35}) brightness(${0.75 + warm * 0.15})`}} />
+        <AbsoluteFill style={{background: `radial-gradient(90% 80% at 54% ${sy}%, rgba(255,160,60,${warm * 0.55}) 0%, rgba(120,60,20,${warm * 0.3}) 60%, transparent 100%)`, mixBlendMode: 'soft-light'}} />
         <AbsoluteFill
           style={{
-            background: `repeating-conic-gradient(from ${g * 8}deg at 54% ${(sunY / H) * 100}%, rgba(255,214,140,0.55) 0deg 4deg, transparent 4deg 13deg)`,
-            WebkitMaskImage: `radial-gradient(48% 70% at 54% ${(sunY / H) * 100}%, #000 0%, transparent 100%)`,
-            maskImage: `radial-gradient(48% 70% at 54% ${(sunY / H) * 100}%, #000 0%, transparent 100%)`,
-            opacity: rise * 0.9,
+            background: `repeating-conic-gradient(from ${g * 8}deg at 54% ${sy}%, rgba(255,210,140,0.5) 0deg 4deg, transparent 4deg 13deg)`,
+            WebkitMaskImage: `radial-gradient(48% 70% at 54% ${sy}%, #000 0%, transparent 100%)`,
+            maskImage: `radial-gradient(48% 70% at 54% ${sy}%, #000 0%, transparent 100%)`,
+            opacity: rise * 0.8,
             mixBlendMode: 'screen',
             filter: 'blur(3px)',
           }}
@@ -631,17 +646,16 @@ const SIce: React.FC<SP> = ({start, end}) => {
             opacity: 0.4 + rise * 0.6,
           }}
         />
-        <Full name="cut/7-iceberg.png" style={{filter: `sepia(${warm * 0.7}) saturate(${1 + warm * 1.4}) hue-rotate(${-warm * 10}deg) brightness(${1 + warm * 0.25})`}} />
-        <AbsoluteFill style={{background: `radial-gradient(60% 55% at 54% ${(sunY / H) * 100}%, rgba(255,150,50,${warm * 0.35}) 0%, transparent 100%)`, mixBlendMode: 'screen'}} />
+        <Full name="cut/7-iceberg.png" style={{filter: `saturate(${0.35 + warm * 0.4}) sepia(${warm * 0.75}) hue-rotate(${-warm * 8}deg) brightness(${0.95 + warm * 0.2})`}} />
       </AbsoluteFill>
       <Words
         g={g}
         vanish={vanish}
         ws={[
-          {text: 'VOGLIO IL SOLE', at: 23.96, x: W / 2, y: 150, size: 120, outline: true},
-          {text: 'RICOPRA DI RAGGI', at: 24.72, x: W / 2, y: 275, size: 120, outline: true},
-          {text: 'UNO DEL', at: 25.78, x: W / 2, y: 830, size: 110},
-          {text: 'POLO NORD', at: 26.24, x: W / 2, y: 960, size: 170},
+          {text: 'VOGLIO IL SOLE', at: 23.96, x: W / 2, y: 140, size: 110},
+          {text: 'RICOPRA DI RAGGI', at: 24.72, x: W / 2, y: 260, size: 110},
+          {text: 'UNO DEL', at: 25.78, x: W / 2, y: 850, size: 100},
+          {text: 'POLO NORD', at: 26.24, x: W / 2, y: 970, size: 160},
         ]}
       />
       <AbsoluteFill style={{background: '#000', opacity: ease(prog(g, 27.55, end))}} />
@@ -709,13 +723,13 @@ export const Freedom: React.FC = () => {
           );
         })}
       </AbsoluteFill>
-      <AbsoluteFill style={{background: 'radial-gradient(80% 75% at 50% 50%, transparent 45%, rgba(0,0,0,0.7) 100%)'}} />
+      <AbsoluteFill style={{background: 'radial-gradient(80% 75% at 50% 50%, transparent 45%, rgba(0,0,0,0.6) 100%)'}} />
       <AbsoluteFill
         style={{
           backgroundImage: `url(${staticFile('simba/grain.png')})`,
           backgroundPosition: `${Math.floor(random(`g${f2}`) * 512)}px ${Math.floor(random(`h${f2}`) * 512)}px`,
           mixBlendMode: 'overlay',
-          opacity: 0.14,
+          opacity: 0.12,
         }}
       />
       {white > 0 && <AbsoluteFill style={{background: '#FFFFFF', opacity: white}} />}
