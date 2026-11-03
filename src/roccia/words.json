@@ -1,3 +1,551 @@
 {
- "beats":[4.2,4.55,4.92,5.32,5.71,6.15,6.62,7.01,7.41,7.8,8.29,8.66,9.06,9.45,9.89,10.36,10.8,11.26,11.68,12.07,12.45,12.89,13.31,13.72,14.14,14.56,14.98,15.39,15.84,16.23,16.6,17.07,17.51,17.95,18.37,18.78,19.2,19.62,20.06,20.48,20.9,21.36,21.78,22.18,22.59,23.01,23.43,23.85,24.26,24.68,25.12,25.54,25.96,26.38,26.82,27.26,27.65,28.07,28.51,28.93,29.35,29.77,30.19,30.6,31.05,31.44,31.83]
+"beats": [
+4.2,
+4.55,
+4.92,
+5.32,
+5.71,
+6.15,
+6.62,
+7.01,
+7.41,
+7.8,
+8.29,
+8.66,
+9.06,
+9.45,
+9.89,
+10.36,
+10.8,
+11.26,
+11.68,
+12.07,
+12.45,
+12.89,
+13.31,
+13.72,
+14.14,
+14.56,
+14.98,
+15.39,
+15.84,
+16.23,
+16.6,
+17.07,
+17.51,
+17.95,
+18.37,
+18.78,
+19.2,
+19.62,
+20.06,
+20.48,
+20.9,
+21.36,
+21.78,
+22.18,
+22.59,
+23.01,
+23.43,
+23.85,
+24.26,
+24.68,
+25.12,
+25.54,
+25.96,
+26.38,
+26.82,
+27.26,
+27.65,
+28.07,
+28.51,
+28.93,
+29.35,
+29.77,
+30.19,
+30.6,
+31.05,
+31.44,
+31.83
+],
+"words": [
+{
+"text": "ROCCIA",
+"line": 0,
+"adlib": false,
+"start": 0.35,
+"end": 2.0
+},
+{
+"text": "22SIMBA",
+"line": 1,
+"adlib": false,
+"start": 2.0,
+"end": 3.8
+},
+{
+"text": "il",
+"line": 2,
+"adlib": false,
+"start": 3.8,
+"end": 4.36
+},
+{
+"text": "mondo",
+"line": 2,
+"adlib": false,
+"start": 4.36,
+"end": 4.8
+},
+{
+"text": "mio",
+"line": 2,
+"adlib": false,
+"start": 4.8,
+"end": 5.04
+},
+{
+"text": "non",
+"line": 3,
+"adlib": false,
+"start": 5.04,
+"end": 5.58
+},
+{
+"text": "comprende",
+"line": 3,
+"adlib": false,
+"start": 5.58,
+"end": 6.04
+},
+{
+"text": "il",
+"line": 4,
+"adlib": false,
+"start": 6.04,
+"end": 6.22
+},
+{
+"text": "cuore",
+"line": 4,
+"adlib": false,
+"start": 6.22,
+"end": 6.72
+},
+{
+"text": "mi",
+"line": 5,
+"adlib": false,
+"start": 6.72,
+"end": 7.02
+},
+{
+"text": "fido",
+"line": 5,
+"adlib": false,
+"start": 7.02,
+"end": 7.3
+},
+{
+"text": "più",
+"line": 5,
+"adlib": false,
+"start": 7.3,
+"end": 7.58
+},
+{
+"text": "dei",
+"line": 6,
+"adlib": false,
+"start": 7.58,
+"end": 7.8
+},
+{
+"text": "gatti",
+"line": 6,
+"adlib": false,
+"start": 7.8,
+"end": 8.16
+},
+{
+"text": "Dio",
+"line": 7,
+"adlib": false,
+"start": 8.16,
+"end": 8.44
+},
+{
+"text": "gli",
+"line": 7,
+"adlib": false,
+"start": 8.44,
+"end": 8.72
+},
+{
+"text": "direi",
+"line": 7,
+"adlib": false,
+"start": 8.72,
+"end": 9.1
+},
+{
+"text": "\"sparati\"",
+"line": 8,
+"adlib": false,
+"start": 9.1,
+"end": 9.62
+},
+{
+"text": "poh",
+"line": 8,
+"adlib": false,
+"start": 9.62,
+"end": 10.0
+},
+{
+"text": "poh",
+"line": 8,
+"adlib": false,
+"start": 10.0,
+"end": 10.56
+},
+{
+"text": "incontrassi",
+"line": 9,
+"adlib": false,
+"start": 10.56,
+"end": 11.24
+},
+{
+"text": "sto",
+"line": 10,
+"adlib": false,
+"start": 11.24,
+"end": 11.44
+},
+{
+"text": "nel",
+"line": 10,
+"adlib": false,
+"start": 11.44,
+"end": 11.66
+},
+{
+"text": "mio",
+"line": 10,
+"adlib": false,
+"start": 11.66,
+"end": 11.78
+},
+{
+"text": "mentre",
+"line": 11,
+"adlib": false,
+"start": 11.78,
+"end": 12.2
+},
+{
+"text": "raccontan",
+"line": 11,
+"adlib": false,
+"start": 12.2,
+"end": 12.84
+},
+{
+"text": "storie",
+"line": 11,
+"adlib": false,
+"start": 12.84,
+"end": 13.32
+},
+{
+"text": "sui",
+"line": 12,
+"adlib": false,
+"start": 13.32,
+"end": 13.62
+},
+{
+"text": "peggio",
+"line": 12,
+"adlib": false,
+"start": 13.62,
+"end": 13.92
+},
+{
+"text": "modi",
+"line": 12,
+"adlib": false,
+"start": 13.92,
+"end": 14.28
+},
+{
+"text": "per",
+"line": 13,
+"adlib": false,
+"start": 14.28,
+"end": 14.6
+},
+{
+"text": "farli",
+"line": 13,
+"adlib": false,
+"start": 14.6,
+"end": 14.88
+},
+{
+"text": "un",
+"line": 14,
+"adlib": false,
+"start": 14.88,
+"end": 15.08
+},
+{
+"text": "socio",
+"line": 14,
+"adlib": false,
+"start": 15.08,
+"end": 15.38
+},
+{
+"text": "dice",
+"line": 14,
+"adlib": false,
+"start": 15.38,
+"end": 15.68
+},
+{
+"text": "\"sparagli\"",
+"line": 15,
+"adlib": false,
+"start": 15.68,
+"end": 16.44
+},
+{
+"text": "io",
+"line": 16,
+"adlib": false,
+"start": 16.44,
+"end": 16.72
+},
+{
+"text": "che",
+"line": 16,
+"adlib": false,
+"start": 16.72,
+"end": 16.98
+},
+{
+"text": "saremo",
+"line": 16,
+"adlib": false,
+"start": 16.98,
+"end": 17.46
+},
+{
+"text": "ricchi",
+"line": 16,
+"adlib": false,
+"start": 17.46,
+"end": 17.94
+},
+{
+"text": "glielo",
+"line": 17,
+"adlib": false,
+"start": 17.94,
+"end": 18.44
+},
+{
+"text": "giuro",
+"line": 17,
+"adlib": false,
+"start": 18.44,
+"end": 19.14
+},
+{
+"text": "Roccia",
+"line": 18,
+"adlib": false,
+"start": 19.14,
+"end": 19.82
+},
+{
+"text": "non",
+"line": 19,
+"adlib": false,
+"start": 19.82,
+"end": 20.06
+},
+{
+"text": "mollare",
+"line": 19,
+"adlib": false,
+"start": 20.06,
+"end": 20.62
+},
+{
+"text": "la",
+"line": 20,
+"adlib": false,
+"start": 20.62,
+"end": 21.02
+},
+{
+"text": "corda",
+"line": 20,
+"adlib": false,
+"start": 21.02,
+"end": 21.56
+},
+{
+"text": "col",
+"line": 21,
+"adlib": false,
+"start": 21.56,
+"end": 21.72
+},
+{
+"text": "tempo",
+"line": 21,
+"adlib": false,
+"start": 21.72,
+"end": 22.1
+},
+{
+"text": "chi",
+"line": 22,
+"adlib": false,
+"start": 22.1,
+"end": 22.28
+},
+{
+"text": "l'ha",
+"line": 22,
+"adlib": false,
+"start": 22.28,
+"end": 22.56
+},
+{
+"text": "fatto",
+"line": 22,
+"adlib": false,
+"start": 22.56,
+"end": 22.88
+},
+{
+"text": "lo",
+"line": 23,
+"adlib": false,
+"start": 22.88,
+"end": 23.22
+},
+{
+"text": "chiami",
+"line": 23,
+"adlib": false,
+"start": 23.22,
+"end": 23.52
+},
+{
+"text": "tossico",
+"line": 24,
+"adlib": false,
+"start": 23.52,
+"end": 24.16
+},
+{
+"text": "o",
+"line": 25,
+"adlib": false,
+"start": 24.16,
+"end": 24.3
+},
+{
+"text": "troia",
+"line": 25,
+"adlib": false,
+"start": 24.3,
+"end": 25.0
+},
+{
+"text": "Roccia",
+"line": 26,
+"adlib": false,
+"start": 25.0,
+"end": 25.82
+},
+{
+"text": "non",
+"line": 27,
+"adlib": false,
+"start": 25.82,
+"end": 25.96
+},
+{
+"text": "ti",
+"line": 27,
+"adlib": false,
+"start": 25.96,
+"end": 26.18
+},
+{
+"text": "fotte",
+"line": 27,
+"adlib": false,
+"start": 26.18,
+"end": 26.46
+},
+{
+"text": "una",
+"line": 28,
+"adlib": false,
+"start": 26.46,
+"end": 26.74
+},
+{
+"text": "donna",
+"line": 28,
+"adlib": false,
+"start": 26.74,
+"end": 27.78
+},
+{
+"text": "ripetilo",
+"line": 29,
+"adlib": false,
+"start": 27.78,
+"end": 28.7
+},
+{
+"text": "noi",
+"line": 30,
+"adlib": false,
+"start": 28.7,
+"end": 29.06
+},
+{
+"text": "ce",
+"line": 30,
+"adlib": false,
+"start": 29.06,
+"end": 29.64
+},
+{
+"text": "la",
+"line": 30,
+"adlib": false,
+"start": 29.64,
+"end": 30.06
+},
+{
+"text": "faremo",
+"line": 31,
+"adlib": false,
+"start": 30.06,
+"end": 31.9
+}
+],
+"duration": 31.9,
+"tempo": 143.5
 }
