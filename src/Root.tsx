@@ -18,6 +18,7 @@ import {LUNA_FRAMES, Luna} from './luna/Luna';
 import {TOSSICO_FRAMES, Tossico} from './tossico/Tossico';
 import {FIERO_FRAMES, Fiero} from './fiero/Fiero';
 import {FREEDOM_FRAMES, Freedom} from './freedom/Freedom';
+import {ROCCIA_FRAMES, Roccia} from './roccia/Roccia';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -54,5 +55,6 @@ export const RemotionRoot: React.FC = () => (
   <Composition id="Tossico" component={Tossico} width={1920} height={1080} fps={ANG_FPS} durationInFrames={TOSSICO_FRAMES} />
   <Composition id="Fiero" component={Fiero} width={1920} height={1080} fps={ANG_FPS} durationInFrames={FIERO_FRAMES} />
   <Composition id="Freedom" component={Freedom} width={1920} height={1080} fps={60} durationInFrames={FREEDOM_FRAMES} />
+      <Composition id="Roccia" component={Roccia} width={1920} height={1080} fps={60} durationInFrames={ROCCIA_FRAMES} />
   </>
 );
