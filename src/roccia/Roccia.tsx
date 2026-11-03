@@ -278,7 +278,7 @@ const Cam: React.FC<{
     <AbsoluteFill style={{filter: on ? `url(#${id})` : undefined}}>
       {on && <Warp id={id} scale={w} freq={freq} seed={Math.floor(g * 6)} />}
       <AbsoluteFill style={{transform: `translate(${x}px, ${y}px) scale(${s}) rotate(${r}deg)`, transformOrigin: origin}}>{all.filter((c) => !isText(c))}</AbsoluteFill>
-      <AbsoluteFill style={{transform: `translate(${x * 0.6}px, ${y * 0.6}px) scale(${ts}) rotate(${r * 0.5}deg)`, transformOrigin: '50% 50%'}}>{all.filter(isText)}</AbsoluteFill>
+      <AbsoluteFill style={{transform: `translate(${Math.max(-40, Math.min(40, x * 0.6))}px, ${Math.max(-40, Math.min(40, y * 0.6))}px) scale(${ts}) rotate(${r * 0.5}deg)`, transformOrigin: '50% 50%'}}>{all.filter(isText)}</AbsoluteFill>
     </AbsoluteFill>
   );
 };
@@ -304,7 +304,7 @@ const SCover: React.FC<SP> = ({start, end}) => {
   const p = ease(prog(g, 0, end));
   const fog = (k: number) => `translateX(${Math.sin(g * 0.4 + k) * 80 + g * 25 * (k % 2 ? 1 : -1)}px)`;
   return (
-    <Cam id="w0" g={g} start={-1} end={end} s={1.28 - 0.2 * p} y={-120 + 150 * p} origin="50% 70%">
+    <Cam id="w0" g={g} start={-1} end={end} s={1.2 - 0.14 * p} y={-20 * p} origin="50% 15%">
       <AbsoluteFill style={{transform: `translateY(${-30 * p}px)`}}>
         <Full name="plate-1-cover.jpg" />
       </AbsoluteFill>
