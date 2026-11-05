@@ -53,7 +53,7 @@ const useFonts = () => {
 // ── piano di montaggio ──
 type Move = 'push' | 'pull' | 'panL' | 'panR' | 'orbit' | 'rise';
 type Trans = 'cut' | 'zoom' | 'whip' | 'burn' | 'flash';
-type Shot = {at: number; src: string; t0: number; move: Move; rate?: number; tin?: Trans; crop?: number};
+type Shot = {at: number; src: string; seg: number; t0: number; move: Move; rate?: number; tin?: Trans; crop?: number};
 const SHOTS = plan.shots as Shot[];
 const ends = SHOTS.map((s, i) => (i + 1 < SHOTS.length ? SHOTS[i + 1].at : DURATION));
 const D = 0.2; // durata di metà transizione (s)
@@ -144,7 +144,7 @@ const ShotView: React.FC<{i: number}> = ({i}) => {
         }}
       >
         <OffthreadVideo
-          src={staticFile(`dio/clip/${sh.src}.mp4`)}
+          src={staticFile(`dio/seg/${sh.seg}.mp4`)}
           trimBefore={Math.max(0, Math.round((sh.t0 - D * (sh.rate ?? 1)) * FPS))}
           playbackRate={sh.rate ?? 1}
           muted
@@ -181,17 +181,26 @@ const LINES: Line[] = (() => {
   out.forEach((l, i) => {
     const last = l.words[l.words.length - 1];
     l.dio = /^dio$/i.test(last.text);
-    l.end = Math.min(i + 1 < out.length ? out[i + 1].start - 0.05 : DURATION, last.start + 1.6);
+    l.end = Math.min(i + 1 < out.length ? out[i + 1].start - 0.32 : DURATION, last.start + 1.6);
   });
   return out;
 })();
+
+/** divide la riga in due righe bilanciate quando è lunga */
+const rows = (ws: Word[]): Word[][] => {
+  const len = (a: Word[]) => a.reduce((n, w) => n + w.text.length + 1, 0);
+  if (len(ws) <= 22) return [ws];
+  let best = 1;
+  for (let k = 1; k < ws.length; k++) if (Math.abs(len(ws.slice(0, k)) - len(ws.slice(k))) < Math.abs(len(ws.slice(0, best)) - len(ws.slice(best)))) best = k;
+  return [ws.slice(0, best), ws.slice(best)];
+};
 
 /** una parola che sale da dietro la sua linea */
 const MaskWord: React.FC<{w: Word; g: number; size: number; serif?: boolean; color?: string}> = ({w, g, size, serif, color = '#F4EEE6'}) => {
   const p = easeOut(prog(g, w.start - 0.04, w.start + 0.32));
   const active = g < w.end + 0.1;
   return (
-    <span style={{display: 'inline-block', overflow: 'hidden', verticalAlign: 'bottom', padding: '0 0.08em', marginBottom: -size * 0.08}}>
+    <span style={{display: 'inline-block', overflow: 'hidden', verticalAlign: 'bottom', fontSize: size, padding: '0.04em 0.06em', marginRight: '0.2em'}}>
       <span
         style={{
           display: 'inline-block',
@@ -215,7 +224,7 @@ const MaskWord: React.FC<{w: Word; g: number; size: number; serif?: boolean; col
 
 const LyricLine: React.FC<{l: Line; g: number; idx: number}> = ({l, g, idx}) => {
   if (g < l.start - 0.1 || g > l.end + 0.5) return null;
-  const out = easeIn(prog(g, l.end, l.end + 0.45));
+  const out = easeIn(prog(g, l.end, l.end + 0.3));
   const drift = Math.sin(g * 0.8 + idx) * 6;
   const words = l.dio ? l.words.slice(0, -1) : l.words;
   const dio = l.dio ? l.words[l.words.length - 1] : null;
@@ -228,17 +237,18 @@ const LyricLine: React.FC<{l: Line; g: number; idx: number}> = ({l, g, idx}) => 
           position: 'absolute',
           left: centered ? 0 : 150,
           right: centered ? 0 : undefined,
-          top: centered ? H / 2 - 90 : 760,
+          top: centered ? H / 2 - 90 : 700,
           textAlign: centered ? 'center' : 'left',
           whiteSpace: 'nowrap',
           textShadow: '0 4px 30px rgba(0,0,0,0.7)',
         }}
       >
-        {words.map((w, i) => (
-          <React.Fragment key={i}>
-            <MaskWord w={w} g={g} size={centered ? 150 : 74} serif={centered && i === 2} />
-            {i < words.length - 1 && ' '}
-          </React.Fragment>
+        {rows(words).map((row, r) => (
+          <div key={r}>
+            {row.map((w, i) => (
+              <MaskWord key={i} w={w} g={g} size={centered ? 150 : 78} serif={centered && w.text.length > 5} />
+            ))}
+          </div>
         ))}
       </div>
       {/* linea sottile che si disegna sotto la riga */}
@@ -247,7 +257,7 @@ const LyricLine: React.FC<{l: Line; g: number; idx: number}> = ({l, g, idx}) => 
           style={{
             position: 'absolute',
             left: 158,
-            top: 860,
+            top: 904,
             height: 2,
             width: 520 * easeOut(prog(g, l.start, l.start + 0.8)),
             background: 'rgba(244,238,230,0.7)',

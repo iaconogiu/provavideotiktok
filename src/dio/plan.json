@@ -1,1 +1,175 @@
-{"shots": []}
+{
+"shots": [
+{
+"at": 0.0,
+"src": "lacura",
+"t0": 0.5,
+"move": "push",
+"rate": 1,
+"tin": "cut",
+"seg": 0
+},
+{
+"at": 1.41,
+"src": "oldfashionverona",
+"t0": 0.5,
+"move": "orbit",
+"rate": 1,
+"tin": "zoom",
+"seg": 1
+},
+{
+"at": 2.5,
+"src": "nulladibello",
+"t0": 0.5,
+"move": "panR",
+"rate": 1,
+"tin": "whip",
+"seg": 2
+},
+{
+"at": 3.62,
+"src": "demoni",
+"t0": 0.5,
+"move": "push",
+"rate": 1,
+"tin": "burn",
+"seg": 3
+},
+{
+"at": 4.74,
+"src": "oldfashionverona",
+"t0": 0.5,
+"move": "pull",
+"rate": 1,
+"tin": "flash",
+"seg": 4
+},
+{
+"at": 5.86,
+"src": "padova",
+"t0": 0.5,
+"move": "orbit",
+"rate": 1,
+"tin": "zoom",
+"seg": 5
+},
+{
+"at": 6.94,
+"src": "demoni",
+"t0": 0.5,
+"move": "rise",
+"rate": 1,
+"tin": "flash",
+"seg": 6
+},
+{
+"at": 8.06,
+"src": "lacura",
+"t0": 0.5,
+"move": "push",
+"rate": 1,
+"tin": "whip",
+"seg": 7
+},
+{
+"at": 9.18,
+"src": "oldfashionverona",
+"t0": 0.4,
+"move": "pull",
+"rate": 0.5,
+"tin": "flash",
+"seg": 8
+},
+{
+"at": 10.21,
+"src": "nulladibello",
+"t0": 0.42,
+"move": "push",
+"rate": 0.6,
+"tin": "burn",
+"seg": 9
+},
+{
+"at": 10.75,
+"src": "padova",
+"t0": 0.46,
+"move": "panL",
+"rate": 0.8,
+"tin": "zoom",
+"seg": 10
+},
+{
+"at": 11.78,
+"src": "demoni",
+"t0": 0.5,
+"move": "push",
+"rate": 1,
+"tin": "whip",
+"seg": 11
+},
+{
+"at": 12.8,
+"src": "padova",
+"t0": 0.5,
+"move": "orbit",
+"rate": 1,
+"tin": "zoom",
+"seg": 12
+},
+{
+"at": 13.66,
+"src": "oldfashionverona",
+"t0": 0.5,
+"move": "pull",
+"rate": 1,
+"tin": "flash",
+"seg": 13
+},
+{
+"at": 14.46,
+"src": "nulladibello",
+"t0": 0.5,
+"move": "panR",
+"rate": 1,
+"tin": "whip",
+"seg": 14
+},
+{
+"at": 15.58,
+"src": "lacura",
+"t0": 0.5,
+"move": "push",
+"rate": 1,
+"tin": "burn",
+"seg": 15
+},
+{
+"at": 16.16,
+"src": "demoni",
+"t0": 0.5,
+"move": "orbit",
+"rate": 1,
+"tin": "zoom",
+"seg": 16
+},
+{
+"at": 17.25,
+"src": "padova",
+"t0": 0.5,
+"move": "rise",
+"rate": 1,
+"tin": "whip",
+"seg": 17
+},
+{
+"at": 18.12,
+"src": "lacura",
+"t0": 0.44,
+"move": "pull",
+"rate": 0.7,
+"tin": "flash",
+"seg": 18
+}
+]
+}
