@@ -1,0 +1,475 @@
+{
+"tempo": 110.3,
+"beats": [
+0.1,
+0.8,
+1.41,
+1.95,
+2.5,
+3.07,
+3.62,
+4.16,
+4.74,
+5.31,
+5.86,
+6.37,
+6.94,
+7.49,
+8.06,
+8.58,
+9.18,
+9.7,
+10.21,
+10.75,
+11.26,
+11.78,
+12.29,
+12.8,
+13.34,
+13.92,
+14.46,
+15.01,
+15.58,
+16.16,
+16.7,
+17.25,
+17.79,
+18.34,
+18.85
+],
+"words": [
+{
+"text": "Non",
+"line": 0,
+"start": 0.52,
+"end": 0.92
+},
+{
+"text": "c'è",
+"line": 0,
+"start": 0.92,
+"end": 1.1
+},
+{
+"text": "nulla",
+"line": 0,
+"start": 1.1,
+"end": 1.36
+},
+{
+"text": "possan",
+"line": 0,
+"start": 1.36,
+"end": 1.64
+},
+{
+"text": "fare",
+"line": 0,
+"start": 1.64,
+"end": 1.84
+},
+{
+"text": "per",
+"line": 0,
+"start": 1.84,
+"end": 2.04
+},
+{
+"text": "fermarmi",
+"line": 0,
+"start": 2.04,
+"end": 2.58
+},
+{
+"text": "io",
+"line": 0,
+"start": 2.58,
+"end": 3.1
+},
+{
+"text": "Non",
+"line": 1,
+"start": 3.1,
+"end": 3.14
+},
+{
+"text": "ho",
+"line": 1,
+"start": 3.14,
+"end": 3.28
+},
+{
+"text": "scelta",
+"line": 1,
+"start": 3.28,
+"end": 3.56
+},
+{
+"text": "perché",
+"line": 1,
+"start": 3.56,
+"end": 3.76
+},
+{
+"text": "è",
+"line": 1,
+"start": 3.76,
+"end": 3.96
+},
+{
+"text": "tutto",
+"line": 1,
+"start": 3.96,
+"end": 4.18
+},
+{
+"text": "un",
+"line": 1,
+"start": 4.18,
+"end": 4.34
+},
+{
+"text": "piano",
+"line": 1,
+"start": 4.34,
+"end": 4.48
+},
+{
+"text": "di",
+"line": 1,
+"start": 4.48,
+"end": 4.74
+},
+{
+"text": "Dio",
+"line": 1,
+"start": 4.74,
+"end": 5.28
+},
+{
+"text": "Non",
+"line": 2,
+"start": 5.28,
+"end": 5.42
+},
+{
+"text": "ho",
+"line": 2,
+"start": 5.42,
+"end": 5.44
+},
+{
+"text": "scelta",
+"line": 2,
+"start": 5.44,
+"end": 5.78
+},
+{
+"text": "perché",
+"line": 2,
+"start": 5.78,
+"end": 6.02
+},
+{
+"text": "è",
+"line": 2,
+"start": 6.02,
+"end": 6.18
+},
+{
+"text": "tutto",
+"line": 2,
+"start": 6.18,
+"end": 6.42
+},
+{
+"text": "un",
+"line": 2,
+"start": 6.42,
+"end": 6.54
+},
+{
+"text": "piano",
+"line": 2,
+"start": 6.54,
+"end": 6.7
+},
+{
+"text": "di",
+"line": 2,
+"start": 6.7,
+"end": 6.96
+},
+{
+"text": "Dio",
+"line": 2,
+"start": 6.96,
+"end": 7.5
+},
+{
+"text": "Non",
+"line": 3,
+"start": 7.5,
+"end": 7.56
+},
+{
+"text": "hai",
+"line": 3,
+"start": 7.56,
+"end": 7.7
+},
+{
+"text": "scelta",
+"line": 3,
+"start": 7.7,
+"end": 7.96
+},
+{
+"text": "perché",
+"line": 3,
+"start": 7.96,
+"end": 8.2
+},
+{
+"text": "è",
+"line": 3,
+"start": 8.2,
+"end": 8.38
+},
+{
+"text": "tutto",
+"line": 3,
+"start": 8.38,
+"end": 8.62
+},
+{
+"text": "un",
+"line": 3,
+"start": 8.62,
+"end": 8.76
+},
+{
+"text": "piano",
+"line": 3,
+"start": 8.76,
+"end": 8.92
+},
+{
+"text": "di",
+"line": 3,
+"start": 8.92,
+"end": 9.24
+},
+{
+"text": "Dio",
+"line": 3,
+"start": 9.24,
+"end": 9.84
+},
+{
+"text": "E",
+"line": 4,
+"start": 10.72,
+"end": 10.88
+},
+{
+"text": "non",
+"line": 4,
+"start": 10.88,
+"end": 11.0
+},
+{
+"text": "giudicherò",
+"line": 4,
+"start": 11.0,
+"end": 11.6
+},
+{
+"text": "perché",
+"line": 5,
+"start": 12.0,
+"end": 12.16
+},
+{
+"text": "a",
+"line": 5,
+"start": 12.16,
+"end": 12.26
+},
+{
+"text": "me",
+"line": 5,
+"start": 12.26,
+"end": 12.36
+},
+{
+"text": "non",
+"line": 5,
+"start": 12.36,
+"end": 12.56
+},
+{
+"text": "hanno",
+"line": 5,
+"start": 12.56,
+"end": 12.78
+},
+{
+"text": "chiesto",
+"line": 5,
+"start": 12.78,
+"end": 13.06
+},
+{
+"text": "il",
+"line": 5,
+"start": 13.06,
+"end": 13.16
+},
+{
+"text": "lavoro",
+"line": 5,
+"start": 13.16,
+"end": 13.36
+},
+{
+"text": "di",
+"line": 5,
+"start": 13.36,
+"end": 13.52
+},
+{
+"text": "un",
+"line": 5,
+"start": 13.52,
+"end": 13.66
+},
+{
+"text": "Dio",
+"line": 5,
+"start": 13.66,
+"end": 14.18
+},
+{
+"text": "Neanche",
+"line": 6,
+"start": 14.18,
+"end": 14.42
+},
+{
+"text": "a",
+"line": 6,
+"start": 14.42,
+"end": 14.48
+},
+{
+"text": "te",
+"line": 6,
+"start": 14.48,
+"end": 14.56
+},
+{
+"text": "non",
+"line": 6,
+"start": 14.56,
+"end": 14.78
+},
+{
+"text": "hanno",
+"line": 6,
+"start": 14.78,
+"end": 14.92
+},
+{
+"text": "chiesto",
+"line": 6,
+"start": 14.92,
+"end": 15.24
+},
+{
+"text": "il",
+"line": 6,
+"start": 15.24,
+"end": 15.38
+},
+{
+"text": "lavoro",
+"line": 6,
+"start": 15.38,
+"end": 15.58
+},
+{
+"text": "di",
+"line": 6,
+"start": 15.58,
+"end": 15.74
+},
+{
+"text": "un",
+"line": 6,
+"start": 15.74,
+"end": 15.86
+},
+{
+"text": "Dio",
+"line": 6,
+"start": 15.86,
+"end": 16.46
+},
+{
+"text": "Quindi",
+"line": 7,
+"start": 16.46,
+"end": 16.58
+},
+{
+"text": "non",
+"line": 7,
+"start": 16.58,
+"end": 16.82
+},
+{
+"text": "abbiamo",
+"line": 7,
+"start": 16.82,
+"end": 17.1
+},
+{
+"text": "chiesto",
+"line": 7,
+"start": 17.1,
+"end": 17.48
+},
+{
+"text": "il",
+"line": 7,
+"start": 17.48,
+"end": 17.64
+},
+{
+"text": "lavoro",
+"line": 7,
+"start": 17.64,
+"end": 17.84
+},
+{
+"text": "di",
+"line": 7,
+"start": 17.84,
+"end": 17.98
+},
+{
+"text": "un",
+"line": 7,
+"start": 17.98,
+"end": 18.12
+},
+{
+"text": "Dio",
+"line": 7,
+"start": 18.12,
+"end": 18.7
+}
+],
+"duration": 19.0
+}
