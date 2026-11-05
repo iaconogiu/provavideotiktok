@@ -211,19 +211,19 @@ const fitRows = (rs: Word[][], size: number, maxW: number) => Math.min(size, ...
 
 /** una parola: scatta dentro grande e si assesta subito (reattiva), poi resta */
 const Pop: React.FC<{w: Word; g: number; size: number; cur: boolean}> = ({w, g, size, cur}) => {
-  const t = g - w.start;
+  const t = g - (w.start - 0.03); // un filo in anticipo: arriva sul colpo
   if (t < -0.001) return <span style={{display: 'inline-block', opacity: 0, fontSize: size, marginRight: size * 0.25}}>{w.text}</span>;
-  const k = Math.exp(-t * 17);
+  const k = Math.exp(-t * 26);
   const key = isKey(w);
   return (
     <span
       style={{
         display: 'inline-block',
         marginRight: size * 0.25,
-        transform: `translateY(${k * size * 0.25}px) scale(${1 + 0.32 * k})`,
+        transform: `translateY(${k * size * 0.3}px) scale(${1 + 0.4 * k})`,
         transformOrigin: "50% 80%",
-        filter: t < 0.07 ? `blur(${(1 - t / 0.07) * 6}px)` : undefined,
-        opacity: Math.min(1, t / 0.035),
+        filter: t < 0.04 ? `blur(${(1 - t / 0.04) * 5}px)` : undefined,
+        opacity: Math.min(1, t / 0.02),
         fontFamily: key ? SERIF : SANS,
         fontWeight: 600,
         fontSize: key ? size * 1.05 : size,
@@ -240,15 +240,18 @@ const Pop: React.FC<{w: Word; g: number; size: number; cur: boolean}> = ({w, g, 
 
 const LyricLine: React.FC<{l: Line; g: number; idx: number}> = ({l, g, idx}) => {
   if (g < l.start - 0.05 || g > l.end + 0.2) return null;
-  const out = easeIn(prog(g, l.end, l.end + 0.16));
+  const out = easeIn(prog(g, l.end, l.end + 0.12));
   const words = l.dio ? l.words.slice(0, -1) : l.words;
   const dio = l.dio ? l.words[l.words.length - 1] : null;
   const rs = rows(words);
   const size = fitRows(rs, 150, 1500);
   // quando arriva "Dio" la frase si ritira in alto e si rimpicciolisce
-  const up = dio ? easeOut(prog(g, dio.start - 0.02, dio.start + 0.22)) : 0;
-  const bp = beatPulse(g);
-  const rgb = bp * 5;
+  const up = dio ? easeOut(prog(g, dio.start - 0.04, dio.start + 0.14)) : 0;
+  const bp = beatPulse(g) ** 2; // colpo secco sul beat
+  // ogni parola nuova dà una spinta a tutta la frase
+  const lastW = words.filter((w) => w.start - 0.03 <= g).pop();
+  const kick = lastW ? Math.exp(-(g - lastW.start + 0.03) * 20) : 0;
+  const rgb = bp * 6 + kick * 6;
   const cur = (w: Word) => {
     const i = l.words.indexOf(w);
     return g >= w.start && (i + 1 >= l.words.length || g < l.words[i + 1].start);
@@ -259,7 +262,7 @@ const LyricLine: React.FC<{l: Line; g: number; idx: number}> = ({l, g, idx}) => 
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
         <div
           style={{
-            transform: `translateY(${-up * (230 + totalH * 0.2)}px) scale(${(1 - up * 0.5) * (1 + bp * 0.035)})`,
+            transform: `translateY(${-up * (230 + totalH * 0.2) - kick * 10}px) scale(${(1 - up * 0.5) * (1 + bp * 0.05 + kick * 0.04)}) rotate(${kick * (lastW && lastW.start * 10 % 2 > 1 ? 0.8 : -0.8)}deg)`,
             textAlign: 'center',
             whiteSpace: 'nowrap',
             textShadow: `${-rgb}px 0 0 rgba(255,40,60,0.6), ${rgb}px 0 0 rgba(40,220,255,0.6), 0 6px 34px rgba(0,0,0,0.75)`,
@@ -282,9 +285,9 @@ const LyricLine: React.FC<{l: Line; g: number; idx: number}> = ({l, g, idx}) => 
 
 /** "Dio": sbatte dentro enorme, si assesta e continua a crescere piano */
 const BigDio: React.FC<{w: Word; g: number}> = ({w, g}) => {
-  const t = g - w.start;
+  const t = g - (w.start - 0.03);
   if (t < 0) return null;
-  const k = Math.exp(-t * 14);
+  const k = Math.exp(-t * 22);
   const rgb = 14 * Math.exp(-t * 9) + beatPulse(g) * 4;
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
