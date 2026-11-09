@@ -200,6 +200,7 @@ const WordView: React.FC<{pl: Placed; g: number; cam: Cam; cur: boolean}> = ({pl
         left: 0,
         top: 0,
         transform: `translate3d(${pl.p.x}px, ${pl.p.y}px, ${pl.p.z}px) rotateY(${pl.yaw}rad) rotateX(${pl.pitch}rad) translate(-50%, -50%) scale(${1 + 0.5 * k})`,
+        transformOrigin: '0 0', // il centro della parola sta esattamente nel suo punto
         opacity: Math.min(1, t / 0.05) * fog,
         filter: blur > 0.6 ? `blur(${blur.toFixed(1)}px)` : undefined,
         textAlign: 'center',
