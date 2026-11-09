@@ -56,7 +56,7 @@ const COLD = (line: number) => line >= 12 && line <= 14; // "veniamo tutti da ca
 
 // ── mondo: ogni parola forte ha un posto nello spazio ──
 type V3 = {x: number; y: number; z: number};
-type Placed = {w: Word; p: V3; yaw: number; pitch: number; size: number; small: Placed[]; idx: number};
+type Placed = {w: Word; p: V3; yaw: number; pitch: number; size: number; small: Placed[]; idx: number; ww: number};
 const D = 520; // distanza della camera dalla parola che guarda
 
 let ctx: CanvasRenderingContext2D | null = null;
@@ -90,7 +90,8 @@ const world = (): Placed[] => {
     }
     lastLine = w.line;
     const up = w.text.toUpperCase();
-    const size = Math.min(250, (980 / textW(up, `800 100px ${WIDE}`)) * 100);
+    const size = Math.min(300, (980 / textW(up, `800 100px ${WIDE}`)) * 100);
+    const ww = (textW(up, `800 100px ${WIDE}`) * size) / 100;
     const side = k % 2 ? 1 : -1;
     const fwd = k * 780;
     const lat = side * 230;
@@ -101,15 +102,15 @@ const world = (): Placed[] => {
     };
     const yaw = heading - side * 0.32;
     const pitch = ((k % 3) - 1) * -0.12;
-    const pl: Placed = {w, p, yaw, pitch, size, small: [], idx: out.length};
+    const pl: Placed = {w, p, yaw, pitch, size, small: [], idx: out.length, ww};
     // le parole piccole davanti si attaccano a questa, sopra
-    pendingSmall.forEach((s) => pl.small.push({w: s, p, yaw, pitch, size: 52, small: [], idx: -1}));
+    pendingSmall.forEach((s) => pl.small.push({w: s, p, yaw, pitch, size: 52, small: [], idx: -1, ww: 0}));
     pendingSmall = [];
     out.push(pl);
     k++;
   });
   // parole piccole finali (dopo l'ultima forte della riga): vanno sotto la precedente
-  if (pendingSmall.length) out[out.length - 1].small.push(...pendingSmall.map((s) => ({w: s, p: out[out.length - 1].p, yaw: 0, pitch: 0, size: 52, small: [], idx: -1})));
+  if (pendingSmall.length) out[out.length - 1].small.push(...pendingSmall.map((s) => ({w: s, p: out[out.length - 1].p, yaw: 0, pitch: 0, size: 52, small: [], idx: -1, ww: 0})));
   // si memorizza solo quando i font sono pronti (le misure dipendono dal font)
   if (typeof document !== 'undefined' && document.fonts.check(`800 100px ${WIDE}`)) WORLD = out;
   return out;
@@ -117,54 +118,74 @@ const world = (): Placed[] => {
 
 // ── telecamera ──
 type Cam = {x: number; y: number; z: number; yaw: number; pitch: number; roll: number};
+const KEYS_ = ['x', 'y', 'z', 'yaw', 'pitch', 'roll'] as const;
+/** distanza perché la parola occupi sempre circa l'80% della larghezza dello schermo */
+const distFor = (pl: Placed) => Math.max(320, Math.min(1500, PERSP_ * (pl.ww / (W * 0.58)) - PERSP_));
+const PERSP_ = 1500;
 const camFor = (pl: Placed, i: number): Cam => {
   const side = random(`cs${i}`) > 0.5 ? 1 : -1;
-  const yaw = pl.yaw + side * 0.18;
-  const dist = D + (pl.size < 150 ? -60 : 0);
+  const yaw = pl.yaw + side * 0.16;
+  const dist = distFor(pl);
   return {
     x: pl.p.x + Math.sin(yaw) * dist,
-    y: pl.p.y - 40 + (random(`cy${i}`) - 0.5) * 120,
+    y: pl.p.y - 60 + (random(`cy${i}`) - 0.5) * 80,
     z: pl.p.z + Math.cos(yaw) * dist,
     yaw,
-    pitch: pl.pitch * 0.6 + (random(`cp${i}`) - 0.5) * 0.08,
-    roll: (random(`cr${i}`) - 0.5) * (isAccent(pl.w) ? 0.22 : 0.1),
+    pitch: pl.pitch * 0.5 + (random(`cp${i}`) - 0.5) * 0.06,
+    roll: (random(`cr${i}`) - 0.5) * (isAccent(pl.w) ? 0.16 : 0.08),
   };
 };
-const mix = (a: Cam, b: Cam, t: number): Cam => ({
-  x: lerp(a.x, b.x, t),
-  y: lerp(a.y, b.y, t),
-  z: lerp(a.z, b.z, t),
-  yaw: lerp(a.yaw, b.yaw, t),
-  pitch: lerp(a.pitch, b.pitch, t),
-  roll: lerp(a.roll, b.roll, t),
-});
-const camera = (g: number): Cam => {
+
+/** tappe della camera: arriva su ogni parola nell'istante in cui viene cantata */
+let KEYS: {t: number; c: Cam}[] | null = null;
+const keys = () => {
   const W3 = world();
-  let cam = camFor(W3[0], 0);
-  // partenza: lontano e in alto, poi scende sulla prima parola
-  cam = {...cam, z: cam.z + 2200, y: cam.y - 500, pitch: 0.25};
+  if (KEYS && WORLD) return KEYS;
+  const out: {t: number; c: Cam}[] = [];
+  const first = camFor(W3[0], 0);
+  out.push({t: -0.5, c: {...first, z: first.z + Math.cos(first.yaw) * 2400, x: first.x + Math.sin(first.yaw) * 2400, y: first.y - 600, pitch: 0.3}});
   W3.forEach((pl, i) => {
-    const s = pl.w.start - 0.06;
-    const prev = W3[i - 1];
-    const newPhrase = !prev || prev.w.line !== pl.w.line;
-    const dur = newPhrase ? 0.55 : Math.min(0.42, Math.max(0.2, pl.w.start - (prev?.w.start ?? 0)));
-    const t = prog(g, s, s + dur);
-    if (t > 0) cam = mix(cam, camFor(pl, i), easeInOut(t));
+    out.push({t: pl.w.start + 0.03, c: camFor(pl, i)});
+    // l'intermezzo: giro lento attorno a "l'arte"
+    if (norm(pl.w.text) === "l'arte" && pl.w.line === 0) {
+      const base = camFor(pl, i);
+      const d = distFor(pl);
+      [2.4, 3.4, 4.4].forEach((t, k) => {
+        const a = pl.yaw + [0.55, 0.0, -0.5][k];
+        const r = d + [250, 420, 200][k];
+        out.push({t, c: {x: pl.p.x + Math.sin(a) * r, y: pl.p.y - 60 - [220, 360, 120][k], z: pl.p.z + Math.cos(a) * r, yaw: a, pitch: [0.14, 0.22, 0.08][k], roll: [-0.05, 0.04, -0.02][k]}});
+      });
+      out.push({t: 5.2, c: base});
+    }
   });
-  // l'intermezzo: orbita lenta attorno a "l'arte"
-  const orb = prog(g, 1.7, 5.3);
-  if (orb > 0 && orb < 1) {
-    const pl = W3.find((x) => norm(x.w.text) === "l'arte")!;
-    const a = pl.yaw + Math.sin(orb * Math.PI) * 0.9;
-    const r = D + 250 * Math.sin(orb * Math.PI);
-    const o: Cam = {x: pl.p.x + Math.sin(a) * r, y: pl.p.y - 60 - 260 * Math.sin(orb * Math.PI), z: pl.p.z + Math.cos(a) * r, yaw: a, pitch: 0.18 * Math.sin(orb * Math.PI), roll: -0.06};
-    cam = mix(cam, o, Math.sin(orb * Math.PI) ** 0.5);
-  }
-  // finale: la camera si allontana e sale
-  const fin = easeInOut(prog(g, 28.25, DURATION + 0.4));
-  if (fin > 0) cam = {...cam, z: cam.z + Math.cos(cam.yaw) * 900 * fin, x: cam.x + Math.sin(cam.yaw) * 900 * fin, y: cam.y - 300 * fin};
+  const last = out[out.length - 1].c;
+  out.push({t: DURATION + 0.6, c: {...last, z: last.z + Math.cos(last.yaw) * 1200, x: last.x + Math.sin(last.yaw) * 1200, y: last.y - 400, pitch: 0.2}});
+  out.sort((a, b) => a.t - b.t);
+  if (WORLD) KEYS = out;
+  return out;
+};
+
+/** curva continua (Hermite / Catmull-Rom) tra le tappe: velocità senza scatti */
+const camera = (g: number): Cam => {
+  const K = keys();
+  let i = K.findIndex((k) => k.t > g) - 1;
+  if (i < 0) i = g < K[0].t ? 0 : K.length - 2;
+  const a = K[Math.max(0, i - 1)];
+  const b = K[i];
+  const c = K[Math.min(K.length - 1, i + 1)];
+  const d = K[Math.min(K.length - 1, i + 2)];
+  const h = Math.max(1e-3, c.t - b.t);
+  const u = clamp((g - b.t) / h);
+  const u2 = u * u;
+  const u3 = u2 * u;
+  const out = {} as Cam;
+  KEYS_.forEach((key) => {
+    const m0 = ((c.c[key] - a.c[key]) / Math.max(1e-3, c.t - a.t)) * h * 0.8;
+    const m1 = ((d.c[key] - b.c[key]) / Math.max(1e-3, d.t - b.t)) * h * 0.8;
+    out[key] = (2 * u3 - 3 * u2 + 1) * b.c[key] + (u3 - 2 * u2 + u) * m0 + (-2 * u3 + 3 * u2) * c.c[key] + (u3 - u2) * m1;
+  });
   // mano: piccolo respiro continuo
-  return {...cam, x: cam.x + Math.sin(g * 0.9) * 14, y: cam.y + Math.sin(g * 1.3) * 10, roll: cam.roll + Math.sin(g * 0.7) * 0.015};
+  return {...out, x: out.x + Math.sin(g * 0.9) * 10, y: out.y + Math.sin(g * 1.3) * 8, roll: out.roll + Math.sin(g * 0.7) * 0.012};
 };
 
 /** posizione di un punto nello spazio della camera (z negativo = davanti) */
@@ -177,16 +198,17 @@ const toCam = (p: V3, c: Cam) => {
   return {x: x * cy + z * sy, y, z: -x * sy + z * cy};
 };
 
-const PERSP = 1500;
+const PERSP = PERSP_;
 
-const WordView: React.FC<{pl: Placed; g: number; cam: Cam; cur: boolean}> = ({pl, g, cam, cur}) => {
+const WordView: React.FC<{pl: Placed; g: number; cam: Cam; cur: boolean; focus: number; vis: number}> = ({pl, g, cam, cur, focus, vis}) => {
+  if (vis <= 0.01) return null;
   const t = g - (pl.w.start - 0.04);
   if (t < 0) return null;
   const cs = toCam(pl.p, cam);
   const depth = -cs.z;
   if (depth < 120 || depth > 6000) return null;
   const k = Math.exp(-t * 16);
-  const blur = Math.min(9, Math.abs(depth - D) / 260) + k * 6;
+  const blur = Math.min(9, Math.abs(depth - focus) / 260) + k * 6;
   const fog = clamp(1 - (depth - 1500) / 3500);
   const acc = isAccent(pl.w);
   const cold = COLD(pl.w.line);
@@ -201,14 +223,14 @@ const WordView: React.FC<{pl: Placed; g: number; cam: Cam; cur: boolean}> = ({pl
         top: 0,
         transform: `translate3d(${pl.p.x}px, ${pl.p.y}px, ${pl.p.z}px) rotateY(${pl.yaw}rad) rotateX(${pl.pitch}rad) translate(-50%, -50%) scale(${1 + 0.5 * k})`,
         transformOrigin: '0 0', // il centro della parola sta esattamente nel suo punto
-        opacity: Math.min(1, t / 0.05) * fog,
+        opacity: Math.min(1, t / 0.05) * fog * vis,
         filter: blur > 0.6 ? `blur(${blur.toFixed(1)}px)` : undefined,
         textAlign: 'center',
         whiteSpace: 'nowrap',
       }}
     >
       {/* parole piccole sopra: mono corsivo, entrano a tempo */}
-      <div style={{fontFamily: MONO, fontSize: 58, color: '#A9BCDD', letterSpacing: '0.06em', height: 72, marginBottom: 8}}>
+      <div style={{fontFamily: MONO, fontSize: 70, color: '#B9CAE6', letterSpacing: '0.04em', height: 86, marginBottom: 10}}>
         {pl.small
           .filter((s) => g >= s.w.start - 0.04)
           .map((s, i) => (
@@ -320,6 +342,49 @@ const Rain: React.FC<{g: number; vx: number}> = ({g, vx}) => (
   </>
 );
 
+const lineStart = (line: number) => WORDS.find((w) => w.line === line)?.start ?? 0;
+
+/** la riga intera in basso: le parole si accendono mentre le canta, così sai sempre dove sei */
+const Karaoke: React.FC<{g: number}> = ({g}) => {
+  const cw = WORDS.filter((w) => w.start - 0.04 <= g).pop();
+  if (!cw) return null;
+  const line = WORDS.filter((w) => w.line === cw.line);
+  const a = line[0].start - 0.1;
+  const nextL = WORDS.find((w) => w.line === cw.line + 1);
+  const end = nextL ? nextL.start - 0.1 : DURATION;
+  const op = Math.min(prog(g, a, a + 0.15), 1 - prog(g, end - 0.1, end));
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 90,
+        width: W - 180,
+        top: 1290,
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        rowGap: 4,
+        textAlign: 'center',
+        fontFamily: MONO,
+        fontSize: 50,
+        lineHeight: 1.35,
+        opacity: op,
+        textShadow: '0 2px 14px rgba(0,0,0,0.9)',
+      }}
+    >
+      {line.map((w, i) => {
+        const on = g >= w.start - 0.04;
+        const now = on && (i + 1 >= line.length || g < line[i + 1].start - 0.04);
+        return (
+          <span key={i} style={{color: now ? (COLD(w.line) ? '#7FE6FF' : '#FF8A2A') : on ? '#F2F6FF' : 'rgba(200,215,240,0.32)', marginRight: '0.45em'}}>
+            {w.text}
+          </span>
+        );
+      })}
+    </div>
+  );
+};
+
 export const Arte: React.FC = () => {
   useFonts();
   const frame = useCurrentFrame();
@@ -332,6 +397,7 @@ export const Arte: React.FC = () => {
   const shown = W3.filter((p) => g >= p.w.start - 0.04);
   const cur = shown[shown.length - 1];
   const coldNow = cur && COLD(cur.w.line) ? 1 : 0;
+  const focus = cur ? -toCam(cur.p, cam).z : D;
   const bp = beatPulse(g);
   const motionBlur = Math.min(7, speed / 900);
   const accHit = cur && isAccent(cur.w) ? Math.exp(-(g - cur.w.start) * 6) : 0;
@@ -358,12 +424,16 @@ export const Arte: React.FC = () => {
           }}
         >
           <Floor cam={cam} cold={coldNow} />
-          {W3.map((pl) => (
-            <WordView key={pl.idx} pl={pl} g={g} cam={cam} cur={pl === cur} />
-          ))}
+          {W3.map((pl) => {
+            // si vedono solo la frase in corso e, per un attimo, quella prima
+            const l = pl.w.line;
+            const vis = !cur ? 1 : l === cur.w.line ? 1 : l === cur.w.line - 1 ? 1 - prog(g, lineStart(cur.w.line), lineStart(cur.w.line) + 0.5) : l < cur.w.line ? 0 : 1;
+            return <WordView key={pl.idx} pl={pl} g={g} cam={cam} cur={pl === cur} focus={focus} vis={vis} />;
+          })}
         </div>
       </AbsoluteFill>
       <Rain g={g} vx={vx} />
+      <Karaoke g={g} />
       {/* bagliore sulle parole chiave */}
       {accHit > 0.02 && <AbsoluteFill style={{background: `radial-gradient(60% 40% at 50% 50%, ${coldNow ? 'rgba(120,230,255,' : 'rgba(255,140,50,'}${accHit * 0.25}) 0%, transparent 70%)`, mixBlendMode: 'screen'}} />}
       <AbsoluteFill
