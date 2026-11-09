@@ -145,7 +145,17 @@ const keys = () => {
   const first = camFor(W3[0], 0);
   out.push({t: -0.5, c: {...first, z: first.z + Math.cos(first.yaw) * 2400, x: first.x + Math.sin(first.yaw) * 2400, y: first.y - 600, pitch: 0.3}});
   W3.forEach((pl, i) => {
-    out.push({t: pl.w.start + 0.03, c: camFor(pl, i)});
+    // arriva sulla parola un attimo prima che venga cantata, resta lì avvicinandosi piano,
+    // poi parte verso la successiva solo nell'ultimo tratto
+    const c = camFor(pl, i);
+    const next = W3[i + 1];
+    const gap = (next ? next.w.start : pl.w.start + 1.2) - pl.w.start;
+    const travel = Math.min(0.32, Math.max(0.16, gap * 0.45));
+    const arrive = pl.w.start - 0.02;
+    const leave = Math.max(arrive + 0.06, pl.w.start + gap - travel);
+    out.push({t: arrive, c});
+    const push = Math.min(90, gap * 60);
+    out.push({t: leave, c: {...c, x: c.x - Math.sin(c.yaw) * push, z: c.z - Math.cos(c.yaw) * push, roll: c.roll * 0.6}});
     // l'intermezzo: giro lento attorno a "l'arte"
     if (norm(pl.w.text) === "l'arte" && pl.w.line === 0) {
       const base = camFor(pl, i);
