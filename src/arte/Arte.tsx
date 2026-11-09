@@ -1,15 +1,12 @@
-import '@fontsource/anton';
 import React, {useEffect, useState} from 'react';
 import {AbsoluteFill, Audio, continueRender, delayRender, random, staticFile, useCurrentFrame} from 'remotion';
-import {useAudioData, visualizeAudio} from '@remotion/media-utils';
 import data from './words.json';
 
 /**
- * "Se regnasse l'arte": video verticale di sola tipografia (stile poster cinetico).
- * Le parole si impilano a tempo in blocchi: le parole forti in Anton che scattano dentro, quelle
- * di passaggio in corsivo; la parola appena detta è chiara, le altre si spengono in grigio.
- * Le parole chiave sono rosse e cerchiate a mano; la frase si scorre verso l'alto mentre cresce.
- * Due momenti su carta chiara ("ma son solo un artista…", "tu lo noti…") con l'onda dell'audio vera.
+ * "Se regnasse l'arte" — versione 3D. Le parole stanno sospese in una città di notte sotto la
+ * pioggia, a profondità e angoli diversi; una telecamera virtuale vola da una parola all'altra
+ * mentre vengono cantate (spinta, rotazione, rollio), con profondità di campo, scia di movimento,
+ * pavimento bagnato che riflette le luci e pioggia che reagisce alla velocità della camera.
  */
 
 export const FPS = 30;
@@ -20,13 +17,12 @@ export const ARTE_FRAMES = Math.round(DURATION * FPS);
 type Word = {text: string; line: number; start: number};
 const WORDS = data.words as Word[];
 const BEATS = data.beats as number[];
-const AUDIO = staticFile('arte/audio.m4a');
-const WAVE = staticFile('arte/wave.wav'); // l'onda si legge da un wav (l'aac non si decodifica nel render)
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
 const prog = (g: number, a: number, b: number) => clamp((g - a) / (b - a));
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const easeOut = (t: number) => 1 - (1 - t) ** 3;
-const easeIn = (t: number) => t ** 3;
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const beatPulse = (t: number, k = 10) => {
   let last = -10;
   for (const b of BEATS) {
@@ -36,338 +32,350 @@ const beatPulse = (t: number, k = 10) => {
   return Math.exp(-(t - last) * k);
 };
 
-const BIG = '"Anton", "Impact", sans-serif';
-const ITAL = '"AItal", "Playfair Display", serif';
+const WIDE = '"AUnb", sans-serif';
+const MONO = '"AMono", monospace';
 const useFonts = () => {
-  const [handle] = useState(() => delayRender('font Arte'));
+  const [handle] = useState(() => delayRender('font Arte 3D'));
   useEffect(() => {
-    Promise.all([new FontFace('AItal', `url(${staticFile('roccia/font/PlayfairItalic.ttf')})`).load(), document.fonts.load(`100px Anton`)])
-      .then(([f]) => document.fonts.add(f))
+    Promise.all([
+      new FontFace('AUnb', `url(${staticFile('arte/font/Unbounded.ttf')})`, {weight: '200 900'}).load(),
+      new FontFace('AMono', `url(${staticFile('arte/font/SpaceMonoItalic.ttf')})`).load(),
+    ])
+      .then((fs) => fs.forEach((f) => document.fonts.add(f)))
       .finally(() => continueRender(handle));
   }, [handle]);
 };
 
-// ── che cosa è una parola ──
+// ── parole ──
 const norm = (s: string) => s.toLowerCase().replace(/[^a-zàèéìòù']/g, '');
-const SMALL = new Set(
-  "come il lo la l' le i un una se da di in ci ti mi che con per ma o e non tu cui sarà son lì nelle forse certo sarei solo bene tutti".split(' '),
-);
-const ACCENT = new Set(["l'arte", 'disparte', 'vero', "l'odio", 'fredde', 'assente', 'gente', 'dispersi']);
+const SMALL = new Set("come il lo la l' le i un una se da di in ci ti mi che con per ma o e non tu cui sarà son lì nelle forse certo sarei solo bene tutti".split(' '));
+const ACCENT = new Set(["l'arte", 'disparte', 'vero', "l'odio", 'fredde', 'assente', 'gente', 'dispersi', 'casa', 'artista']);
 const isSmall = (w: Word) => SMALL.has(norm(w.text));
 const isAccent = (w: Word) => ACCENT.has(norm(w.text));
+const COLD = (line: number) => line >= 12 && line <= 14; // "veniamo tutti da case fredde…": luce fredda
 
-// ── blocchi: frasi che si impilano insieme, poi si cambia pagina ──
-type Block = {lines: number[]; light?: boolean};
-const BLOCKS: Block[] = [
-  {lines: [0, 1]},
-  {lines: [2, 3, 4]},
-  {lines: [5, 6]},
-  {lines: [7]},
-  {lines: [8]},
-  {lines: [9], light: true},
-  {lines: [10, 11]},
-  {lines: [12, 13, 14]},
-  {lines: [15], light: true},
-];
-const blockWords = (b: Block) => WORDS.filter((w) => b.lines.includes(w.line));
-const blockStart = (i: number) => blockWords(BLOCKS[i])[0].start;
-const blockEnd = (i: number) => (i + 1 < BLOCKS.length ? blockStart(i + 1) - 0.03 : DURATION + 1);
+// ── mondo: ogni parola forte ha un posto nello spazio ──
+type V3 = {x: number; y: number; z: number};
+type Placed = {w: Word; p: V3; yaw: number; pitch: number; size: number; small: Placed[]; idx: number};
+const D = 520; // distanza della camera dalla parola che guarda
 
-// ── impaginazione misurata ──
 let ctx: CanvasRenderingContext2D | null = null;
-const measure = (text: string, font: string) => {
+const textW = (t: string, font: string) => {
   ctx ??= document.createElement('canvas').getContext('2d');
-  if (!ctx) return text.length * 50;
+  if (!ctx) return t.length * 60;
   ctx.font = font;
-  return ctx.measureText(text).width;
+  return ctx.measureText(t).width;
 };
-const MAXW = 900;
-const LEFT = 90;
-type Row = {kind: 'big' | 'small'; words: Word[]; size: number; y: number; h: number; widths: number[]};
-const layout = (ws: Word[]): Row[] => {
-  const rows: Row[] = [];
-  let pend: Word[] = [];
-  const flush = () => {
-    if (!pend.length) return;
-    let size = 70;
-    const wid = () => pend.map((w) => measure(w.text, `600 ${size}px ${ITAL}`));
-    const total = () => wid().reduce((a, b) => a + b, 0) + size * 0.28 * (pend.length - 1);
-    if (total() > MAXW) size = (size * MAXW) / total();
-    rows.push({kind: 'small', words: pend, size, y: 0, h: size * 1.2, widths: wid()});
-    pend = [];
-  };
-  ws.forEach((w) => {
+
+let WORLD: Placed[] | null = null;
+const world = (): Placed[] => {
+  if (WORLD) return WORLD;
+  const out: Placed[] = [];
+  let base: V3 = {x: 0, y: 0, z: 0};
+  let heading = 0;
+  let pendingSmall: Word[] = [];
+  let lastLine = -1;
+  let k = 0;
+  WORDS.forEach((w) => {
     if (isSmall(w)) {
-      pend.push(w);
+      pendingSmall.push(w);
       return;
     }
-    flush();
-    const txt = w.text.toUpperCase();
-    const size = Math.min(285, MAXW / (measure(txt, `100px ${BIG}`) / 100));
-    // due parole forti corte stanno sulla stessa riga
-    const prev = rows[rows.length - 1];
-    if (prev && prev.kind === 'big' && prev.words.length === 1 && prev.size < 300) {
-      const both = `${prev.words[0].text.toUpperCase()} ${txt}`;
-      const s2 = Math.min(240, MAXW / (measure(both, `100px ${BIG}`) / 100));
-      if (s2 >= 175 && prev.words[0].text.length + w.text.length <= 11) {
-        prev.words.push(w);
-        prev.size = s2;
-        prev.h = s2 * 0.98;
-        prev.widths = prev.words.map((x) => measure(x.text.toUpperCase(), `${s2}px ${BIG}`));
-        return;
-      }
+    if (w.line !== lastLine && out.length) {
+      // nuova frase: la strada gira e sale/scende
+      const prev = out[out.length - 1].p;
+      heading += (random(`h${w.line}`) > 0.5 ? 1 : -1) * (0.55 + random(`hh${w.line}`) * 0.35);
+      base = {x: prev.x + Math.sin(heading) * 1100, y: prev.y + (random(`y${w.line}`) - 0.5) * 500, z: prev.z - Math.cos(heading) * 1100};
+      k = 0;
     }
-    rows.push({kind: 'big', words: [w], size, y: 0, h: size * 0.98, widths: [measure(txt, `${size}px ${BIG}`)]});
+    lastLine = w.line;
+    const up = w.text.toUpperCase();
+    const size = Math.min(250, (980 / textW(up, `800 100px ${WIDE}`)) * 100);
+    const side = k % 2 ? 1 : -1;
+    const fwd = k * 780;
+    const lat = side * 230;
+    const p = {
+      x: base.x + Math.sin(heading) * fwd + Math.cos(heading) * lat,
+      y: base.y + ((k % 3) - 1) * 170,
+      z: base.z - Math.cos(heading) * fwd + Math.sin(heading) * lat,
+    };
+    const yaw = heading - side * 0.32;
+    const pitch = ((k % 3) - 1) * -0.12;
+    const pl: Placed = {w, p, yaw, pitch, size, small: [], idx: out.length};
+    // le parole piccole davanti si attaccano a questa, sopra
+    pendingSmall.forEach((s) => pl.small.push({w: s, p, yaw, pitch, size: 52, small: [], idx: -1}));
+    pendingSmall = [];
+    out.push(pl);
+    k++;
   });
-  flush();
-  let y = 0;
-  rows.forEach((r) => {
-    r.y = y;
-    y += r.h + 4;
-  });
-  return rows;
+  // parole piccole finali (dopo l'ultima forte della riga): vanno sotto la precedente
+  if (pendingSmall.length) out[out.length - 1].small.push(...pendingSmall.map((s) => ({w: s, p: out[out.length - 1].p, yaw: 0, pitch: 0, size: 52, small: [], idx: -1})));
+  // si memorizza solo quando i font sono pronti (le misure dipendono dal font)
+  if (typeof document !== 'undefined' && document.fonts.check(`800 100px ${WIDE}`)) WORLD = out;
+  return out;
 };
 
-/** riquadro disegnato a mano attorno a una parola (si adatta alla parola, niente misure) */
-const Scribble: React.FC<{t: number; seed: string; color: string}> = ({t, seed, color}) => {
-  const p = easeOut(clamp(t / 0.28));
-  if (p <= 0) return null;
-  const j = (k: string, a = 4) => (random(`${seed}${k}`) - 0.5) * a;
-  const pts = [
-    [j('a'), j('b') + 2],
-    [100 + j('c'), j('d')],
-    [99 + j('e'), 100 + j('f')],
-    [j('g') + 1, 99 + j('h')],
-    [j('i') + 4, j('j') + 6],
-  ];
-  const d = pts.map((q, i) => `${i ? 'L' : 'M'}${q[0].toFixed(1)},${q[1].toFixed(1)}`).join(' ');
-  return (
-    <svg style={{position: 'absolute', left: '-6%', top: '-8%', width: '112%', height: '116%', overflow: 'visible'}} viewBox="0 0 100 100" preserveAspectRatio="none">
-      <path d={d} pathLength={100} fill="none" stroke={color} strokeWidth={5} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" strokeDasharray={100} strokeDashoffset={100 * (1 - p)} />
-    </svg>
-  );
+// ── telecamera ──
+type Cam = {x: number; y: number; z: number; yaw: number; pitch: number; roll: number};
+const camFor = (pl: Placed, i: number): Cam => {
+  const side = random(`cs${i}`) > 0.5 ? 1 : -1;
+  const yaw = pl.yaw + side * 0.18;
+  const dist = D + (pl.size < 150 ? -60 : 0);
+  return {
+    x: pl.p.x + Math.sin(yaw) * dist,
+    y: pl.p.y - 40 + (random(`cy${i}`) - 0.5) * 120,
+    z: pl.p.z + Math.cos(yaw) * dist,
+    yaw,
+    pitch: pl.pitch * 0.6 + (random(`cp${i}`) - 0.5) * 0.08,
+    roll: (random(`cr${i}`) - 0.5) * (isAccent(pl.w) ? 0.22 : 0.1),
+  };
 };
-
-/** onda dell'audio vera, a barre specchiate */
-const Wave: React.FC<{width: number; height: number; color: string; frame: number}> = ({width, height, color, frame}) => {
-  const audio = useAudioData(WAVE);
-  if (!audio) return null;
-  const n = 48;
-  const vals = visualizeAudio({fps: FPS, frame, audioData: audio, numberOfSamples: 64, smoothing: true}).slice(0, n);
-  const bw = width / n;
-  return (
-    <svg width={width} height={height} style={{overflow: 'visible'}}>
-      {vals.map((v, i) => {
-        const hh = Math.max(3, Math.min(1, v * 5 + 0.04) * height);
-        return <rect key={i} x={i * bw + bw * 0.2} y={(height - hh) / 2} width={bw * 0.6} height={hh} rx={bw * 0.3} fill={color} />;
-      })}
-    </svg>
-  );
-};
-
-// ── un blocco di testo ──
-const BlockView: React.FC<{i: number; g: number; frame: number}> = ({i, g, frame}) => {
-  const b = BLOCKS[i];
-  const ws = blockWords(b);
-  const rows = layout(ws);
-  const a = blockStart(i);
-  const e = blockEnd(i);
-  if (g < a - 0.05 || g > e + 0.01) return null;
-  const light = !!b.light;
-  const bigs = ws.filter((w) => !isSmall(w));
-  const lastBig = bigs.filter((w) => w.start - 0.03 <= g).pop();
-
-  // camera: segue la riga più recente, con una corsa morbida
-  const shown = rows.filter((r) => r.words[0].start - 0.03 <= g);
-  const focusOf = (r: Row) => r.y + r.h / 2;
-  let cam = rows.length ? focusOf(rows[0]) : 0;
-  shown.forEach((r, k) => {
-    const target = Math.max(focusOf(r), k === 0 ? 0 : 0);
-    cam = cam + (target - cam) * easeOut(prog(g, r.words[0].start - 0.03, r.words[0].start + 0.32));
+const mix = (a: Cam, b: Cam, t: number): Cam => ({
+  x: lerp(a.x, b.x, t),
+  y: lerp(a.y, b.y, t),
+  z: lerp(a.z, b.z, t),
+  yaw: lerp(a.yaw, b.yaw, t),
+  pitch: lerp(a.pitch, b.pitch, t),
+  roll: lerp(a.roll, b.roll, t),
+});
+const camera = (g: number): Cam => {
+  const W3 = world();
+  let cam = camFor(W3[0], 0);
+  // partenza: lontano e in alto, poi scende sulla prima parola
+  cam = {...cam, z: cam.z + 2200, y: cam.y - 500, pitch: 0.25};
+  W3.forEach((pl, i) => {
+    const s = pl.w.start - 0.06;
+    const prev = W3[i - 1];
+    const newPhrase = !prev || prev.w.line !== pl.w.line;
+    const dur = newPhrase ? 0.55 : Math.min(0.42, Math.max(0.2, pl.w.start - (prev?.w.start ?? 0)));
+    const t = prog(g, s, s + dur);
+    if (t > 0) cam = mix(cam, camFor(pl, i), easeInOut(t));
   });
-  const anchor = 980;
-  const ty = anchor - cam;
+  // l'intermezzo: orbita lenta attorno a "l'arte"
+  const orb = prog(g, 1.7, 5.3);
+  if (orb > 0 && orb < 1) {
+    const pl = W3.find((x) => norm(x.w.text) === "l'arte")!;
+    const a = pl.yaw + Math.sin(orb * Math.PI) * 0.9;
+    const r = D + 250 * Math.sin(orb * Math.PI);
+    const o: Cam = {x: pl.p.x + Math.sin(a) * r, y: pl.p.y - 60 - 260 * Math.sin(orb * Math.PI), z: pl.p.z + Math.cos(a) * r, yaw: a, pitch: 0.18 * Math.sin(orb * Math.PI), roll: -0.06};
+    cam = mix(cam, o, Math.sin(orb * Math.PI) ** 0.5);
+  }
+  // finale: la camera si allontana e sale
+  const fin = easeInOut(prog(g, 28.25, DURATION + 0.4));
+  if (fin > 0) cam = {...cam, z: cam.z + Math.cos(cam.yaw) * 900 * fin, x: cam.x + Math.sin(cam.yaw) * 900 * fin, y: cam.y - 300 * fin};
+  // mano: piccolo respiro continuo
+  return {...cam, x: cam.x + Math.sin(g * 0.9) * 14, y: cam.y + Math.sin(g * 1.3) * 10, roll: cam.roll + Math.sin(g * 0.7) * 0.015};
+};
 
-  // uscita: quattro modi, a giro
-  const out = prog(g, e - 0.15, e);
-  const kind = i % 4;
-  const outT =
-    kind === 0
-      ? `scale(${1 + easeIn(out) * 0.6}, ${1 - easeIn(out) * 0.3})`
-      : kind === 1
-        ? `translateY(${easeIn(out) * 500}px) rotate(${easeIn(out) * 6}deg)`
-        : kind === 2
-          ? `scale(${1 + easeIn(out) * 1.6})`
-          : `translateX(${-easeIn(out) * 900}px) skewX(${easeIn(out) * 20}deg)`;
+/** posizione di un punto nello spazio della camera (z negativo = davanti) */
+const toCam = (p: V3, c: Cam) => {
+  const x = p.x - c.x;
+  const y = p.y - c.y;
+  const z = p.z - c.z;
+  const cy = Math.cos(-c.yaw);
+  const sy = Math.sin(-c.yaw);
+  return {x: x * cy + z * sy, y, z: -x * sy + z * cy};
+};
 
-  const dim = light ? '#B6AC9E' : '#4E4843';
-  const bright = light ? '#141110' : '#F6F0E6';
-  const smallC = light ? '#6E655C' : '#958C83';
-  const red = '#E0262E';
-  const bp = beatPulse(g);
-  let bigIdx = 0;
+const PERSP = 1500;
 
+const WordView: React.FC<{pl: Placed; g: number; cam: Cam; cur: boolean}> = ({pl, g, cam, cur}) => {
+  const t = g - (pl.w.start - 0.04);
+  if (t < 0) return null;
+  const cs = toCam(pl.p, cam);
+  const depth = -cs.z;
+  if (depth < 120 || depth > 6000) return null;
+  const k = Math.exp(-t * 16);
+  const blur = Math.min(9, Math.abs(depth - D) / 260) + k * 6;
+  const fog = clamp(1 - (depth - 1500) / 3500);
+  const acc = isAccent(pl.w);
+  const cold = COLD(pl.w.line);
+  const accC = cold ? '#7FE6FF' : '#FF8A2A';
+  const color = acc ? accC : cur ? '#F2F6FF' : '#8D9BB5';
+  const glow = acc ? `0 0 30px ${accC}, 0 0 80px ${accC}66` : cur ? '0 0 26px rgba(170,200,255,0.45)' : 'none';
   return (
-    <AbsoluteFill style={{transform: outT, opacity: 1 - easeIn(out), filter: out > 0 ? `blur(${out * 10}px)` : undefined}}>
-      <div style={{position: 'absolute', left: 0, top: ty, width: W, transform: `scale(${1 + bp * 0.012})`, transformOrigin: `50% ${cam}px`}}>
-        {rows.map((r, ri) => {
-          return (
-            <div
-              key={ri}
-              style={{position: 'absolute', left: 0, top: r.y, width: W, height: r.h, display: 'flex', alignItems: 'flex-start', paddingLeft: LEFT + (r.kind === 'small' ? 8 : 0), gap: r.kind === 'big' ? r.size * 0.22 : r.size * 0.28}}
-            >
-              {r.words.map((w, wi) => {
-                const t = g - (w.start - 0.03);
-                if (t < 0) return null;
-                const acc = isAccent(w);
-                if (r.kind === 'small') {
-                  const p = easeOut(clamp(t / 0.16));
-                  return (
-                    <div
-                      key={wi}
-                      style={{
-                        position: 'relative',
-                        fontFamily: ITAL,
-                        fontWeight: 600,
-                        fontSize: r.size,
-                        lineHeight: 1.2,
-                        whiteSpace: 'nowrap',
-                        color: acc ? red : smallC,
-                        opacity: p,
-                        transform: `translateY(${(1 - p) * 22}px)`,
-                        filter: p < 1 ? `blur(${(1 - p) * 5}px)` : undefined,
-                      }}
-                    >
-                      {w.text}
-                      {acc && <Scribble t={t - 0.08} seed={`s${w.start}`} color={red} />}
-                    </div>
-                  );
-                }
-                const k = Math.exp(-t * 24);
-                const isCur = lastBig === w;
-                const outline = !acc && bigIdx++ % 4 === 2;
-                // colore: chiaro appena detta, poi si spegne
-                const fade = isCur ? 0 : 1;
-                const col = acc ? red : fade ? dim : bright;
-                const rgb = isCur ? bp * 2.5 + k * 9 : 0;
-                return (
-                  <div
-                    key={wi}
-                    style={{
-                      position: 'relative',
-                      fontFamily: BIG,
-                      fontSize: r.size,
-                      lineHeight: 1,
-                      whiteSpace: 'nowrap',
-                      letterSpacing: `${k * 0.08}em`,
-                      color: outline ? 'transparent' : col,
-                      WebkitTextStroke: outline ? `${Math.max(2, r.size / 70)}px ${isCur ? bright : dim}` : undefined,
-                      transform: `scale(${1 + 0.32 * k}) translateY(${k * 30}px)`,
-                      transformOrigin: '0% 70%',
-                      opacity: Math.min(1, t / 0.03),
-                      filter: t < 0.06 ? `blur(${(1 - t / 0.06) * 8}px)` : undefined,
-                      textShadow: rgb > 0.5 ? `${-rgb}px 0 0 rgba(255,30,50,0.55), ${rgb}px 0 0 rgba(30,220,255,0.5)` : undefined,
-                    }}
-                  >
-                    {w.text.toUpperCase()}
-                    {acc && <Scribble t={t - 0.1} seed={`b${w.start}`} color={light ? '#141110' : '#F6F0E6'} />}
-                    {acc && light && (
-                      <div style={{position: 'absolute', left: 0, top: r.size * 1.02}}>
-                        <Wave width={r.widths[wi]} height={r.size * 0.38} color={red} frame={frame} />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        transform: `translate3d(${pl.p.x}px, ${pl.p.y}px, ${pl.p.z}px) rotateY(${pl.yaw}rad) rotateX(${pl.pitch}rad) translate(-50%, -50%) scale(${1 + 0.5 * k})`,
+        opacity: Math.min(1, t / 0.05) * fog,
+        filter: blur > 0.6 ? `blur(${blur.toFixed(1)}px)` : undefined,
+        textAlign: 'center',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {/* parole piccole sopra: mono corsivo, entrano a tempo */}
+      <div style={{fontFamily: MONO, fontSize: 58, color: '#A9BCDD', letterSpacing: '0.06em', height: 72, marginBottom: 8}}>
+        {pl.small
+          .filter((s) => g >= s.w.start - 0.04)
+          .map((s, i) => (
+            <span key={i} style={{opacity: Math.min(1, (g - s.w.start + 0.04) / 0.1), marginRight: 18}}>
+              {s.w.text}
+            </span>
+          ))}
       </div>
-    </AbsoluteFill>
+      <div
+        style={{
+          fontFamily: WIDE,
+          fontWeight: 800,
+          fontSize: pl.size,
+          lineHeight: 1,
+          color,
+          textShadow: glow,
+          letterSpacing: `${-0.01 + k * 0.1}em`,
+        }}
+      >
+        {pl.w.text.toUpperCase()}
+      </div>
+    </div>
   );
 };
 
-/** l'intermezzo strumentale: "l'arte" respira sul beat con l'onda sotto */
-const Interlude: React.FC<{g: number; frame: number}> = ({g, frame}) => {
-  const a = 1.75;
-  const b = 5.35;
-  if (g < a || g > b) return null;
-  const p = easeOut(prog(g, a, a + 0.5));
-  const o = 1 - easeIn(prog(g, b - 0.2, b));
+/** pavimento bagnato: griglia che riflette le luci, segue la camera */
+const Floor: React.FC<{cam: Cam; cold: number}> = ({cam, cold}) => {
+  const step = 400;
+  const fx = Math.round(cam.x / step) * step;
+  const fz = Math.round(cam.z / step) * step;
+  const c = cold > 0.5 ? '120,220,255' : '255,140,60';
   return (
-    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 380, opacity: p * o}}>
-      <Wave width={800} height={140} color="#E0262E" frame={frame} />
-    </AbsoluteFill>
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: 12000,
+        height: 12000,
+        transform: `translate3d(${fx}px, ${cam.y + 1000}px, ${fz}px) translate(-50%, -50%) rotateX(90deg)`,
+        backgroundColor: 'rgba(4,6,12,0.9)',
+        backgroundImage: `linear-gradient(rgba(${c},0.45) 3px, transparent 3px), linear-gradient(90deg, rgba(${c},0.45) 3px, transparent 3px), radial-gradient(closest-side, rgba(${c},0.12), transparent)`,
+        backgroundSize: `${step}px ${step}px, ${step}px ${step}px, 100% 100%`,
+        backgroundPosition: 'center',
+        WebkitMaskImage: 'radial-gradient(closest-side, #000 20%, transparent 75%)',
+      }}
+    />
   );
 };
+
+/** luci della città lontane, sfocate */
+const Bokeh: React.FC<{cam: Cam; cold: number}> = ({cam, cold}) => (
+  <>
+    {Array.from({length: 46}, (_, i) => {
+      const a = random(`bk${i}`) * Math.PI * 2;
+      const r = 5000 + random(`br${i}`) * 3000;
+      const p = {x: Math.sin(a) * r, y: -300 + random(`by${i}`) * 1100, z: -Math.cos(a) * r};
+      const cs = toCam(p, {...cam, x: cam.x * 0.15, z: cam.z * 0.15});
+      if (-cs.z < 200) return null;
+      const s = PERSP / -cs.z;
+      const sx = W / 2 + cs.x * s;
+      const sy = H / 2 + (cs.y - 0) * s;
+      if (sx < -200 || sx > W + 200) return null;
+      const sz = 30 + random(`bs${i}`) * 70;
+      const hue = random(`bc${i}`);
+      const col = cold > 0.5 ? (hue > 0.5 ? '120,220,255' : '180,200,255') : hue > 0.6 ? '255,150,60' : hue > 0.3 ? '255,90,70' : '160,200,255';
+      return (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            left: sx - sz / 2,
+            top: sy - sz / 2,
+            width: sz,
+            height: sz,
+            borderRadius: '50%',
+            background: `radial-gradient(circle, rgba(${col},0.55) 0%, rgba(${col},0.15) 50%, transparent 70%)`,
+          }}
+        />
+      );
+    })}
+  </>
+);
+
+/** pioggia: righe sottili, più inclinate quando la camera si muove di lato */
+const Rain: React.FC<{g: number; vx: number}> = ({g, vx}) => (
+  <>
+    {Array.from({length: 90}, (_, i) => {
+      const x0 = random(`rx${i}`) * (W + 400) - 200;
+      const sp = 2600 + random(`rs${i}`) * 1600;
+      const len = 60 + random(`rl${i}`) * 120;
+      const y = ((random(`ry${i}`) * (H + 400) + g * sp) % (H + 400)) - 200;
+      const ang = Math.max(-35, Math.min(35, -vx * 0.012)) + 8;
+      return (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            left: x0 - (y * Math.tan((ang * Math.PI) / 180)) * 0.3,
+            top: y,
+            width: 2,
+            height: len,
+            background: 'linear-gradient(transparent, rgba(190,210,255,0.35))',
+            transform: `rotate(${ang}deg)`,
+          }}
+        />
+      );
+    })}
+  </>
+);
 
 export const Arte: React.FC = () => {
   useFonts();
   const frame = useCurrentFrame();
   const g = frame / FPS;
-  const bi = BLOCKS.findIndex((_, i) => g >= blockStart(i) - 0.05 && g <= blockEnd(i) + 0.01);
-  const light = bi >= 0 && !!BLOCKS[bi].light;
-  // passaggio alla carta: un cerchio che si apre dal centro
-  const lightStart = bi >= 0 && light ? blockStart(bi) - 0.05 : 0;
-  const iris = light ? easeOut(prog(g, lightStart, lightStart + 0.22)) : 0;
+  const W3 = world();
+  const cam = camera(g);
+  const prev = camera(g - 1 / FPS);
+  const speed = Math.hypot(cam.x - prev.x, cam.y - prev.y, cam.z - prev.z) * FPS + Math.abs(cam.yaw - prev.yaw) * FPS * 900;
+  const vx = (cam.x - prev.x) * Math.cos(cam.yaw) * FPS - (cam.z - prev.z) * Math.sin(cam.yaw) * FPS + (cam.yaw - prev.yaw) * FPS * 1200;
+  const shown = W3.filter((p) => g >= p.w.start - 0.04);
+  const cur = shown[shown.length - 1];
+  const coldNow = cur && COLD(cur.w.line) ? 1 : 0;
   const bp = beatPulse(g);
+  const motionBlur = Math.min(7, speed / 900);
+  const accHit = cur && isAccent(cur.w) ? Math.exp(-(g - cur.w.start) * 6) : 0;
+  const fade = Math.max(1 - prog(g, 0, 0.5), prog(g, DURATION - 0.4, DURATION));
   const f2 = Math.floor(frame / 2);
-  const flash = BLOCKS.map((_, i) => (i % 4 === 3 ? Math.exp(-Math.abs(g - blockStart(i)) * 30) : 0)).reduce((x, y) => Math.max(x, y), 0);
-  const fade = Math.max(1 - prog(g, 0, 0.3), prog(g, DURATION - 0.45, DURATION));
-  const drift = Math.sin(g * 0.35) * 8;
+  const sky = coldNow
+    ? 'linear-gradient(180deg, #02060C 0%, #071624 45%, #0C2A3A 62%, #03080E 100%)'
+    : 'linear-gradient(180deg, #02030A 0%, #08101F 45%, #1A1420 62%, #04050A 100%)';
   return (
-    <AbsoluteFill style={{background: '#0E0C0B', overflow: 'hidden'}}>
-      {/* fondo scuro caldo con una luce che vaga piano */}
-      <AbsoluteFill style={{background: 'radial-gradient(75% 45% at 50% 46%, #2B2622 0%, #171412 55%, #0B0A09 100%)'}} />
-      <AbsoluteFill
-        style={{
-          background: `radial-gradient(40% 25% at ${45 + drift}% ${40 + drift / 2}%, rgba(255,210,170,${0.05 + bp * 0.035}) 0%, transparent 70%)`,
-        }}
-      />
-      {/* carta chiara */}
-      {light && (
-        <AbsoluteFill style={{clipPath: `circle(${iris * 120}% at 50% 50%)`}}>
-          <AbsoluteFill style={{background: 'radial-gradient(80% 55% at 50% 48%, #F1EBDF 0%, #E3DBCC 60%, #CFC5B4 100%)'}} />
-        </AbsoluteFill>
-      )}
-      {/* testo */}
-      <AbsoluteFill style={{transform: `rotate(${Math.sin(g * 0.5) * 0.6}deg) scale(${1 + g * 0.002})`}}>
-        {BLOCKS.map((_, i) => (
-          <BlockView key={i} i={i} g={g} frame={frame} />
-        ))}
-        <Interlude g={g} frame={frame} />
-      </AbsoluteFill>
-      {/* dettagli da impaginato: numero del blocco e barra di avanzamento */}
-      {bi >= 0 && (
+    <AbsoluteFill style={{background: '#03040A', overflow: 'hidden'}}>
+      <AbsoluteFill style={{background: sky}} />
+      <Bokeh cam={cam} cold={coldNow} />
+      {/* mondo 3D */}
+      <AbsoluteFill style={{perspective: PERSP, perspectiveOrigin: '50% 50%', filter: motionBlur > 0.5 ? `blur(${motionBlur.toFixed(1)}px)` : undefined}}>
         <div
           style={{
             position: 'absolute',
-            left: LEFT,
-            top: 200,
-            fontFamily: ITAL,
-            fontSize: 34,
-            color: light ? '#8A8075' : '#5C554F',
-            letterSpacing: '0.1em',
+            left: W / 2,
+            top: H / 2,
+            width: 0,
+            height: 0,
+            transformStyle: 'preserve-3d',
+            transform: `scale(${1 + bp * 0.015 + accHit * 0.04}) rotateZ(${-cam.roll}rad) rotateX(${-cam.pitch}rad) rotateY(${-cam.yaw}rad) translate3d(${-cam.x}px, ${-cam.y}px, ${-cam.z}px)`,
           }}
         >
-          N°{String(bi + 1).padStart(2, '0')}
-          <span style={{display: 'inline-block', width: 12, height: 12, borderRadius: 6, background: '#E0262E', marginLeft: 16, transform: `scale(${0.7 + bp * 0.6})`}} />
+          <Floor cam={cam} cold={coldNow} />
+          {W3.map((pl) => (
+            <WordView key={pl.idx} pl={pl} g={g} cam={cam} cur={pl === cur} />
+          ))}
         </div>
-      )}
-      <div style={{position: 'absolute', left: LEFT, bottom: 330, height: 3, width: (W - 2 * LEFT) * clamp(g / DURATION), background: light ? '#141110' : '#3E3833'}} />
-      {/* grana */}
+      </AbsoluteFill>
+      <Rain g={g} vx={vx} />
+      {/* bagliore sulle parole chiave */}
+      {accHit > 0.02 && <AbsoluteFill style={{background: `radial-gradient(60% 40% at 50% 50%, ${coldNow ? 'rgba(120,230,255,' : 'rgba(255,140,50,'}${accHit * 0.25}) 0%, transparent 70%)`, mixBlendMode: 'screen'}} />}
       <AbsoluteFill
         style={{
           backgroundImage: `url(${staticFile('simba/grain.png')})`,
           backgroundPosition: `${Math.floor(random(`g${f2}`) * 512)}px ${Math.floor(random(`h${f2}`) * 512)}px`,
-          mixBlendMode: light ? 'multiply' : 'overlay',
-          opacity: light ? 0.12 : 0.16,
+          mixBlendMode: 'overlay',
+          opacity: 0.14,
         }}
       />
-      <AbsoluteFill style={{background: 'radial-gradient(90% 70% at 50% 50%, transparent 55%, rgba(0,0,0,0.45) 100%)'}} />
-      {flash > 0.02 && <AbsoluteFill style={{background: '#F6F0E6', opacity: flash * 0.8}} />}
+      <AbsoluteFill style={{background: 'radial-gradient(95% 65% at 50% 50%, transparent 50%, rgba(0,0,0,0.65) 100%)'}} />
       <AbsoluteFill style={{background: '#000', opacity: fade}} />
-      <Audio src={AUDIO} />
+      <Audio src={staticFile('arte/audio.m4a')} />
     </AbsoluteFill>
   );
 };
