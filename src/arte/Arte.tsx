@@ -76,7 +76,7 @@ const layoutRows = (ws: Word[]): Row[] => {
   const flush = () => {
     if (!pend.length) return;
     const txt = pend.map((w) => w.text).join(' ');
-    rows.push({kind: 'small', words: pend, size: Math.min(96, (PLATE_W / textW(txt, `100px ${MONO}`)) * 100)});
+    rows.push({kind: 'small', words: pend, size: Math.min(135, (PLATE_W * 0.9 / textW(txt, `100px ${MONO}`)) * 100)});
     pend = [];
   };
   ws.forEach((w) => {
@@ -132,7 +132,7 @@ const plates = (): Plate[] => {
 type Cam = {x: number; y: number; z: number; yaw: number; pitch: number; roll: number};
 const KEYS_ = ['x', 'y', 'z', 'yaw', 'pitch', 'roll'] as const;
 /** distanza perché tutta la frase stia nello schermo, il più grande possibile */
-const distFor = (pl: Plate) => Math.max(PERSP * (PLATE_W / (W * 0.72)) - PERSP, PERSP * (pl.h / (H * 0.58)) - PERSP, 300);
+const distFor = (pl: Plate) => Math.max(PERSP * (PLATE_W / (W * 0.68)) - PERSP, PERSP * (pl.h / (H * 0.58)) - PERSP, 300);
 const camFor = (pl: Plate, push = 0, swing = 0): Cam => {
   const side = random(`cs${pl.line}`) > 0.5 ? 1 : -1;
   const yaw = pl.yaw + side * (0.06 + swing);
