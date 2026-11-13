@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Ball, C, Check, DISPLAY, FlagBG, FlagIS, Kicker, SceneBox, UI, at, atEnd, clamp, cue, easeBack, easeIn, easeInOut, easeOut, glass, pop, prog} from './kit';
+import {Ball, C, Check, DISPLAY, FlagIS, Kicker, SceneBox, Shirt, UI, WavingFlag, at, atEnd, clamp, cue, easeBack, easeIn, easeInOut, easeOut, glass, pop, prog} from './kit';
 
 /** le scene dopo l'intro: numeri col club, numeri in nazionale, l'andata, la lettura, il pronostico, la chiusura */
 
@@ -49,12 +49,8 @@ export const Liga: React.FC<{g: number}> = ({g}) => {
   return (
     <SceneBox g={g} id="liga">
       <div style={{position: 'absolute', left: LEFT, top: 300, display: 'flex', alignItems: 'center', gap: 28, ...head}}>
-        {/* le strisce bianco-azzurre della Real Sociedad */}
-        <div style={{width: 120, height: 120, borderRadius: 22, overflow: 'hidden', display: 'flex', border: '3px solid #fff', boxShadow: '0 10px 30px rgba(0,0,0,0.4)'}}>
-          {Array.from({length: 5}, (_, i) => (
-            <div key={i} style={{flex: 1, background: i % 2 ? '#fff' : C.rsBlue}} />
-          ))}
-        </div>
+        {/* la maglia bianco-azzurra a strisce della Real Sociedad, col suo 9 */}
+        <Shirt size={140} kind="rs" num="9" />
         <div>
           <Kicker style={{fontSize: 30}}>IN LIGA · QUEST'ANNO</Kicker>
           <div style={{fontFamily: DISPLAY, fontSize: 100, lineHeight: 1.02, color: '#fff'}}>REAL SOCIEDAD</div>
@@ -159,7 +155,7 @@ export const Nazionale: React.FC<{g: number}> = ({g}) => {
                       width: 170,
                       height: 170,
                       borderRadius: '50%',
-                      background: `radial-gradient(circle at 35% 30%, #0A67C4 0%, ${C.isBlue} 60%, #013A70 100%)`,
+                      background: `radial-gradient(circle at 35% 30%, #13306E 0%, ${C.navy} 70%)`,
                       border: `5px solid ${ck > 0.5 ? C.cyan : '#fff'}`,
                       boxShadow: ck > 0.5 ? `0 0 34px ${C.cyan}99` : '0 10px 30px rgba(0,0,0,0.45)',
                       display: 'flex',
@@ -171,7 +167,7 @@ export const Nazionale: React.FC<{g: number}> = ({g}) => {
                       color: '#fff',
                     }}
                   >
-                    9
+                    <Shirt size={128} kind="is" num="9" />
                     <div style={{position: 'absolute', right: -6, bottom: -6, width: 62, height: 62, borderRadius: '50%', background: C.navy, border: `3px solid ${C.cyan}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${easeBack(ck)})`}}>
                       <Check size={40} />
                     </div>
@@ -232,7 +228,8 @@ export const Andata: React.FC<{g: number}> = ({g}) => {
   const digit = (t: number, v: string) => {
     const p = prog(g, t - 0.05, t + 0.25);
     return (
-      <div style={{width: 120, height: 170, borderRadius: 14, background: '#fff', color: C.navy, fontFamily: DISPLAY, fontSize: 140, lineHeight: '170px', textAlign: 'center', overflow: 'hidden', boxShadow: 'inset 0 -6px 0 rgba(0,0,0,0.12)'}}>
+      <div style={{position: 'relative', width: 120, height: 170, borderRadius: 14, background: p > 0 ? '#fff' : 'rgba(255,255,255,0.12)', border: p > 0 ? 'none' : `3px solid ${C.cyan}66`, color: C.navy, fontFamily: DISPLAY, fontSize: 140, lineHeight: '170px', textAlign: 'center', overflow: 'hidden', boxShadow: 'inset 0 -6px 0 rgba(0,0,0,0.12)'}}>
+        {p <= 0 && <div style={{position: 'absolute', inset: 0, color: C.cyan, fontSize: 110, lineHeight: '164px', opacity: 0.6 + 0.4 * Math.sin(g * 8)}}>?</div>}
         <div style={{transform: `translateY(${(1 - easeOut(p)) * 100}%)`, opacity: p > 0 ? 1 : 0}}>{v}</div>
       </div>
     );
@@ -246,7 +243,7 @@ export const Andata: React.FC<{g: number}> = ({g}) => {
       {/* tabellone */}
       <div style={{...glass, position: 'absolute', left: LEFT, top: 410, width: COL, height: 290, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 36px', ...pop(g, c.start, 70)}}>
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: 230}}>
-          <FlagIS w={130} />
+          <WavingFlag kind="is" g={g} fw={140} amp={4} strips={20} style={{boxShadow: '0 6px 18px rgba(0,0,0,0.5)'}} />
           <div style={{fontFamily: DISPLAY, fontSize: 64, color: '#fff'}}>ISLANDA</div>
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 18}}>
@@ -255,7 +252,7 @@ export const Andata: React.FC<{g: number}> = ({g}) => {
           {digit(t0, '0')}
         </div>
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: 230}}>
-          <FlagBG w={130} />
+          <WavingFlag kind="bg" g={g + 0.5} fw={140} amp={4} strips={20} style={{boxShadow: '0 6px 18px rgba(0,0,0,0.5)'}} />
           <div style={{fontFamily: DISPLAY, fontSize: 64, color: '#fff'}}>BULGARIA</div>
         </div>
       </div>

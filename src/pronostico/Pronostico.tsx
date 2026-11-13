@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, OffthreadVideo, Sequence, random, staticFile, useCurrentFrame} from 'remotion';
 import {CLIPS} from './clips';
-import {C, DISPLAY, FPS, FRAMES, FlagBG, FlagIS, H, SCENES, UI, VOICE, W, at, clamp, cue, easeBack, easeIn, easeInOut, easeOut, hit, prog, scene} from './kit';
+import {C, DISPLAY, FPS, FRAMES, FlagBG, FlagIS, H, SCENES, UI, VOICE, W, WavingFlag, at, clamp, cue, easeBack, easeIn, easeInOut, easeOut, hit, prog, scene} from './kit';
 import {Andata, Chiusura, Liga, Lettura, Nazionale, Pronostico5} from './Scenes';
 
 /**
@@ -161,23 +161,9 @@ const Background: React.FC<{g: number}> = ({g}) => (
 const PANEL_H = 640;
 const SLANT = 80; // dislivello del taglio diagonale (≈ 4.2°)
 
-const BulgariaFill: React.FC = () => (
-  <AbsoluteFill style={{transform: 'skewY(-4.2deg) scale(1.2)'}}>
-    <div style={{flex: 1, background: C.bgWhite}} />
-    <div style={{flex: 1, background: C.bgGreen}} />
-    <div style={{flex: 1, background: C.bgRed}} />
-  </AbsoluteFill>
-);
-
-const IcelandFill: React.FC<{g: number}> = ({g}) => (
-  <AbsoluteFill style={{background: `linear-gradient(120deg, #013A70 0%, ${C.isBlue} 55%, #0466C8 100%)`}}>
-    {/* croce nordica (asta a sinistra, come sulla bandiera) che si allunga mentre il pannello entra; il nome sta sotto */}
-    <div style={{position: 'absolute', left: 0, right: 0, top: 150, height: 140, background: C.bgWhite, transformOrigin: '0% 50%', transform: `scaleX(${easeOut(prog(g, 0.45, 1.1))})`}} />
-    <div style={{position: 'absolute', left: 0, right: 0, top: 185, height: 70, background: C.isRed, transformOrigin: '0% 50%', transform: `scaleX(${easeOut(prog(g, 0.55, 1.2))})`}} />
-    <div style={{position: 'absolute', left: 230, width: 140, top: 0, bottom: 0, background: C.bgWhite}} />
-    <div style={{position: 'absolute', left: 265, width: 70, top: 0, bottom: 0, background: C.isRed}} />
-  </AbsoluteFill>
-);
+/** fondo dei pannelli: la bandiera vera, a tutta larghezza, che sventola */
+const BulgariaFill: React.FC<{g: number}> = ({g}) => <WavingFlag kind="bg" g={g} fw={1130} vw={W} vh={PANEL_H} ox={-25} oy={-19} amp={14} />;
+const IcelandFill: React.FC<{g: number}> = ({g}) => <WavingFlag kind="is" g={g + 0.6} fw={1130} vw={W} vh={PANEL_H} ox={-25} oy={-200} amp={14} />;
 
 const TeamPanel: React.FC<{g: number; side: 'top' | 'bottom'}> = ({g, side}) => {
   const top = side === 'top';
@@ -191,13 +177,13 @@ const TeamPanel: React.FC<{g: number; side: 'top' | 'bottom'}> = ({g, side}) => 
   return (
     <div style={{position: 'absolute', left: 0, top: y0, width: W, height: PANEL_H, transform: `translate(${tx}px, ${ty}px)`}}>
       <div style={{position: 'absolute', inset: 0, clipPath: clip, overflow: 'hidden', display: 'flex', flexDirection: 'column'}}>
-        {top ? <BulgariaFill /> : <IcelandFill g={g} />}
+        {top ? <BulgariaFill g={g} /> : <IcelandFill g={g} />}
         {/* ombra dal lato del nome, per leggerlo su qualsiasi colore */}
         <AbsoluteFill
           style={{
             background: top
-              ? 'linear-gradient(90deg, rgba(4,8,30,0.92) 0%, rgba(4,8,30,0.75) 45%, rgba(4,8,30,0.05) 85%)'
-              : 'linear-gradient(270deg, rgba(4,8,30,0.85) 0%, rgba(4,8,30,0.55) 40%, rgba(4,8,30,0.0) 80%)',
+              ? 'linear-gradient(90deg, rgba(4,8,30,0.78) 0%, rgba(4,8,30,0.45) 45%, rgba(4,8,30,0) 75%)'
+              : 'linear-gradient(270deg, rgba(4,8,30,0.78) 0%, rgba(4,8,30,0.45) 45%, rgba(4,8,30,0) 75%)',
           }}
         />
         {/* bordo luminoso sul taglio */}
@@ -213,8 +199,11 @@ const TeamPanel: React.FC<{g: number; side: 'top' | 'bottom'}> = ({g, side}) => 
           opacity: nameIn,
         }}
       >
-        <div style={{fontFamily: UI, fontWeight: 700, fontSize: 30, letterSpacing: 8, color: top ? C.silver : C.silver, opacity: 0.85}}>{top ? 'IN CASA' : 'OSPITI'}</div>
-        <div style={{fontFamily: DISPLAY, fontSize: 190, lineHeight: 1, color: '#fff', textShadow: '0 10px 40px rgba(0,0,0,0.6)'}}>{top ? 'BULGARIA' : 'ISLANDA'}</div>
+        <div style={{display: 'flex', alignItems: 'center', gap: 16, flexDirection: top ? 'row' : 'row-reverse'}}>
+          <WavingFlag kind={top ? 'bg' : 'is'} g={g * 1.2} fw={96} amp={3} strips={16} style={{boxShadow: '0 6px 18px rgba(0,0,0,0.5)'}} />
+          <div style={{fontFamily: UI, fontWeight: 800, fontSize: 30, letterSpacing: 8, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,0.8)'}}>{top ? 'IN CASA' : 'OSPITI'}</div>
+        </div>
+        <div style={{fontFamily: DISPLAY, fontSize: 190, lineHeight: 1, color: '#fff', textShadow: '0 4px 0 rgba(0,0,0,0.35), 0 10px 40px rgba(0,0,0,0.8)'}}>{top ? 'BULGARIA' : 'ISLANDA'}</div>
       </div>
     </div>
   );
@@ -338,8 +327,6 @@ const Reveal: React.FC<{g: number}> = ({g}) => {
   if (g < T.reveal - 0.05 || g > T.end) return null;
   const out = easeIn(prog(g, T.end - 0.35, T.end));
   const wipe = easeInOut(prog(g, T.reveal - 0.05, T.reveal + 0.4));
-  const crossH = easeOut(prog(g, T.reveal + 0.15, T.reveal + 0.65));
-  const crossV = easeOut(prog(g, T.reveal + 0.25, T.reveal + 0.75));
   const nine = 0.45 * easeOut(prog(g, T.reveal + 0.2, T.reveal + 1.0)) + 0.55 * easeOut(prog(g, T.nine, T.nine + 0.4));
   const nineHit = hit(g, T.nine + 0.1, 6);
   const first = easeOut(prog(g, T.reveal + 0.35, T.reveal + 0.7));
@@ -353,12 +340,11 @@ const Reveal: React.FC<{g: number}> = ({g}) => {
   const push = 1 + Math.max(0, g - T.reveal) * 0.02;
   return (
     <AbsoluteFill style={{clipPath: `inset(${(1 - wipe) * 100}% 0 0 0)`, opacity: 1 - out, transform: `translateY(${-out * 140}px)`}}>
-      <AbsoluteFill style={{background: `linear-gradient(160deg, #013063 0%, ${C.isBlue} 50%, #013A70 100%)`}} />
-      {/* croce dell'Islanda che si disegna dietro al nome */}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 1250, height: 150, background: '#fff', opacity: 0.16, transformOrigin: '0 50%', transform: `scaleX(${crossH})`}} />
-      <div style={{position: 'absolute', left: 0, right: 0, top: 1295, height: 60, background: C.isRed, opacity: 0.75, transformOrigin: '0 50%', transform: `scaleX(${crossH})`}} />
-      <div style={{position: 'absolute', top: 0, bottom: 0, left: 250, width: 150, background: '#fff', opacity: 0.16, transformOrigin: '50% 0', transform: `scaleY(${crossV})`}} />
-      <div style={{position: 'absolute', top: 0, bottom: 0, left: 295, width: 60, background: C.isRed, opacity: 0.75, transformOrigin: '50% 0', transform: `scaleY(${crossV})`}} />
+      {/* la bandiera islandese vera, grande, con l'incrocio della croce in alto a sinistra */}
+      <AbsoluteFill style={{background: C.isBlue}}>
+        <WavingFlag kind="is" g={g} fw={3600} vw={W} vh={H} ox={-860} oy={-620} amp={22} strips={60} />
+      </AbsoluteFill>
+      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,12,45,0.05) 0%, rgba(0,12,45,0.2) 40%, rgba(0,12,45,0.72) 60%, rgba(0,12,45,0.82) 100%)'}} />
       {/* numero 9 gigante, solo contorno */}
       <div
         style={{
@@ -376,7 +362,7 @@ const Reveal: React.FC<{g: number}> = ({g}) => {
         9
       </div>
       <AbsoluteFill style={{background: 'radial-gradient(80% 50% at 50% 50%, transparent 40%, rgba(0,10,40,0.55) 100%)'}} />
-      <div style={{position: 'absolute', left: 80, right: 60, top: 620, transform: `scale(${push})`, transformOrigin: '0 50%'}}>
+      <div style={{position: 'absolute', left: 80, right: 60, top: 990, transform: `scale(${push})`, transformOrigin: '0 50%'}}>
         <div style={{fontFamily: UI, fontWeight: 800, fontSize: 34, letterSpacing: 10, color: C.cyan, opacity: first}}>IL NOME DA SEGUIRE</div>
         <div style={{fontFamily: DISPLAY, fontSize: 170, lineHeight: 1.05, color: '#fff', marginTop: 10, opacity: first, transform: `translateX(${(1 - first) * -120}px)`}}>ORRI</div>
         <div style={{display: 'flex', fontFamily: DISPLAY, fontSize: 196, lineHeight: 1, color: '#fff', textShadow: '0 14px 50px rgba(0,0,0,0.5)'}}>

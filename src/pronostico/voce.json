@@ -1,684 +1,684 @@
 {
- "audio": false,
+ "audio": true,
  "offset": 0.5,
- "duration": 57.035,
+ "duration": 45.587,
  "words": [
   {
    "text": "Bulgaria-Islanda,",
-   "start": 0.6,
-   "end": 1.64,
+   "start": 0.5,
+   "end": 1.577,
    "cue": "intro"
   },
   {
    "text": "stasera.",
-   "start": 1.89,
-   "end": 2.435,
+   "start": 1.785,
+   "end": 2.305,
    "cue": "intro"
   },
   {
    "text": "C'è",
-   "start": 2.855,
-   "end": 3.07,
+   "start": 2.824,
+   "end": 3.018,
    "cue": "intro"
   },
   {
    "text": "un",
-   "start": 3.07,
-   "end": 3.285,
+   "start": 3.018,
+   "end": 3.212,
    "cue": "intro"
   },
   {
    "text": "nome",
-   "start": 3.285,
-   "end": 3.665,
+   "start": 3.212,
+   "end": 3.528,
    "cue": "intro"
   },
   {
    "text": "che",
-   "start": 3.665,
-   "end": 3.88,
+   "start": 3.528,
+   "end": 3.722,
    "cue": "intro"
   },
   {
    "text": "in",
-   "start": 3.88,
-   "end": 4.095,
+   "start": 3.722,
+   "end": 3.916,
    "cue": "intro"
   },
   {
    "text": "pochi",
-   "start": 4.095,
-   "end": 4.475,
+   "start": 3.916,
+   "end": 4.232,
    "cue": "intro"
   },
   {
    "text": "stanno",
-   "start": 4.475,
-   "end": 4.855,
+   "start": 4.232,
+   "end": 4.547,
    "cue": "intro"
   },
   {
    "text": "guardando.",
-   "start": 4.855,
-   "end": 5.4,
+   "start": 4.547,
+   "end": 4.984,
    "cue": "intro"
   },
   {
    "text": "Orri",
-   "start": 5.97,
-   "end": 6.35,
+   "start": 5.486,
+   "end": 5.954,
    "cue": "chi"
   },
   {
    "text": "Óskarsson.",
-   "start": 6.35,
-   "end": 6.895,
+   "start": 5.954,
+   "end": 6.603,
    "cue": "chi"
   },
   {
    "text": "Numero",
-   "start": 7.315,
-   "end": 7.86,
+   "start": 7.033,
+   "end": 7.446,
    "cue": "chi"
   },
   {
    "text": "nove",
-   "start": 7.86,
-   "end": 8.24,
+   "start": 7.446,
+   "end": 7.745,
    "cue": "chi"
   },
   {
    "text": "dell'Islanda,",
-   "start": 8.24,
-   "end": 8.95,
+   "start": 7.745,
+   "end": 8.273,
    "cue": "chi"
   },
   {
    "text": "attaccante",
-   "start": 9.2,
-   "end": 9.91,
+   "start": 8.441,
+   "end": 9.054,
    "cue": "chi"
   },
   {
    "text": "della",
-   "start": 9.91,
-   "end": 10.29,
+   "start": 9.054,
+   "end": 9.401,
    "cue": "chi"
   },
   {
    "text": "Real",
-   "start": 10.29,
-   "end": 10.505,
+   "start": 9.401,
+   "end": 9.614,
    "cue": "chi"
   },
   {
    "text": "Sociedad.",
-   "start": 10.505,
-   "end": 11.05,
+   "start": 9.614,
+   "end": 10.094,
    "cue": "chi"
   },
   {
    "text": "In",
-   "start": 11.62,
-   "end": 11.835,
+   "start": 10.483,
+   "end": 10.722,
    "cue": "liga"
   },
   {
    "text": "Liga,",
-   "start": 11.835,
-   "end": 12.215,
+   "start": 10.722,
+   "end": 11.112,
    "cue": "liga"
   },
   {
    "text": "quest'anno:",
-   "start": 12.465,
-   "end": 13.01,
+   "start": 11.112,
+   "end": 11.651,
    "cue": "liga"
   },
   {
    "text": "nove",
-   "start": 13.43,
-   "end": 13.81,
+   "start": 12.026,
+   "end": 12.391,
    "cue": "liga"
   },
   {
    "text": "presenze,",
-   "start": 13.81,
-   "end": 14.355,
+   "start": 12.391,
+   "end": 12.897,
    "cue": "liga"
   },
   {
    "text": "cinque",
-   "start": 14.605,
-   "end": 14.985,
+   "start": 13.057,
+   "end": 13.349,
    "cue": "liga"
   },
   {
    "text": "da",
-   "start": 14.985,
-   "end": 15.2,
+   "start": 13.349,
+   "end": 13.528,
    "cue": "liga"
   },
   {
    "text": "titolare,",
-   "start": 15.2,
-   "end": 15.91,
+   "start": 13.528,
+   "end": 14.044,
    "cue": "liga"
   },
   {
    "text": "tre",
-   "start": 16.16,
-   "end": 16.375,
+   "start": 14.268,
+   "end": 14.512,
    "cue": "liga"
   },
   {
    "text": "gol.",
-   "start": 16.375,
-   "end": 16.59,
+   "start": 14.512,
+   "end": 14.756,
    "cue": "liga"
   },
   {
    "text": "Ma",
-   "start": 17.16,
-   "end": 17.375,
+   "start": 15.15,
+   "end": 15.307,
    "cue": "naz"
   },
   {
    "text": "è",
-   "start": 17.375,
-   "end": 17.59,
+   "start": 15.307,
+   "end": 15.463,
    "cue": "naz"
   },
   {
    "text": "con",
-   "start": 17.59,
-   "end": 17.805,
+   "start": 15.463,
+   "end": 15.62,
    "cue": "naz"
   },
   {
    "text": "la",
-   "start": 17.805,
-   "end": 18.02,
+   "start": 15.62,
+   "end": 15.776,
    "cue": "naz"
   },
   {
    "text": "nazionale",
-   "start": 18.02,
-   "end": 18.73,
+   "start": 15.776,
+   "end": 16.227,
    "cue": "naz"
   },
   {
    "text": "che",
-   "start": 18.73,
-   "end": 18.945,
+   "start": 16.227,
+   "end": 16.383,
    "cue": "naz"
   },
   {
    "text": "fa",
-   "start": 18.945,
-   "end": 19.16,
+   "start": 16.383,
+   "end": 16.54,
    "cue": "naz"
   },
   {
    "text": "la",
-   "start": 19.16,
-   "end": 19.375,
+   "start": 16.54,
+   "end": 16.696,
    "cue": "naz"
   },
   {
    "text": "differenza.",
-   "start": 19.375,
-   "end": 20.085,
+   "start": 16.696,
+   "end": 17.146,
    "cue": "naz"
   },
   {
    "text": "Quattro",
-   "start": 20.655,
-   "end": 21.035,
+   "start": 17.524,
+   "end": 17.857,
    "cue": "naz2"
   },
   {
    "text": "partite",
-   "start": 21.035,
-   "end": 21.58,
+   "start": 17.857,
+   "end": 18.319,
    "cue": "naz2"
   },
   {
    "text": "di",
-   "start": 21.58,
-   "end": 21.795,
+   "start": 18.319,
+   "end": 18.524,
    "cue": "naz2"
   },
   {
    "text": "Nations",
-   "start": 21.795,
-   "end": 22.175,
+   "start": 18.524,
+   "end": 18.857,
    "cue": "naz2"
   },
   {
    "text": "League,",
-   "start": 22.175,
-   "end": 22.555,
+   "start": 18.857,
+   "end": 19.19,
    "cue": "naz2"
   },
   {
    "text": "sempre",
-   "start": 22.805,
-   "end": 23.185,
+   "start": 19.19,
+   "end": 19.524,
    "cue": "naz2"
   },
   {
    "text": "titolare:",
-   "start": 23.185,
-   "end": 23.895,
+   "start": 19.524,
+   "end": 20.114,
    "cue": "naz2"
   },
   {
    "text": "tre",
-   "start": 24.315,
-   "end": 24.53,
+   "start": 20.438,
+   "end": 20.713,
    "cue": "naz2"
   },
   {
    "text": "gol",
-   "start": 24.53,
-   "end": 24.745,
+   "start": 20.713,
+   "end": 20.987,
    "cue": "naz2"
   },
   {
    "text": "e",
-   "start": 24.745,
-   "end": 24.96,
+   "start": 20.987,
+   "end": 21.262,
    "cue": "naz2"
   },
   {
    "text": "due",
-   "start": 24.96,
-   "end": 25.175,
+   "start": 21.262,
+   "end": 21.536,
    "cue": "naz2"
   },
   {
    "text": "assist.",
-   "start": 25.175,
-   "end": 25.555,
+   "start": 21.536,
+   "end": 21.982,
    "cue": "naz2"
   },
   {
    "text": "Dentro",
-   "start": 26.125,
-   "end": 26.505,
+   "start": 22.314,
+   "end": 22.648,
    "cue": "naz3"
   },
   {
    "text": "a",
-   "start": 26.505,
-   "end": 26.72,
+   "start": 22.648,
+   "end": 22.854,
    "cue": "naz3"
   },
   {
    "text": "cinque",
-   "start": 26.72,
-   "end": 27.1,
+   "start": 22.854,
+   "end": 23.188,
    "cue": "naz3"
   },
   {
    "text": "gol",
-   "start": 27.1,
-   "end": 27.315,
+   "start": 23.188,
+   "end": 23.394,
    "cue": "naz3"
   },
   {
    "text": "in",
-   "start": 27.315,
-   "end": 27.53,
+   "start": 23.394,
+   "end": 23.599,
    "cue": "naz3"
   },
   {
    "text": "appena",
-   "start": 27.53,
-   "end": 28.075,
+   "start": 23.599,
+   "end": 24.062,
    "cue": "naz3"
   },
   {
    "text": "quattro",
-   "start": 28.075,
-   "end": 28.455,
+   "start": 24.062,
+   "end": 24.396,
    "cue": "naz3"
   },
   {
    "text": "partite.",
-   "start": 28.455,
-   "end": 29.0,
+   "start": 24.396,
+   "end": 24.858,
    "cue": "naz3"
   },
   {
    "text": "E",
-   "start": 29.57,
-   "end": 29.785,
+   "start": 25.225,
+   "end": 25.406,
    "cue": "andata"
   },
   {
    "text": "all'andata,",
-   "start": 29.785,
-   "end": 30.495,
+   "start": 25.406,
+   "end": 25.925,
    "cue": "andata"
   },
   {
    "text": "contro",
-   "start": 30.745,
-   "end": 31.125,
+   "start": 25.925,
+   "end": 26.218,
    "cue": "andata"
   },
   {
    "text": "la",
-   "start": 31.125,
-   "end": 31.34,
+   "start": 26.218,
+   "end": 26.399,
    "cue": "andata"
   },
   {
    "text": "Bulgaria?",
-   "start": 31.34,
-   "end": 31.885,
+   "start": 26.399,
+   "end": 26.805,
    "cue": "andata"
   },
   {
    "text": "Doppietta.",
-   "start": 32.305,
-   "end": 32.85,
+   "start": 27.201,
+   "end": 27.857,
    "cue": "andata"
   },
   {
    "text": "Finì",
-   "start": 33.27,
-   "end": 33.65,
+   "start": 28.224,
+   "end": 28.498,
    "cue": "andata"
   },
   {
    "text": "tre",
-   "start": 33.65,
-   "end": 33.865,
+   "start": 28.498,
+   "end": 28.667,
    "cue": "andata"
   },
   {
    "text": "a",
-   "start": 33.865,
-   "end": 34.08,
+   "start": 28.667,
+   "end": 28.836,
    "cue": "andata"
   },
   {
    "text": "zero.",
-   "start": 34.08,
-   "end": 34.46,
+   "start": 28.836,
+   "end": 29.11,
    "cue": "andata"
   },
   {
    "text": "È",
-   "start": 35.03,
-   "end": 35.245,
+   "start": 29.481,
+   "end": 29.656,
    "cue": "lettura"
   },
   {
    "text": "lui",
-   "start": 35.245,
-   "end": 35.46,
+   "start": 29.656,
+   "end": 29.831,
    "cue": "lettura"
   },
   {
    "text": "il",
-   "start": 35.46,
-   "end": 35.675,
+   "start": 29.831,
+   "end": 30.005,
    "cue": "lettura"
   },
   {
    "text": "riferimento",
-   "start": 35.675,
-   "end": 36.55,
+   "start": 30.005,
+   "end": 30.617,
    "cue": "lettura"
   },
   {
    "text": "dell'attacco",
-   "start": 36.55,
-   "end": 37.26,
+   "start": 30.617,
+   "end": 31.119,
    "cue": "lettura"
   },
   {
    "text": "islandese.",
-   "start": 37.26,
-   "end": 37.97,
+   "start": 31.119,
+   "end": 31.621,
    "cue": "lettura"
   },
   {
    "text": "In",
-   "start": 38.39,
-   "end": 38.605,
+   "start": 31.929,
+   "end": 32.109,
    "cue": "lettura"
   },
   {
    "text": "questa",
-   "start": 38.605,
-   "end": 38.985,
+   "start": 32.109,
+   "end": 32.403,
    "cue": "lettura"
   },
   {
    "text": "competizione",
-   "start": 38.985,
-   "end": 39.86,
+   "start": 32.403,
+   "end": 33.036,
    "cue": "lettura"
   },
   {
    "text": "ha",
-   "start": 39.86,
-   "end": 40.075,
+   "start": 33.036,
+   "end": 33.216,
    "cue": "lettura"
   },
   {
    "text": "già",
-   "start": 40.075,
-   "end": 40.29,
+   "start": 33.216,
+   "end": 33.397,
    "cue": "lettura"
   },
   {
    "text": "fatto",
-   "start": 40.29,
-   "end": 40.67,
+   "start": 33.397,
+   "end": 33.691,
    "cue": "lettura"
   },
   {
    "text": "la",
-   "start": 40.67,
-   "end": 40.885,
+   "start": 33.691,
+   "end": 33.871,
    "cue": "lettura"
   },
   {
    "text": "differenza,",
-   "start": 40.885,
-   "end": 41.595,
+   "start": 33.871,
+   "end": 34.391,
    "cue": "lettura"
   },
   {
    "text": "e",
-   "start": 41.845,
-   "end": 42.06,
+   "start": 34.58,
+   "end": 34.74,
    "cue": "lettura"
   },
   {
    "text": "arriva",
-   "start": 42.06,
-   "end": 42.605,
+   "start": 34.74,
+   "end": 35.1,
    "cue": "lettura"
   },
   {
    "text": "a",
-   "start": 42.605,
-   "end": 42.82,
+   "start": 35.1,
+   "end": 35.26,
    "cue": "lettura"
   },
   {
    "text": "stasera",
-   "start": 42.82,
-   "end": 43.365,
+   "start": 35.26,
+   "end": 35.619,
    "cue": "lettura"
   },
   {
    "text": "con",
-   "start": 43.365,
-   "end": 43.58,
+   "start": 35.619,
+   "end": 35.779,
    "cue": "lettura"
   },
   {
    "text": "numeri",
-   "start": 43.58,
-   "end": 44.125,
+   "start": 35.779,
+   "end": 36.139,
    "cue": "lettura"
   },
   {
    "text": "pesanti.",
-   "start": 44.125,
-   "end": 44.67,
+   "start": 36.139,
+   "end": 36.498,
    "cue": "lettura"
   },
   {
    "text": "Il",
-   "start": 45.24,
-   "end": 45.455,
+   "start": 36.877,
+   "end": 37.054,
    "cue": "pron"
   },
   {
    "text": "mio",
-   "start": 45.455,
-   "end": 45.67,
+   "start": 37.054,
+   "end": 37.232,
    "cue": "pron"
   },
   {
    "text": "pronostico:",
-   "start": 45.67,
-   "end": 46.38,
+   "start": 37.232,
+   "end": 37.742,
    "cue": "pron"
   },
   {
    "text": "Óskarsson",
-   "start": 46.8,
-   "end": 47.345,
+   "start": 38.044,
+   "end": 38.543,
    "cue": "pron"
   },
   {
    "text": "a",
-   "start": 47.345,
-   "end": 47.56,
+   "start": 38.543,
+   "end": 38.765,
    "cue": "pron"
   },
   {
    "text": "segno.",
-   "start": 47.56,
-   "end": 47.94,
+   "start": 38.765,
+   "end": 39.125,
    "cue": "pron"
   },
   {
    "text": "Occhio",
-   "start": 48.51,
-   "end": 48.89,
+   "start": 39.471,
+   "end": 39.727,
    "cue": "pt"
   },
   {
    "text": "al",
-   "start": 48.89,
-   "end": 49.105,
+   "start": 39.727,
+   "end": 39.884,
    "cue": "pt"
   },
   {
    "text": "primo",
-   "start": 49.105,
-   "end": 49.485,
+   "start": 39.884,
+   "end": 40.139,
    "cue": "pt"
   },
   {
    "text": "tempo…",
-   "start": 49.485,
-   "end": 49.865,
+   "start": 40.139,
+   "end": 40.394,
    "cue": "pt"
   },
   {
    "text": "e",
-   "start": 50.435,
-   "end": 50.65,
+   "start": 40.851,
+   "end": 41.017,
    "cue": "dop"
   },
   {
    "text": "non",
-   "start": 50.65,
-   "end": 50.865,
+   "start": 41.017,
+   "end": 41.184,
    "cue": "dop"
   },
   {
    "text": "escludo",
-   "start": 50.865,
-   "end": 51.41,
+   "start": 41.184,
+   "end": 41.559,
    "cue": "dop"
   },
   {
    "text": "la",
-   "start": 51.41,
-   "end": 51.625,
+   "start": 41.559,
+   "end": 41.726,
    "cue": "dop"
   },
   {
    "text": "doppietta.",
-   "start": 51.625,
-   "end": 52.17,
+   "start": 41.726,
+   "end": 42.101,
    "cue": "dop"
   },
   {
    "text": "Tu",
-   "start": 52.74,
-   "end": 52.955,
+   "start": 42.496,
+   "end": 42.638,
    "cue": "chiusura"
   },
   {
    "text": "chi",
-   "start": 52.955,
-   "end": 53.17,
+   "start": 42.791,
+   "end": 42.951,
    "cue": "chiusura"
   },
   {
    "text": "vedi",
-   "start": 53.17,
-   "end": 53.55,
+   "start": 42.951,
+   "end": 43.211,
    "cue": "chiusura"
   },
   {
    "text": "a",
-   "start": 53.55,
-   "end": 53.765,
+   "start": 43.211,
+   "end": 43.372,
    "cue": "chiusura"
   },
   {
    "text": "segno",
-   "start": 53.765,
-   "end": 54.145,
+   "start": 43.372,
+   "end": 43.632,
    "cue": "chiusura"
   },
   {
    "text": "stasera?",
-   "start": 54.145,
-   "end": 54.69,
+   "start": 43.632,
+   "end": 43.993,
    "cue": "chiusura"
   },
   {
    "text": "Scrivilo",
-   "start": 55.11,
-   "end": 55.655,
+   "start": 44.35,
+   "end": 44.765,
    "cue": "chiusura"
   },
   {
    "text": "nei",
-   "start": 55.655,
-   "end": 55.87,
+   "start": 44.765,
+   "end": 44.949,
    "cue": "chiusura"
   },
   {
    "text": "commenti.",
-   "start": 55.87,
-   "end": 56.415,
+   "start": 44.949,
+   "end": 45.363,
    "cue": "chiusura"
   }
  ]

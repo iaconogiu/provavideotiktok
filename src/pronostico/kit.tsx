@@ -170,3 +170,129 @@ export const Check: React.FC<{size: number; color?: string}> = ({size, color = C
     <path d="M4 12.5l5 5L20 6.5" fill="none" stroke={color} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+
+// ── bandiere vere, che sventolano ──
+
+/** bandiera con la geometria ufficiale (Bulgaria 3:5, tre fasce uguali; Islanda 18:25, croce 7-1-2-1-14 × 7-1-2-1-7) */
+export const FlagSvg: React.FC<{kind: 'bg' | 'is'; w: number; h: number}> = ({kind, w, h}) =>
+  kind === 'bg' ? (
+    <svg width={w} height={h} viewBox="0 0 5 3" preserveAspectRatio="none" style={{display: 'block'}}>
+      <rect width="5" height="1.01" fill={C.bgWhite} />
+      <rect y="1" width="5" height="1.01" fill={C.bgGreen} />
+      <rect y="2" width="5" height="1" fill={C.bgRed} />
+    </svg>
+  ) : (
+    <svg width={w} height={h} viewBox="0 0 25 18" preserveAspectRatio="none" style={{display: 'block'}}>
+      <rect width="25" height="18" fill={C.isBlue} />
+      <rect x="7" width="4" height="18" fill="#fff" />
+      <rect y="7" width="25" height="4" fill="#fff" />
+      <rect x="8" width="2" height="18" fill={C.isRed} />
+      <rect y="8" width="25" height="2" fill={C.isRed} />
+    </svg>
+  );
+
+export const FLAG_RATIO = {bg: 5 / 3, is: 25 / 18};
+
+/**
+ * Bandiera al vento: un'onda che scorre dall'asta al bordo libero deforma la stoffa (mappa di
+ * spostamento SVG, un pezzo unico, niente giunture) e le dà luce e ombra. `fw` è la larghezza della
+ * bandiera intera (l'altezza segue le proporzioni ufficiali); `vw`×`vh` è la finestra visibile e
+ * `ox`,`oy` dove sta la bandiera dentro la finestra.
+ */
+export const WavingFlag: React.FC<{
+  kind: 'bg' | 'is';
+  g: number;
+  fw: number;
+  vw?: number;
+  vh?: number;
+  ox?: number;
+  oy?: number;
+  amp?: number;
+  strips?: number;
+  style?: React.CSSProperties;
+}> = ({kind, g, fw, vw, vh, ox = 0, oy = 0, amp, style}) => {
+  const fid = `wave${React.useId().replace(/[^a-zA-Z0-9]/g, '')}`;
+  const fh = fw / FLAG_RATIO[kind];
+  const W0 = vw ?? fw;
+  const H0 = vh ?? fh;
+  const A = amp ?? Math.max(2, fw * 0.022);
+  const wl = Math.max(220, fw * 0.55); // lunghezza d'onda
+  const phase = (x: number) => g * 3.4 - ((x - ox) / wl) * Math.PI * 2;
+  const along = (x: number) => clamp((x - ox) / fw); // 0 all'asta, 1 al bordo libero
+  const N = 32;
+  const xs = Array.from({length: N + 1}, (_, k) => (k / N) * W0);
+  // mappa di spostamento: canale rosso = spostamento verticale
+  const mapStops = xs
+    .map((x, k) => {
+      const v = Math.sin(phase(x)) * (0.25 + along(x) * 0.75);
+      return `<stop offset='${(k / N).toFixed(4)}' stop-color='rgb(${Math.round(127.5 + 127 * v)},128,128)'/>`;
+    })
+    .join('');
+  const map = `data:image/svg+xml;utf8,${encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' width='${W0}' height='${H0}'><defs><linearGradient id='m' x1='0' x2='1' y1='0' y2='0'>${mapStops}</linearGradient></defs><rect width='${W0}' height='${H0}' fill='url(#m)'/></svg>`,
+  )}`;
+  // luce e ombra in un'unica sfumatura continua sopra la stoffa
+  const shade = xs
+    .map((x, k) => {
+      const sh = Math.cos(phase(x)) * (0.4 + along(x) * 0.6);
+      const col = sh > 0 ? `rgba(255,255,255,${(0.17 * sh).toFixed(3)})` : `rgba(0,0,25,${(0.32 * -sh).toFixed(3)})`;
+      return `${col} ${((k / N) * 100).toFixed(2)}%`;
+    })
+    .join(', ');
+  return (
+    <div style={{position: 'relative', width: W0, height: H0, ...style}}>
+      <svg width={W0} height={H0} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
+        <defs>
+          <filter id={fid} filterUnits="userSpaceOnUse" x={0} y={-A * 2} width={W0} height={H0 + A * 4} colorInterpolationFilters="sRGB">
+            <feImage href={map} x={0} y={-A * 2} width={W0} height={H0 + A * 4} preserveAspectRatio="none" result="m" />
+            <feDisplacementMap in="SourceGraphic" in2="m" scale={A * 2} xChannelSelector="G" yChannelSelector="R" />
+          </filter>
+        </defs>
+        <g filter={`url(#${fid})`}>
+          <g transform={`translate(${ox} ${oy})`}>
+            <FlagSvg kind={kind} w={fw} h={fh} />
+          </g>
+        </g>
+      </svg>
+      <div style={{position: 'absolute', inset: 0, background: `linear-gradient(90deg, ${shade})`}} />
+    </div>
+  );
+};
+
+/** maglia stilizzata: strisce verticali (Real Sociedad) o tinta unita con bordi (Islanda) */
+export const Shirt: React.FC<{size: number; kind: 'rs' | 'is'; num?: string}> = ({size, kind, num}) => {
+  const id = `sh${kind}`;
+  const body = 'M30 8 L42 4 Q50 12 58 4 L70 8 L94 24 L84 42 L74 36 L74 96 L26 96 L26 36 L16 42 L6 24 Z';
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" style={{display: 'block', filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.45))'}}>
+      <defs>
+        <clipPath id={id}>
+          <path d={body} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${id})`}>
+        {kind === 'rs' ? (
+          <>
+            <rect width="100" height="100" fill="#fff" />
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <rect key={i} x={i * 18 - 2} width="9" height="100" fill={C.rsBlue} />
+            ))}
+          </>
+        ) : (
+          <>
+            <rect width="100" height="100" fill={C.isBlue} />
+            <path d="M42 4 Q50 12 58 4" stroke="#fff" strokeWidth="5" fill="none" />
+            <path d="M84 42 L94 24" stroke={C.isRed} strokeWidth="6" />
+            <path d="M16 42 L6 24" stroke={C.isRed} strokeWidth="6" />
+          </>
+        )}
+      </g>
+      <path d={body} fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2" />
+      {num && (
+        <text x="50" y="74" textAnchor="middle" fontFamily={DISPLAY} fontSize="40" fill="#fff" stroke={kind === 'rs' ? C.navy : 'none'} strokeWidth="1.5">
+          {num}
+        </text>
+      )}
+    </svg>
+  );
+};
