@@ -1,53 +1,35 @@
-import '@fontsource/anton';
-import '@fontsource-variable/inter';
 import React from 'react';
-import {AbsoluteFill, OffthreadVideo, Sequence, random, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, OffthreadVideo, Sequence, random, staticFile, useCurrentFrame} from 'remotion';
 import {CLIPS} from './clips';
+import {C, DISPLAY, FPS, FRAMES, FlagBG, FlagIS, H, SCENES, UI, VOICE, W, at, clamp, cue, easeBack, easeIn, easeInOut, easeOut, hit, prog, scene} from './kit';
+import {Andata, Chiusura, Liga, Lettura, Nazionale, Pronostico5} from './Scenes';
 
 /**
  * Pronostico Bulgaria–Islanda (Nations League, Lega C): il nome da seguire è Orri Óskarsson.
  * Stile "notte di Nations League": blu notte, scie di luce argento/ciano, riflettori sul campo;
  * le due squadre entrano con i loro colori (Bulgaria bianco-verde-rosso, Islanda blu con croce
- * bianca e rossa). Per ora c'è solo l'intro: sfida → frase gancio → presentazione del giocatore.
+ * bianca e rossa). Intro: sfida → frase gancio → presentazione del giocatore; poi le scene di
+ * Scenes.tsx. Tutto è agganciato ai tempi della voce (src/pronostico/voce.json).
  */
 
-export const FPS = 30;
-export const W = 1080;
-export const H = 1920;
-const INTRO = 7;
-export const PRONOSTICO_FRAMES = INTRO * FPS;
+export {FPS};
+export const PRONOSTICO_FRAMES = FRAMES;
 
-const C = {
-  night: '#060A22',
-  navy: '#0B1240',
-  cyan: '#4FE3FF',
-  silver: '#DCE6F5',
-  bgWhite: '#FFFFFF',
-  bgGreen: '#00966E',
-  bgRed: '#D62612',
-  isBlue: '#02529C',
-  isRed: '#DC1E35',
-};
-const DISPLAY = '"Anton", "Impact", sans-serif';
-const UI = '"Inter Variable", sans-serif';
-
-// ── tempi dell'intro (secondi) ──
+// ── tempi dell'intro, presi dalla voce ──
+const vs = at('intro', 'bulgaria') + 0.35;
+const hook = at('intro', "c'e") - 0.05;
+const date = at('intro', 'stasera');
 const T = {
-  panelsIn: 0.25,
-  vs: 1.0,
-  date: 1.45,
-  panelsOut: 2.7,
-  hook: 3.05,
-  reveal: 4.55,
+  panelsIn: Math.max(0.05, vs - 0.75),
+  vs,
+  date,
+  panelsOut: Math.max(date + 0.5, hook - 0.35),
+  hook,
+  reveal: at('chi', 'orri') - 0.35,
+  name: at('chi', 'oskarsson'),
+  nine: at('chi', 'numero'),
+  end: scene('intro').b,
 };
-
-const clamp = (v: number) => Math.min(1, Math.max(0, v));
-const prog = (g: number, a: number, b: number) => clamp((g - a) / (b - a));
-const easeOut = (t: number) => 1 - (1 - t) ** 3;
-const easeIn = (t: number) => t * t * t;
-const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-const easeBack = (t: number) => 1 + 2.4 * (t - 1) ** 3 + 1.4 * (t - 1) ** 2;
-const hit = (g: number, at: number, k = 7) => (g < at ? 0 : Math.exp(-(g - at) * k));
 
 // ───────────────────────── sfondo ─────────────────────────
 
@@ -122,10 +104,11 @@ const Floodlights: React.FC<{g: number}> = ({g}) => {
 };
 
 /** scie di luce diagonali (stile notte di Nations League) */
+const BURSTS = [0.15, T.reveal, ...SCENES.slice(1).map((s) => s.a)];
 const Streaks: React.FC<{g: number}> = ({g}) => (
   <AbsoluteFill style={{mixBlendMode: 'screen', overflow: 'hidden'}}>
-    {Array.from({length: 7}, (_, i) => {
-      const start = 0.15 + i * 0.09 + (i > 3 ? 4.1 : 0);
+    {Array.from({length: BURSTS.length * 4}, (_, i) => {
+      const start = BURSTS[Math.floor(i / 4)] + (i % 4) * 0.09;
       const p = prog(g, start, start + 0.75);
       if (p <= 0 || p >= 1) return null;
       const y = 200 + random(`sy${i}`) * 1500;
@@ -151,30 +134,27 @@ const Streaks: React.FC<{g: number}> = ({g}) => (
   </AbsoluteFill>
 );
 
-const Background: React.FC<{g: number}> = ({g}) => {
-  const clips = CLIPS.intro;
-  return (
-    <AbsoluteFill style={{background: C.night}}>
-      {clips.length ? (
-        clips.map((c, i) => {
-          const len = Math.ceil((INTRO * FPS) / clips.length);
-          return (
-            <Sequence key={i} from={i * len} durationInFrames={len}>
-              <AbsoluteFill style={{transform: `scale(${1.08 + g * 0.01})`}}>
-                <OffthreadVideo src={staticFile(c.src)} startFrom={Math.round((c.from ?? 0) * FPS)} muted style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-              </AbsoluteFill>
-            </Sequence>
-          );
-        })
-      ) : (
-        <Pitch g={g} />
-      )}
-      {/* gradazione blu notte: tiene coerenti clip e grafica */}
-      <AbsoluteFill style={{background: `linear-gradient(180deg, ${C.night}E6 0%, ${C.navy}66 38%, ${C.navy}80 70%, ${C.night}EE 100%)`}} />
+const Background: React.FC<{g: number}> = ({g}) => (
+  <AbsoluteFill style={{background: C.night}}>
+    <Pitch g={g} />
+    {/* clip delle squadre, se ci sono: coprono il campo animato nella loro scena */}
+    {SCENES.map(({id, a, b}) => {
+      const clips = CLIPS[id] ?? [];
+      if (!clips.length) return null;
+      const len = Math.ceil(((b - a) * FPS) / clips.length);
+      return clips.map((c, i) => (
+        <Sequence key={`${id}${i}`} from={Math.round(a * FPS) + i * len} durationInFrames={len}>
+          <AbsoluteFill style={{transform: `scale(${1.08 + (g - a) * 0.01})`}}>
+            <OffthreadVideo src={staticFile(c.src)} startFrom={Math.round((c.from ?? 0) * FPS)} muted style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+          </AbsoluteFill>
+        </Sequence>
+      ));
+    })}
+    {/* gradazione blu notte: tiene coerenti clip e grafica */}
+    <AbsoluteFill style={{background: `linear-gradient(180deg, ${C.night}E6 0%, ${C.navy}66 38%, ${C.navy}80 70%, ${C.night}EE 100%)`}} />
       <Floodlights g={g} />
-    </AbsoluteFill>
-  );
-};
+  </AbsoluteFill>
+);
 
 // ───────────────────────── sfida ─────────────────────────
 
@@ -309,10 +289,10 @@ const Header: React.FC<{g: number}> = ({g}) => {
 // ───────────────────────── frase gancio ─────────────────────────
 
 const HOOK: {t: string; at: number; hi?: boolean}[][] = [
-  [{t: 'IL', at: 0}, {t: 'NOME', at: 0.12}],
-  [{t: 'CHE', at: 0.36}, {t: 'IN POCHI', at: 0.5, hi: true}],
-  [{t: 'STANNO', at: 0.8}],
-  [{t: 'GUARDANDO', at: 0.95}],
+  [{t: 'UN', at: at('intro', 'un')}, {t: 'NOME', at: at('intro', 'nome')}],
+  [{t: 'CHE', at: at('intro', 'che')}, {t: 'IN POCHI', at: at('intro', 'in'), hi: true}],
+  [{t: 'STANNO', at: at('intro', 'stanno')}],
+  [{t: 'GUARDANDO', at: at('intro', 'guardando')}],
 ];
 
 const Hook: React.FC<{g: number}> = ({g}) => {
@@ -324,7 +304,7 @@ const Hook: React.FC<{g: number}> = ({g}) => {
         {HOOK.map((row, r) => (
           <div key={r} style={{display: 'flex', gap: 34, justifyContent: 'center'}}>
             {row.map((w) => {
-              const p = prog(g, T.hook + w.at, T.hook + w.at + 0.22);
+              const p = prog(g, w.at - 0.06, w.at + 0.16);
               return (
                 <span
                   key={w.t}
@@ -355,17 +335,24 @@ const Hook: React.FC<{g: number}> = ({g}) => {
 // ───────────────────────── presentazione del giocatore ─────────────────────────
 
 const Reveal: React.FC<{g: number}> = ({g}) => {
-  if (g < T.reveal - 0.05) return null;
+  if (g < T.reveal - 0.05 || g > T.end) return null;
+  const out = easeIn(prog(g, T.end - 0.35, T.end));
   const wipe = easeInOut(prog(g, T.reveal - 0.05, T.reveal + 0.4));
   const crossH = easeOut(prog(g, T.reveal + 0.15, T.reveal + 0.65));
   const crossV = easeOut(prog(g, T.reveal + 0.25, T.reveal + 0.75));
-  const nine = easeOut(prog(g, T.reveal + 0.2, T.reveal + 1.0));
+  const nine = 0.45 * easeOut(prog(g, T.reveal + 0.2, T.reveal + 1.0)) + 0.55 * easeOut(prog(g, T.nine, T.nine + 0.4));
+  const nineHit = hit(g, T.nine + 0.1, 6);
   const first = easeOut(prog(g, T.reveal + 0.35, T.reveal + 0.7));
-  const last = prog(g, T.reveal + 0.45, T.reveal + 0.85);
-  const tag = easeOut(prog(g, T.reveal + 0.85, T.reveal + 1.25));
+  const last = prog(g, T.name - 0.12, T.name + 0.3);
+  const bar = easeOut(prog(g, T.name + 0.25, T.name + 0.6));
+  const TAGS = [
+    {t: 'ISLANDA', at: at('chi', "dell'islanda")},
+    {t: 'ATTACCANTE', at: at('chi', 'attaccante')},
+    {t: 'REAL SOCIEDAD', at: at('chi', 'real')},
+  ];
   const push = 1 + Math.max(0, g - T.reveal) * 0.02;
   return (
-    <AbsoluteFill style={{clipPath: `inset(${(1 - wipe) * 100}% 0 0 0)`}}>
+    <AbsoluteFill style={{clipPath: `inset(${(1 - wipe) * 100}% 0 0 0)`, opacity: 1 - out, transform: `translateY(${-out * 140}px)`}}>
       <AbsoluteFill style={{background: `linear-gradient(160deg, #013063 0%, ${C.isBlue} 50%, #013A70 100%)`}} />
       {/* croce dell'Islanda che si disegna dietro al nome */}
       <div style={{position: 'absolute', left: 0, right: 0, top: 1250, height: 150, background: '#fff', opacity: 0.16, transformOrigin: '0 50%', transform: `scaleX(${crossH})`}} />
@@ -382,8 +369,8 @@ const Reveal: React.FC<{g: number}> = ({g}) => {
           fontSize: 1250,
           lineHeight: 1,
           color: 'transparent',
-          WebkitTextStroke: `6px rgba(255,255,255,${0.35 * nine})`,
-          transform: `translateY(${(1 - nine) * 200}px) scale(${push})`,
+          WebkitTextStroke: `${6 + nineHit * 6}px rgba(255,255,255,${0.4 * nine + nineHit * 0.3})`,
+          transform: `translateY(${(1 - Math.min(1, nine * 2.2)) * 200}px) scale(${push + nineHit * 0.05})`,
         }}
       >
         9
@@ -402,13 +389,16 @@ const Reveal: React.FC<{g: number}> = ({g}) => {
             );
           })}
         </div>
-        <div style={{height: 14, width: 520, marginTop: 18, background: C.isRed, transformOrigin: '0 50%', transform: `scaleX(${tag})`}} />
-        <div style={{display: 'flex', gap: 16, marginTop: 30, opacity: tag, transform: `translateY(${(1 - tag) * 30}px)`}}>
-          {['ATTACCANTE', 'ISLANDA', 'REAL SOCIEDAD'].map((t) => (
-            <div key={t} style={{fontFamily: UI, fontWeight: 800, fontSize: 32, letterSpacing: 3, color: '#fff', padding: '10px 22px', border: '2px solid rgba(255,255,255,0.7)', borderRadius: 8, background: 'rgba(0,20,60,0.35)'}}>
-              {t}
-            </div>
-          ))}
+        <div style={{height: 14, width: 520, marginTop: 18, background: C.isRed, transformOrigin: '0 50%', transform: `scaleX(${bar})`}} />
+        <div style={{display: 'flex', gap: 16, marginTop: 30}}>
+          {TAGS.map(({t, at: ta}) => {
+            const tp = easeOut(prog(g, ta - 0.08, ta + 0.25));
+            return (
+              <div key={t} style={{fontFamily: UI, fontWeight: 800, fontSize: 32, letterSpacing: 3, color: '#fff', padding: '10px 22px', border: '2px solid rgba(255,255,255,0.7)', borderRadius: 8, background: 'rgba(0,20,60,0.35)', opacity: tp, transform: `translateY(${(1 - tp) * 30}px) scale(${0.9 + 0.1 * easeBack(tp)})`}}>
+                {t}
+              </div>
+            );
+          })}
         </div>
       </div>
     </AbsoluteFill>
@@ -417,16 +407,41 @@ const Reveal: React.FC<{g: number}> = ({g}) => {
 
 // ───────────────────────── composizione ─────────────────────────
 
+/** momenti forti: scossa e lampo */
+const SLAMS = [at('andata', 'doppietta'), at('pron', 'segno')];
+
+/** dopo l'intro resta in alto la "grafica TV" della partita */
+const ScoreBug: React.FC<{g: number}> = ({g}) => {
+  const p = easeOut(prog(g, T.end, T.end + 0.4));
+  if (p <= 0) return null;
+  return (
+    <div style={{position: 'absolute', left: 0, right: 0, top: 110, display: 'flex', justifyContent: 'center', opacity: p, transform: `translateY(${(1 - p) * -60}px)`}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 18, padding: '12px 26px', borderRadius: 999, background: 'rgba(6,10,34,0.78)', border: `2px solid ${C.silver}44`, boxShadow: '0 10px 30px rgba(0,0,0,0.4)'}}>
+        <FlagBG w={52} />
+        <div style={{fontFamily: DISPLAY, fontSize: 40, color: '#fff', letterSpacing: 1}}>BUL</div>
+        <div style={{fontFamily: UI, fontWeight: 800, fontSize: 24, color: C.cyan, letterSpacing: 3}}>VS</div>
+        <div style={{fontFamily: DISPLAY, fontSize: 40, color: '#fff', letterSpacing: 1}}>ISL</div>
+        <FlagIS w={52} />
+        <div style={{width: 2, height: 34, background: `${C.silver}55`, margin: '0 4px'}} />
+        <div style={{fontFamily: UI, fontWeight: 800, fontSize: 24, color: C.silver, letterSpacing: 4}}>NATIONS LEAGUE</div>
+      </div>
+    </div>
+  );
+};
+
 export const Pronostico: React.FC = () => {
   const frame = useCurrentFrame();
   const g = frame / FPS;
-  const slam = hit(g, T.vs + 0.2, 9);
+  const slam = Math.max(hit(g, T.vs + 0.2, 9), ...SLAMS.map((t) => hit(g, t + 0.15, 9) * 0.8));
   const shake = slam * 14;
   const sx = (random(`kx${frame}`) - 0.5) * shake;
   const sy = (random(`ky${frame}`) - 0.5) * shake;
-  const flash = Math.max(hit(g, T.vs + 0.22, 10) * 0.55, hit(g, T.reveal + 0.35, 8) * 0.35);
+  const flash = Math.max(hit(g, T.vs + 0.22, 10) * 0.55, hit(g, T.reveal + 0.35, 8) * 0.35, ...SLAMS.map((t) => hit(g, t + 0.15, 10) * 0.3), ...SCENES.slice(1).map((s) => hit(g, s.a, 12) * 0.12));
   const fadeIn = 1 - prog(g, 0, 0.35);
-  const push = 1 + g * 0.006;
+  const fadeOut = prog(g, SCENES[SCENES.length - 1].b - 0.5, SCENES[SCENES.length - 1].b);
+  // spinta lenta della camera, che riparte a ogni scena (senza accumularsi)
+  const sceneStart = [...SCENES].reverse().find((sc) => g >= sc.a)?.a ?? 0;
+  const push = 1 + Math.min(0.035, (g - sceneStart) * 0.006);
   const f2 = Math.floor(frame / 2);
   return (
     <AbsoluteFill style={{background: C.night, overflow: 'hidden'}}>
@@ -439,6 +454,16 @@ export const Pronostico: React.FC = () => {
         <Hook g={g} />
         <Reveal g={g} />
         <Header g={g} />
+        {/* scene un po' più in basso: centro ottico tra la grafica in alto e le scritte di TikTok in basso */}
+        <AbsoluteFill style={{transform: 'translateY(80px)'}}>
+          <Liga g={g} />
+          <Nazionale g={g} />
+          <Andata g={g} />
+          <Lettura g={g} />
+          <Pronostico5 g={g} />
+          <Chiusura g={g} />
+        </AbsoluteFill>
+        <ScoreBug g={g} />
       </AbsoluteFill>
       <AbsoluteFill style={{background: '#fff', opacity: flash, mixBlendMode: 'screen'}} />
       <AbsoluteFill
@@ -450,7 +475,12 @@ export const Pronostico: React.FC = () => {
         }}
       />
       <AbsoluteFill style={{background: 'radial-gradient(100% 70% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%)'}} />
-      <AbsoluteFill style={{background: '#000', opacity: fadeIn}} />
+      <AbsoluteFill style={{background: '#000', opacity: Math.max(fadeIn, fadeOut * 0.85)}} />
+      {VOICE.audio && (
+        <Sequence from={Math.round(VOICE.offset * FPS)}>
+          <Audio src={staticFile('pronostico/voce.mp3')} />
+        </Sequence>
+      )}
     </AbsoluteFill>
   );
 };
