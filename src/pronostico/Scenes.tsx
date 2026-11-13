@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill} from 'remotion';
+import {AbsoluteFill, Img, staticFile} from 'remotion';
 import {Ball, C, Check, DISPLAY, FlagIS, Kicker, SceneBox, Shirt, UI, WavingFlag, at, atEnd, clamp, cue, easeBack, easeIn, easeInOut, easeOut, glass, pop, prog} from './kit';
 
 /** le scene dopo l'intro: numeri col club, numeri in nazionale, l'andata, la lettura, il pronostico, la chiusura */
@@ -48,9 +48,9 @@ export const Liga: React.FC<{g: number}> = ({g}) => {
   const head = pop(g, t0 - 0.1, 40);
   return (
     <SceneBox g={g} id="liga">
-      <div style={{position: 'absolute', left: LEFT, top: 300, display: 'flex', alignItems: 'center', gap: 28, ...head}}>
-        {/* la maglia bianco-azzurra a strisce della Real Sociedad, col suo 9 */}
-        <Shirt size={140} kind="rs" num="9" />
+      <div style={{position: 'absolute', left: LEFT, top: 280, display: 'flex', alignItems: 'center', gap: 30, ...head}}>
+        {/* stemma ufficiale della Real Sociedad (public/pronostico/logo/realsociedad.svg) */}
+        <Img src={staticFile('pronostico/logo/realsociedad.svg')} style={{height: 170, filter: 'drop-shadow(0 10px 24px rgba(0,0,0,0.55)) drop-shadow(0 0 30px rgba(255,255,255,0.25))'}} />
         <div>
           <Kicker style={{fontSize: 30}}>IN LIGA · QUEST'ANNO</Kicker>
           <div style={{fontFamily: DISPLAY, fontSize: 100, lineHeight: 1.02, color: '#fff'}}>REAL SOCIEDAD</div>

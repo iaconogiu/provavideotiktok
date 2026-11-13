@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Audio, OffthreadVideo, Sequence, random, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, Img, OffthreadVideo, Sequence, random, staticFile, useCurrentFrame} from 'remotion';
 import {CLIPS} from './clips';
 import {C, DISPLAY, FPS, FRAMES, FlagBG, FlagIS, H, SCENES, UI, VOICE, W, WavingFlag, at, clamp, cue, easeBack, easeIn, easeInOut, easeOut, hit, prog, scene} from './kit';
 import {Andata, Chiusura, Liga, Lettura, Nazionale, Pronostico5} from './Scenes';
@@ -380,7 +380,8 @@ const Reveal: React.FC<{g: number}> = ({g}) => {
           {TAGS.map(({t, at: ta}) => {
             const tp = easeOut(prog(g, ta - 0.08, ta + 0.25));
             return (
-              <div key={t} style={{fontFamily: UI, fontWeight: 800, fontSize: 32, letterSpacing: 3, color: '#fff', padding: '10px 22px', border: '2px solid rgba(255,255,255,0.7)', borderRadius: 8, background: 'rgba(0,20,60,0.35)', opacity: tp, transform: `translateY(${(1 - tp) * 30}px) scale(${0.9 + 0.1 * easeBack(tp)})`}}>
+              <div key={t} style={{display: 'flex', alignItems: 'center', gap: 10, fontFamily: UI, fontWeight: 800, fontSize: 28, letterSpacing: 2, color: '#fff', padding: '10px 22px', border: '2px solid rgba(255,255,255,0.7)', borderRadius: 8, background: 'rgba(0,20,60,0.35)', opacity: tp, transform: `translateY(${(1 - tp) * 30}px) scale(${0.9 + 0.1 * easeBack(tp)})`}}>
+                {t === 'REAL SOCIEDAD' && <Img src={staticFile('pronostico/logo/realsociedad.svg')} style={{height: 36}} />}
                 {t}
               </div>
             );
