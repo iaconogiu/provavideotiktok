@@ -114,7 +114,7 @@ export const Backdrop: React.FC<{g: number}> = ({g}) => (
  * Segnaposto delle clip: qui vanno i filmati veri (giocatore, squadra, stadio). Finché non ci
  * sono si vede uno stadio di notte sfocato che si avvicina piano, con la scritta "CLIP".
  */
-export type Clip = {src: string; from: number; rate?: number; x?: number} | {image: string; x?: number; pan?: number};
+export type Clip = {src: string; from: number; rate?: number; x?: number} | {image: string; x?: number; y?: number; zoom?: number; pan?: number};
 /**
  * Spazio per le immagini in movimento: filmato vero (src), immagine (image, con zoom e
  * panoramica lenta) oppure, se non c'è niente, la bandiera della squadra (flag) che sventola
@@ -134,8 +134,9 @@ export const ClipSlot: React.FC<{g: number; a: number; seed: string; label?: str
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            objectPosition: `${(clip.x ?? 0.5) * 100}% 40%`,
-            transform: `scale(${1.08 + t * 0.035}) translateX(${(clip.pan ?? 0) * t * 12}px)`,
+            objectPosition: `${(clip.x ?? 0.5) * 100}% ${(clip.y ?? 0.4) * 100}%`,
+            transformOrigin: `${(clip.x ?? 0.5) * 100}% ${(clip.y ?? 0.4) * 100}%`,
+            transform: `scale(${(clip.zoom ?? 1.08) + t * 0.035}) translateX(${(clip.pan ?? 0) * t * 12}px)`,
           }}
         />
         <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,15,51,0.35) 0%, rgba(11,15,51,0.05) 40%, rgba(11,15,51,0.55) 100%)'}} />

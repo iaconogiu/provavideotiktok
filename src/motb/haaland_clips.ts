@@ -7,5 +7,10 @@ import type {Clip} from './kit';
  * Se uno spazio è vuoto si vede la bandiera della squadra.
  */
 export const HAALAND_CLIPS: Partial<Record<'gancio' | 'uno' | 'casa' | 'splitTop' | 'splitBottom', Clip>> = {
-  // gancio: {src: 'motb/haaland/norvegia-danimarca.mp4', from: 42, rate: 0.7, x: 0.5},
+  gancio: {image: 'motb/haaland/norvegia-squadra.png', y: 0.55, pan: -1},
+  // stessa foto, stretta sul numero 9
+  uno: {image: 'motb/haaland/norvegia-squadra.png', x: 0.37, y: 0.47, zoom: 1.7, pan: 1},
+  casa: {image: 'motb/haaland/norvegia-stadio.png', y: 0.45, pan: 1},
+  splitTop: {image: 'motb/haaland/norvegia-stadio.png', y: 0.35, zoom: 1.25, pan: -1},
+  splitBottom: {image: 'motb/haaland/galles-tifosi.png', y: 0.45, zoom: 1.15, pan: 1},
 };
