@@ -9,7 +9,9 @@ import {Backdrop, Caption, CardRain, ClipSlot, CompareBars, EndCard, FPS, H, Hud
  * Voce: public/motb/cartellini/voce.mp3. Immagini: CLIPS qui sotto (vuoto = bandiera).
  */
 
-const CLIPS: Partial<Record<'gancioTop' | 'gancioBottom' | 'arbitro' | 'bosnia' | 'svezia' | 'domTop' | 'domBottom', Clip>> = {};
+const CLIPS: Partial<Record<'gancioTop' | 'gancioBottom' | 'arbitro' | 'bosnia' | 'svezia' | 'domTop' | 'domBottom', Clip>> = {
+  arbitro: {image: 'motb/cartellini/arbitro.png', x: 0.55, y: 0.3, zoom: 1.08, pan: -1},
+};
 
 export {FPS};
 const TAIL = data.audio ? 1.0 : 0;
@@ -81,7 +83,7 @@ export const Cartellini: React.FC = () => {
         {CLIPS.arbitro && (
           <>
             <ClipSlot g={g} a={S.arbitro} seed="arb" clip={CLIPS.arbitro} />
-            <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,15,51,0.35) 0%, rgba(11,15,51,0.7) 45%, rgba(11,15,51,0.85) 100%)'}} />
+            <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,15,51,0.15) 0%, rgba(11,15,51,0.55) 40%, rgba(11,15,51,0.8) 100%)'}} />
           </>
         )}
         <Caption g={g} y={GFX_Y} out={at('uno', 'quattro') - 0.05} rows={[cap('white', [["L'ARBITRO", at('uno', "l'arbitro")], ['DI', at('uno', 'di')], ['STASERA', at('uno', 'stasera')]]), cap('navy', [['HA', at('uno', 'ha')], ['UNA', at('uno', 'una')], ['MEDIA', at('uno', 'media')], ['DI', at('uno', 'di', 1)]])]} />
