@@ -1,0 +1,480 @@
+{
+ "audio": false,
+ "duration": 28.418,
+ "words": [
+  {
+   "text": "Stasera",
+   "start": 0.0,
+   "end": 0.456,
+   "cue": "gancio"
+  },
+  {
+   "text": "la",
+   "start": 0.456,
+   "end": 0.628,
+   "cue": "gancio"
+  },
+  {
+   "text": "Norvegia",
+   "start": 0.628,
+   "end": 1.084,
+   "cue": "gancio"
+  },
+  {
+   "text": "deve",
+   "start": 1.084,
+   "end": 1.398,
+   "cue": "gancio"
+  },
+  {
+   "text": "vincere",
+   "start": 1.398,
+   "end": 1.854,
+   "cue": "gancio"
+  },
+  {
+   "text": "a",
+   "start": 1.854,
+   "end": 2.026,
+   "cue": "gancio"
+  },
+  {
+   "text": "tutti",
+   "start": 2.026,
+   "end": 2.34,
+   "cue": "gancio"
+  },
+  {
+   "text": "i",
+   "start": 2.34,
+   "end": 2.512,
+   "cue": "gancio"
+  },
+  {
+   "text": "costi,",
+   "start": 2.512,
+   "end": 2.826,
+   "cue": "gancio"
+  },
+  {
+   "text": "per",
+   "start": 2.966,
+   "end": 3.138,
+   "cue": "gancio"
+  },
+  {
+   "text": "arrivare",
+   "start": 3.138,
+   "end": 3.736,
+   "cue": "gancio"
+  },
+  {
+   "text": "viva",
+   "start": 3.736,
+   "end": 4.05,
+   "cue": "gancio"
+  },
+  {
+   "text": "allo",
+   "start": 4.05,
+   "end": 4.364,
+   "cue": "gancio"
+  },
+  {
+   "text": "scontro",
+   "start": 4.364,
+   "end": 4.678,
+   "cue": "gancio"
+  },
+  {
+   "text": "con",
+   "start": 4.678,
+   "end": 4.85,
+   "cue": "gancio"
+  },
+  {
+   "text": "la",
+   "start": 4.85,
+   "end": 5.022,
+   "cue": "gancio"
+  },
+  {
+   "text": "Danimarca.",
+   "start": 5.022,
+   "end": 5.62,
+   "cue": "gancio"
+  },
+  {
+   "text": "Norvegia-Galles:",
+   "start": 5.92,
+   "end": 6.66,
+   "cue": "ctx"
+  },
+  {
+   "text": "tre",
+   "start": 6.8,
+   "end": 6.972,
+   "cue": "ctx"
+  },
+  {
+   "text": "numeri",
+   "start": 6.972,
+   "end": 7.428,
+   "cue": "ctx"
+  },
+  {
+   "text": "su",
+   "start": 7.428,
+   "end": 7.6,
+   "cue": "ctx"
+  },
+  {
+   "text": "Haaland.",
+   "start": 7.6,
+   "end": 7.914,
+   "cue": "ctx"
+  },
+  {
+   "text": "Uno.",
+   "start": 8.214,
+   "end": 8.528,
+   "cue": "uno"
+  },
+  {
+   "text": "In",
+   "start": 8.828,
+   "end": 9.0,
+   "cue": "uno"
+  },
+  {
+   "text": "Nations",
+   "start": 9.0,
+   "end": 9.314,
+   "cue": "uno"
+  },
+  {
+   "text": "League",
+   "start": 9.314,
+   "end": 9.628,
+   "cue": "uno"
+  },
+  {
+   "text": "ha",
+   "start": 9.628,
+   "end": 9.8,
+   "cue": "uno"
+  },
+  {
+   "text": "segnato",
+   "start": 9.8,
+   "end": 10.256,
+   "cue": "uno"
+  },
+  {
+   "text": "ventidue",
+   "start": 10.256,
+   "end": 10.712,
+   "cue": "uno"
+  },
+  {
+   "text": "gol",
+   "start": 10.712,
+   "end": 10.884,
+   "cue": "uno"
+  },
+  {
+   "text": "in",
+   "start": 10.884,
+   "end": 11.056,
+   "cue": "uno"
+  },
+  {
+   "text": "venti",
+   "start": 11.056,
+   "end": 11.37,
+   "cue": "uno"
+  },
+  {
+   "text": "partite.",
+   "start": 11.37,
+   "end": 11.826,
+   "cue": "uno"
+  },
+  {
+   "text": "Nessuno",
+   "start": 12.126,
+   "end": 12.582,
+   "cue": "uno"
+  },
+  {
+   "text": "ne",
+   "start": 12.582,
+   "end": 12.754,
+   "cue": "uno"
+  },
+  {
+   "text": "ha",
+   "start": 12.754,
+   "end": 12.926,
+   "cue": "uno"
+  },
+  {
+   "text": "fatti",
+   "start": 12.926,
+   "end": 13.24,
+   "cue": "uno"
+  },
+  {
+   "text": "di",
+   "start": 13.24,
+   "end": 13.412,
+   "cue": "uno"
+  },
+  {
+   "text": "più.",
+   "start": 13.412,
+   "end": 13.584,
+   "cue": "uno"
+  },
+  {
+   "text": "Due.",
+   "start": 13.884,
+   "end": 14.056,
+   "cue": "due"
+  },
+  {
+   "text": "Quest'anno,",
+   "start": 14.356,
+   "end": 14.812,
+   "cue": "due"
+  },
+  {
+   "text": "in",
+   "start": 14.952,
+   "end": 15.124,
+   "cue": "due"
+  },
+  {
+   "text": "casa,",
+   "start": 15.124,
+   "end": 15.438,
+   "cue": "due"
+  },
+  {
+   "text": "ha",
+   "start": 15.578,
+   "end": 15.75,
+   "cue": "due"
+  },
+  {
+   "text": "già",
+   "start": 15.75,
+   "end": 15.922,
+   "cue": "due"
+  },
+  {
+   "text": "fatto",
+   "start": 15.922,
+   "end": 16.236,
+   "cue": "due"
+  },
+  {
+   "text": "tre",
+   "start": 16.236,
+   "end": 16.408,
+   "cue": "due"
+  },
+  {
+   "text": "gol",
+   "start": 16.408,
+   "end": 16.58,
+   "cue": "due"
+  },
+  {
+   "text": "in",
+   "start": 16.58,
+   "end": 16.752,
+   "cue": "due"
+  },
+  {
+   "text": "due",
+   "start": 16.752,
+   "end": 16.924,
+   "cue": "due"
+  },
+  {
+   "text": "partite.",
+   "start": 16.924,
+   "end": 17.38,
+   "cue": "due"
+  },
+  {
+   "text": "Tre.",
+   "start": 17.68,
+   "end": 17.852,
+   "cue": "tre"
+  },
+  {
+   "text": "Il",
+   "start": 18.152,
+   "end": 18.324,
+   "cue": "tre"
+  },
+  {
+   "text": "Galles",
+   "start": 18.324,
+   "end": 18.638,
+   "cue": "tre"
+  },
+  {
+   "text": "ha",
+   "start": 18.638,
+   "end": 18.81,
+   "cue": "tre"
+  },
+  {
+   "text": "segnato",
+   "start": 18.81,
+   "end": 19.266,
+   "cue": "tre"
+  },
+  {
+   "text": "in",
+   "start": 19.266,
+   "end": 19.438,
+   "cue": "tre"
+  },
+  {
+   "text": "una",
+   "start": 19.438,
+   "end": 19.752,
+   "cue": "tre"
+  },
+  {
+   "text": "sola",
+   "start": 19.752,
+   "end": 20.066,
+   "cue": "tre"
+  },
+  {
+   "text": "partita",
+   "start": 20.066,
+   "end": 20.522,
+   "cue": "tre"
+  },
+  {
+   "text": "su",
+   "start": 20.522,
+   "end": 20.694,
+   "cue": "tre"
+  },
+  {
+   "text": "quattro.",
+   "start": 20.694,
+   "end": 21.008,
+   "cue": "tre"
+  },
+  {
+   "text": "Haaland",
+   "start": 21.308,
+   "end": 21.622,
+   "cue": "dom"
+  },
+  {
+   "text": "a",
+   "start": 21.622,
+   "end": 21.794,
+   "cue": "dom"
+  },
+  {
+   "text": "segno",
+   "start": 21.794,
+   "end": 22.108,
+   "cue": "dom"
+  },
+  {
+   "text": "già",
+   "start": 22.108,
+   "end": 22.28,
+   "cue": "dom"
+  },
+  {
+   "text": "nel",
+   "start": 22.28,
+   "end": 22.452,
+   "cue": "dom"
+  },
+  {
+   "text": "primo",
+   "start": 22.452,
+   "end": 22.766,
+   "cue": "dom"
+  },
+  {
+   "text": "tempo?",
+   "start": 22.766,
+   "end": 23.08,
+   "cue": "dom"
+  },
+  {
+   "text": "E",
+   "start": 23.38,
+   "end": 23.552,
+   "cue": "dom"
+  },
+  {
+   "text": "occhio,",
+   "start": 23.552,
+   "end": 23.866,
+   "cue": "dom"
+  },
+  {
+   "text": "perché",
+   "start": 24.006,
+   "end": 24.32,
+   "cue": "dom"
+  },
+  {
+   "text": "può",
+   "start": 24.32,
+   "end": 24.492,
+   "cue": "dom"
+  },
+  {
+   "text": "farne",
+   "start": 24.492,
+   "end": 24.806,
+   "cue": "dom"
+  },
+  {
+   "text": "più",
+   "start": 24.806,
+   "end": 24.978,
+   "cue": "dom"
+  },
+  {
+   "text": "di",
+   "start": 24.978,
+   "end": 25.15,
+   "cue": "dom"
+  },
+  {
+   "text": "uno.",
+   "start": 25.15,
+   "end": 25.464,
+   "cue": "dom"
+  },
+  {
+   "text": "Commenta",
+   "start": 25.764,
+   "end": 26.22,
+   "cue": "cta"
+  },
+  {
+   "text": "analisi.",
+   "start": 26.22,
+   "end": 26.818,
+   "cue": "cta"
+  }
+ ]
+}

@@ -1,7 +1,6 @@
 import '@fontsource/anton';
 import React, {useEffect, useState} from 'react';
-import {AbsoluteFill, continueRender, delayRender, random} from 'remotion';
-import {FlagSvg} from '../pronostico/kit';
+import {AbsoluteFill, Img, OffthreadVideo, continueRender, delayRender, random, staticFile} from 'remotion';
 
 /**
  * Grafica del canale MOTB (@manofthebet11), rifatta dai video di riferimento: vedi docs/STILE-MOTB.md.
@@ -115,8 +114,26 @@ export const Backdrop: React.FC<{g: number}> = ({g}) => (
  * Segnaposto delle clip: qui vanno i filmati veri (giocatore, squadra, stadio). Finché non ci
  * sono si vede uno stadio di notte sfocato che si avvicina piano, con la scritta "CLIP".
  */
-export const ClipSlot: React.FC<{g: number; a: number; seed: string; label?: string; style?: React.CSSProperties}> = ({g, a, seed, label = 'CLIP', style}) => {
+export type Clip = {src: string; from: number; rate?: number; x?: number};
+export const ClipSlot: React.FC<{g: number; a: number; seed: string; label?: string; style?: React.CSSProperties; clip?: Clip}> = ({g, a, seed, label = 'CLIP', style, clip}) => {
   const z = 1.06 + (g - a) * 0.025;
+  if (clip) {
+    // filmato vero: ritagliato in verticale, rallentato e con un leggero zoom, come nei video MOTB
+    return (
+      <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#000', ...style}}>
+        <div style={{position: 'absolute', inset: 0, transform: `scale(${z + 0.04})`}}>
+          <OffthreadVideo
+            src={staticFile(clip.src)}
+            startFrom={Math.round(clip.from * FPS)}
+            playbackRate={clip.rate ?? 0.7}
+            muted
+            style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${(clip.x ?? 0.5) * 100}% 50%`}}
+          />
+        </div>
+        <AbsoluteFill style={{background: 'radial-gradient(90% 60% at 50% 50%, transparent 45%, rgba(0,0,30,0.5) 100%)'}} />
+      </div>
+    );
+  }
   return (
     <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#0B1A14', ...style}}>
       <div style={{position: 'absolute', inset: 0, transform: `scale(${z})`}}>
@@ -171,13 +188,12 @@ const Chip: React.FC<{light?: boolean; children: React.ReactNode}> = ({light, ch
   </div>
 );
 
-export const FlagIcon: React.FC<{kind: 'bg' | 'is'; h: number}> = ({kind, h}) => (
-  <div style={{borderRadius: 3, overflow: 'hidden', boxShadow: '0 0 0 1.5px rgba(0,0,0,0.25)'}}>
-    <FlagSvg kind={kind} w={kind === 'bg' ? (h * 5) / 3 : (h * 25) / 18} h={h} />
-  </div>
+/** bandiera vera (public/motb/flags/<codice>.svg, da flagcdn.com): bg, is, no, gb-wls, pt, dk… */
+export const FlagIcon: React.FC<{code: string; h: number}> = ({code, h}) => (
+  <Img src={staticFile(`motb/flags/${code}.svg`)} style={{height: h, display: 'block', borderRadius: 3, boxShadow: '0 0 0 1.5px rgba(0,0,0,0.25)'}} />
 );
 
-export const Hud: React.FC<{g: number; show: number; left: string; home: 'bg' | 'is'; away: 'bg' | 'is'; match: string}> = ({g, show, left, home, away, match}) => {
+export const Hud: React.FC<{g: number; show: number; left: string; home: string; away: string; match: string}> = ({g, show, left, home, away, match}) => {
   const p = easeOut(show);
   if (p <= 0.001) return null;
   return (
@@ -189,9 +205,9 @@ export const Hud: React.FC<{g: number; show: number; left: string; home: 'bg' | 
         {left}
       </Chip>
       <Chip light>
-        <FlagIcon kind={home} h={26} />
+        <FlagIcon code={home} h={26} />
         {match}
-        <FlagIcon kind={away} h={26} />
+        <FlagIcon code={away} h={26} />
       </Chip>
     </div>
   );
@@ -357,10 +373,10 @@ const cardIn = (g: number, a: number, out: number) => {
 };
 
 /** numero giallo che conta + griglia di icone che si riempie una alla volta */
-export const StatCard: React.FC<{g: number; a: number; out: number; n: number; total?: number; icon: IconKind; caption: string; y: number; suffix?: string; layout?: 'side' | 'top'}> = ({g, a, out, n, total, icon, caption, y, suffix, layout = 'side'}) => {
+export const StatCard: React.FC<{g: number; a: number; out: number; n: number; total?: number; icon: IconKind; marks?: IconKind[]; caption: string; y: number; suffix?: string; layout?: 'side' | 'top'}> = ({g, a, out, n, total, icon, marks, caption, y, suffix, layout = 'side'}) => {
   const {style, visible} = cardIn(g, a, out);
   if (!visible) return null;
-  const tot = total ?? n;
+  const tot = marks?.length ?? total ?? n;
   const cp = easeOut(prog(g, a, a + 0.6));
   const shown = Math.round(n * cp);
   const iconOn = (i: number) => clamp((cp * tot - i) * 1.2 + 0.5);
@@ -369,7 +385,7 @@ export const StatCard: React.FC<{g: number; a: number; out: number; n: number; t
   const grid = (
     <div style={{display: 'grid', gridTemplateColumns: `repeat(${perRow}, ${s}px)`, gap: s * 0.16}}>
       {Array.from({length: tot}, (_, i) => (
-        <Icon key={i} kind={icon} on={i < n ? iconOn(i) : 0} s={s} />
+        <Icon key={i} kind={marks ? marks[i] : icon} on={marks || i < n ? iconOn(i) : 0} s={s} />
       ))}
     </div>
   );
@@ -496,16 +512,16 @@ export const NumberTile: React.FC<{g: number; a: number; out: number; n: string;
 
 // ───────────────────────── schermata finale ─────────────────────────
 
-export const EndCard: React.FC<{g: number; a: number; home: 'bg' | 'is'; away: 'bg' | 'is'; tWord: number; tKey: number}> = ({g, a, home, away, tWord, tKey}) => {
+export const EndCard: React.FC<{g: number; a: number; home: string; away: string; tWord: number; tKey: number}> = ({g, a, home, away, tWord, tKey}) => {
   if (g < a) return null;
   const p1 = easeBack(prog(g, a, a + 0.3));
   const p2 = easeBack(prog(g, a + 0.08, a + 0.38));
   const pv = easeBack(prog(g, a + 0.15, a + 0.4));
   const box = easeOut(prog(g, tWord - 0.1, tWord + 0.15));
   const key = easeBack(prog(g, tKey - 0.05, tKey + 0.25));
-  const crest = (k: 'bg' | 'is', p: number) => (
+  const crest = (k: string, p: number) => (
     <div style={{width: 170, height: 170, borderRadius: 26, background: '#fff', boxShadow: `0 0 0 5px ${M.cyan}55, 0 0 40px ${M.cyan}88`, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${p})`}}>
-      <FlagIcon kind={k} h={78} />
+      <FlagIcon code={k} h={78} />
     </div>
   );
   return (
@@ -532,5 +548,54 @@ export const EndCard: React.FC<{g: number; a: number; home: 'bg' | 'is'; away: '
         </div>
       </div>
     </AbsoluteFill>
+  );
+};
+
+/** classifica del girone: bandiera, squadra, punti; la squadra in evidenza è gialla */
+export const Table: React.FC<{g: number; a: number; out: number; title: string; rows: {code: string; name: string; pts: number; hi?: boolean}[]; y: number}> = ({g, a, out, title, rows, y}) => {
+  const {style, visible} = cardIn(g, a, out);
+  if (!visible) return null;
+  return (
+    <div style={{...panel, top: y, padding: '26px 40px 22px', ...style}}>
+      <div style={{textAlign: 'center', fontFamily: FONT, fontSize: 30, color: M.cyan, letterSpacing: 3, marginBottom: 12}}>{title}</div>
+      {rows.map((r, i) => {
+        const p = easeOut(prog(g, a + 0.08 * i, a + 0.08 * i + 0.25));
+        return (
+          <div
+            key={r.code}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 22,
+              height: 74,
+              padding: '0 18px',
+              marginTop: 6,
+              borderRadius: 12,
+              background: r.hi ? 'rgba(255,212,4,0.14)' : 'rgba(255,255,255,0.04)',
+              border: r.hi ? `2px solid ${M.yellow}` : '2px solid transparent',
+              opacity: p,
+              transform: `translateX(${(1 - p) * -40}px)`,
+            }}
+          >
+            <div style={{width: 40, fontFamily: FONT, fontSize: 40, color: 'rgba(255,255,255,0.6)'}}>{i + 1}</div>
+            <FlagIcon code={r.code} h={40} />
+            <div style={{flex: 1, fontFamily: FONT, fontSize: 46, color: r.hi ? M.yellow : '#fff'}}>{r.name}</div>
+            <div style={{fontFamily: FONT, fontSize: 52, color: r.hi ? M.yellow : '#fff'}}>{r.pts}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+/** pillola gialla per un'etichetta forte ("MIGLIOR MARCATORE DI SEMPRE") */
+export const Badge: React.FC<{g: number; a: number; out: number; text: string; y: number}> = ({g, a, out, text, y}) => {
+  const p = easeBack(prog(g, a - 0.05, a + 0.25));
+  const o = easeIn(prog(g, out, out + 0.2));
+  if (g < a - 0.05 || g > out + 0.22) return null;
+  return (
+    <div style={{position: 'absolute', left: 0, right: 0, top: y, display: 'flex', justifyContent: 'center', opacity: 1 - o}}>
+      <div style={{padding: '14px 40px', borderRadius: 999, background: M.yellow, color: M.ink, fontFamily: FONT, fontSize: 46, boxShadow: `0 0 50px ${M.yellow}77, 0 14px 30px rgba(0,0,0,0.4)`, transform: `scale(${p})`}}>{text}</div>
+    </div>
   );
 };
