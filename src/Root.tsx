@@ -24,6 +24,7 @@ import {ARTE_FRAMES, Arte, FPS as ARTE_FPS} from './arte/Arte';
 import {FPS as PRO_FPS, PRONOSTICO_FRAMES, Pronostico} from './pronostico/Pronostico';
 import {FPS as MOTB_FPS, OSK_MOTB_FRAMES, OskarssonMotb} from './motb/OskarssonMotb';
 import {HAALAND_FRAMES, Haaland} from './motb/Haaland';
+import {CARTELLINI_FRAMES, Cartellini} from './motb/Cartellini';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -66,5 +67,6 @@ export const RemotionRoot: React.FC = () => (
       <Composition id="OskarssonPronostico" component={Pronostico} width={1080} height={1920} fps={PRO_FPS} durationInFrames={PRONOSTICO_FRAMES} />
       <Composition id="OskarssonMotb" component={OskarssonMotb} width={1080} height={1920} fps={MOTB_FPS} durationInFrames={OSK_MOTB_FRAMES} />
       <Composition id="Haaland" component={Haaland} width={1080} height={1920} fps={MOTB_FPS} durationInFrames={HAALAND_FRAMES} />
+      <Composition id="Cartellini" component={Cartellini} width={1080} height={1920} fps={MOTB_FPS} durationInFrames={CARTELLINI_FRAMES} />
   </>
 );

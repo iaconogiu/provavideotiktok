@@ -1,0 +1,7 @@
+#gancio Stasera c'è una partita in cui i cartellini potrebbero piovere da una parte sola.
+#ctx Svezia-Bosnia: tre numeri sui cartellini.
+#uno Uno. L'arbitro di stasera ha una media di quattro virgola cinque cartellini a partita.
+#due Due. La Bosnia è tra le nazionali più ammonite della Nations League: due virgola sette a partita.
+#tre Tre. La Svezia, invece, è tra le più corrette: appena zero virgola sette.
+#dom Chi prende più cartellini stasera? Io dico la Bosnia.
+#cta Commenta analisi.

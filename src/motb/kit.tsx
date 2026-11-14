@@ -358,9 +358,18 @@ export const cap = (tone: 'white' | 'navy', pairs: [string, number][], size?: nu
 
 // ───────────────────────── riquadri dei dati ─────────────────────────
 
-type IconKind = 'check' | 'x' | 'ball' | 'square';
+type IconKind = 'check' | 'x' | 'ball' | 'square' | 'card';
 
 const Icon: React.FC<{kind: IconKind; on: number; s: number}> = ({kind, on, s}) => {
+  if (kind === 'card') {
+    // cartellino giallo che si riempie dal basso (anche a metà, per le medie con la virgola)
+    const f = clamp(on);
+    return (
+      <div style={{width: s * 0.72, height: s, borderRadius: s * 0.1, border: `${Math.max(2, s * 0.05)}px solid ${f > 0 ? M.yellow : 'rgba(255,212,4,0.35)'}`, position: 'relative', overflow: 'hidden', transform: 'rotate(-6deg)'}}>
+        <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: `${f * 100}%`, background: M.yellow, boxShadow: f > 0.95 ? `0 0 18px ${M.yellow}` : undefined}} />
+      </div>
+    );
+  }
   const bg = kind === 'check' || kind === 'ball' ? M.green : kind === 'x' ? M.red : M.yellow;
   const filled = on > 0.5;
   return (
@@ -419,19 +428,19 @@ const cardIn = (g: number, a: number, out: number) => {
 };
 
 /** numero giallo che conta + griglia di icone che si riempie una alla volta */
-export const StatCard: React.FC<{g: number; a: number; out: number; n: number; total?: number; icon: IconKind; marks?: IconKind[]; caption: string; y: number; suffix?: string; layout?: 'side' | 'top'}> = ({g, a, out, n, total, icon, marks, caption, y, suffix, layout = 'side'}) => {
+export const StatCard: React.FC<{g: number; a: number; out: number; n: number; total?: number; icon: IconKind; marks?: IconKind[]; caption: string; y: number; suffix?: string; layout?: 'side' | 'top'; decimals?: number}> = ({g, a, out, n, total, icon, marks, caption, y, suffix, layout = 'side', decimals = 0}) => {
   const {style, visible} = cardIn(g, a, out);
   if (!visible) return null;
-  const tot = marks?.length ?? total ?? n;
+  const tot = marks?.length ?? total ?? Math.ceil(n);
   const cp = easeOut(prog(g, a, a + 0.6));
-  const shown = Math.round(n * cp);
+  const shown = decimals ? (n * cp).toFixed(decimals).replace('.', ',') : Math.round(n * cp);
   const iconOn = (i: number) => clamp((cp * tot - i) * 1.2 + 0.5);
   const s = tot > 12 ? 44 : tot > 6 ? 54 : 74;
   const perRow = tot > 12 ? Math.ceil(tot / 2) : tot;
   const grid = (
     <div style={{display: 'grid', gridTemplateColumns: `repeat(${perRow}, ${s}px)`, gap: s * 0.16}}>
       {Array.from({length: tot}, (_, i) => (
-        <Icon key={i} kind={marks ? marks[i] : icon} on={marks || i < n ? iconOn(i) : 0} s={s} />
+        <Icon key={i} kind={marks ? marks[i] : icon} on={icon === 'card' && !marks ? clamp(cp * n - i) : marks || i < n ? iconOn(i) : 0} s={s} />
       ))}
     </div>
   );
@@ -642,6 +651,51 @@ export const Badge: React.FC<{g: number; a: number; out: number; text: string; y
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: y, display: 'flex', justifyContent: 'center', opacity: 1 - o}}>
       <div style={{padding: '14px 40px', borderRadius: 999, background: M.yellow, color: M.ink, fontFamily: FONT, fontSize: 46, boxShadow: `0 0 50px ${M.yellow}77, 0 14px 30px rgba(0,0,0,0.4)`, transform: `scale(${p})`}}>{text}</div>
+    </div>
+  );
+};
+
+/** confronto a barre orizzontali (es. cartellini a partita delle due squadre) */
+export const CompareBars: React.FC<{g: number; a: number; out: number; title: string; rows: {code: string; name: string; v: number; hi?: boolean}[]; y: number; decimals?: number}> = ({g, a, out, title, rows, y, decimals = 1}) => {
+  const {style, visible} = cardIn(g, a, out);
+  if (!visible) return null;
+  const max = Math.max(...rows.map((r) => r.v));
+  return (
+    <div style={{...panel, top: y, padding: '28px 40px 26px', ...style}}>
+      <div style={{textAlign: 'center', fontFamily: FONT, fontSize: 30, color: M.cyan, letterSpacing: 3, marginBottom: 18}}>{title}</div>
+      {rows.map((r, i) => {
+        const p = easeOut(prog(g, a + 0.1 + i * 0.15, a + 0.7 + i * 0.15));
+        return (
+          <div key={r.code} style={{display: 'flex', alignItems: 'center', gap: 18, marginTop: i ? 18 : 0}}>
+            <FlagIcon code={r.code} h={44} />
+            <div style={{width: 170, fontFamily: FONT, fontSize: 44, color: '#fff'}}>{r.name}</div>
+            <div style={{flex: 1, height: 46, borderRadius: 10, background: 'rgba(255,255,255,0.08)', overflow: 'hidden'}}>
+              <div style={{width: `${(r.v / max) * 100 * p}%`, height: '100%', borderRadius: 10, background: r.hi ? M.yellow : 'rgba(255,255,255,0.55)', boxShadow: r.hi ? `0 0 24px ${M.yellow}88` : undefined}} />
+            </div>
+            <div style={{width: 92, textAlign: 'right', fontFamily: FONT, fontSize: 56, color: r.hi ? M.yellow : '#fff'}}>{(r.v * p).toFixed(decimals).replace('.', ',')}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+/** cartellini gialli che cadono (dentro un riquadro) */
+export const CardRain: React.FC<{g: number; a: number; seed: string; n?: number; top?: number; height?: number}> = ({g, a, seed, n = 14, top = 0, height = H}) => {
+  if (g < a) return null;
+  return (
+    <div style={{position: 'absolute', left: 0, right: 0, top, height, overflow: 'hidden', pointerEvents: 'none'}}>
+      {Array.from({length: n}, (_, i) => {
+        const t0 = a + random(`${seed}t${i}`) * 1.2;
+        const t = g - t0;
+        if (t < 0) return null;
+        const x = 60 + random(`${seed}x${i}`) * (W - 120);
+        const sp = 520 + random(`${seed}v${i}`) * 380;
+        const y = -120 + ((t * sp) % (height + 200));
+        const r = (random(`${seed}r${i}`) - 0.5) * 70 + t * (random(`${seed}w${i}`) - 0.5) * 160;
+        const s = 60 + random(`${seed}s${i}`) * 50;
+        return <div key={i} style={{position: 'absolute', left: x, top: y, width: s * 0.72, height: s, borderRadius: s * 0.1, background: M.yellow, boxShadow: '0 8px 18px rgba(0,0,0,0.35)', transform: `rotate(${r}deg)`, opacity: 0.95}} />;
+      })}
     </div>
   );
 };

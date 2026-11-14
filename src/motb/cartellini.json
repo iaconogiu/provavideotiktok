@@ -1,0 +1,450 @@
+{
+ "audio": false,
+ "duration": 29.246,
+ "words": [
+  {
+   "text": "Stasera",
+   "start": 0.0,
+   "end": 0.456,
+   "cue": "gancio"
+  },
+  {
+   "text": "c'è",
+   "start": 0.456,
+   "end": 0.628,
+   "cue": "gancio"
+  },
+  {
+   "text": "una",
+   "start": 0.628,
+   "end": 0.942,
+   "cue": "gancio"
+  },
+  {
+   "text": "partita",
+   "start": 0.942,
+   "end": 1.398,
+   "cue": "gancio"
+  },
+  {
+   "text": "in",
+   "start": 1.398,
+   "end": 1.57,
+   "cue": "gancio"
+  },
+  {
+   "text": "cui",
+   "start": 1.57,
+   "end": 1.742,
+   "cue": "gancio"
+  },
+  {
+   "text": "i",
+   "start": 1.742,
+   "end": 1.914,
+   "cue": "gancio"
+  },
+  {
+   "text": "cartellini",
+   "start": 1.914,
+   "end": 2.512,
+   "cue": "gancio"
+  },
+  {
+   "text": "potrebbero",
+   "start": 2.512,
+   "end": 3.11,
+   "cue": "gancio"
+  },
+  {
+   "text": "piovere",
+   "start": 3.11,
+   "end": 3.566,
+   "cue": "gancio"
+  },
+  {
+   "text": "da",
+   "start": 3.566,
+   "end": 3.738,
+   "cue": "gancio"
+  },
+  {
+   "text": "una",
+   "start": 3.738,
+   "end": 4.052,
+   "cue": "gancio"
+  },
+  {
+   "text": "parte",
+   "start": 4.052,
+   "end": 4.366,
+   "cue": "gancio"
+  },
+  {
+   "text": "sola.",
+   "start": 4.366,
+   "end": 4.68,
+   "cue": "gancio"
+  },
+  {
+   "text": "Svezia-Bosnia:",
+   "start": 4.98,
+   "end": 5.578,
+   "cue": "ctx"
+  },
+  {
+   "text": "tre",
+   "start": 5.718,
+   "end": 5.89,
+   "cue": "ctx"
+  },
+  {
+   "text": "numeri",
+   "start": 5.89,
+   "end": 6.346,
+   "cue": "ctx"
+  },
+  {
+   "text": "sui",
+   "start": 6.346,
+   "end": 6.518,
+   "cue": "ctx"
+  },
+  {
+   "text": "cartellini.",
+   "start": 6.518,
+   "end": 7.116,
+   "cue": "ctx"
+  },
+  {
+   "text": "Uno.",
+   "start": 7.416,
+   "end": 7.73,
+   "cue": "uno"
+  },
+  {
+   "text": "L'arbitro",
+   "start": 8.03,
+   "end": 8.486,
+   "cue": "uno"
+  },
+  {
+   "text": "di",
+   "start": 8.486,
+   "end": 8.658,
+   "cue": "uno"
+  },
+  {
+   "text": "stasera",
+   "start": 8.658,
+   "end": 9.114,
+   "cue": "uno"
+  },
+  {
+   "text": "ha",
+   "start": 9.114,
+   "end": 9.286,
+   "cue": "uno"
+  },
+  {
+   "text": "una",
+   "start": 9.286,
+   "end": 9.6,
+   "cue": "uno"
+  },
+  {
+   "text": "media",
+   "start": 9.6,
+   "end": 9.914,
+   "cue": "uno"
+  },
+  {
+   "text": "di",
+   "start": 9.914,
+   "end": 10.086,
+   "cue": "uno"
+  },
+  {
+   "text": "quattro",
+   "start": 10.086,
+   "end": 10.4,
+   "cue": "uno"
+  },
+  {
+   "text": "virgola",
+   "start": 10.4,
+   "end": 10.856,
+   "cue": "uno"
+  },
+  {
+   "text": "cinque",
+   "start": 10.856,
+   "end": 11.17,
+   "cue": "uno"
+  },
+  {
+   "text": "cartellini",
+   "start": 11.17,
+   "end": 11.768,
+   "cue": "uno"
+  },
+  {
+   "text": "a",
+   "start": 11.768,
+   "end": 11.94,
+   "cue": "uno"
+  },
+  {
+   "text": "partita.",
+   "start": 11.94,
+   "end": 12.396,
+   "cue": "uno"
+  },
+  {
+   "text": "Due.",
+   "start": 12.696,
+   "end": 12.868,
+   "cue": "due"
+  },
+  {
+   "text": "La",
+   "start": 13.168,
+   "end": 13.34,
+   "cue": "due"
+  },
+  {
+   "text": "Bosnia",
+   "start": 13.34,
+   "end": 13.654,
+   "cue": "due"
+  },
+  {
+   "text": "è",
+   "start": 13.654,
+   "end": 13.826,
+   "cue": "due"
+  },
+  {
+   "text": "tra",
+   "start": 13.826,
+   "end": 13.998,
+   "cue": "due"
+  },
+  {
+   "text": "le",
+   "start": 13.998,
+   "end": 14.17,
+   "cue": "due"
+  },
+  {
+   "text": "nazionali",
+   "start": 14.17,
+   "end": 14.768,
+   "cue": "due"
+  },
+  {
+   "text": "più",
+   "start": 14.768,
+   "end": 14.94,
+   "cue": "due"
+  },
+  {
+   "text": "ammonite",
+   "start": 14.94,
+   "end": 15.538,
+   "cue": "due"
+  },
+  {
+   "text": "della",
+   "start": 15.538,
+   "end": 15.852,
+   "cue": "due"
+  },
+  {
+   "text": "Nations",
+   "start": 15.852,
+   "end": 16.166,
+   "cue": "due"
+  },
+  {
+   "text": "League:",
+   "start": 16.166,
+   "end": 16.48,
+   "cue": "due"
+  },
+  {
+   "text": "due",
+   "start": 16.62,
+   "end": 16.792,
+   "cue": "due"
+  },
+  {
+   "text": "virgola",
+   "start": 16.792,
+   "end": 17.248,
+   "cue": "due"
+  },
+  {
+   "text": "sette",
+   "start": 17.248,
+   "end": 17.562,
+   "cue": "due"
+  },
+  {
+   "text": "a",
+   "start": 17.562,
+   "end": 17.734,
+   "cue": "due"
+  },
+  {
+   "text": "partita.",
+   "start": 17.734,
+   "end": 18.19,
+   "cue": "due"
+  },
+  {
+   "text": "Tre.",
+   "start": 18.49,
+   "end": 18.662,
+   "cue": "tre"
+  },
+  {
+   "text": "La",
+   "start": 18.962,
+   "end": 19.134,
+   "cue": "tre"
+  },
+  {
+   "text": "Svezia,",
+   "start": 19.134,
+   "end": 19.448,
+   "cue": "tre"
+  },
+  {
+   "text": "invece,",
+   "start": 19.588,
+   "end": 20.044,
+   "cue": "tre"
+  },
+  {
+   "text": "è",
+   "start": 20.184,
+   "end": 20.356,
+   "cue": "tre"
+  },
+  {
+   "text": "tra",
+   "start": 20.356,
+   "end": 20.528,
+   "cue": "tre"
+  },
+  {
+   "text": "le",
+   "start": 20.528,
+   "end": 20.7,
+   "cue": "tre"
+  },
+  {
+   "text": "più",
+   "start": 20.7,
+   "end": 20.872,
+   "cue": "tre"
+  },
+  {
+   "text": "corrette:",
+   "start": 20.872,
+   "end": 21.328,
+   "cue": "tre"
+  },
+  {
+   "text": "appena",
+   "start": 21.468,
+   "end": 21.924,
+   "cue": "tre"
+  },
+  {
+   "text": "zero",
+   "start": 21.924,
+   "end": 22.238,
+   "cue": "tre"
+  },
+  {
+   "text": "virgola",
+   "start": 22.238,
+   "end": 22.694,
+   "cue": "tre"
+  },
+  {
+   "text": "sette.",
+   "start": 22.694,
+   "end": 23.008,
+   "cue": "tre"
+  },
+  {
+   "text": "Chi",
+   "start": 23.308,
+   "end": 23.48,
+   "cue": "dom"
+  },
+  {
+   "text": "prende",
+   "start": 23.48,
+   "end": 23.794,
+   "cue": "dom"
+  },
+  {
+   "text": "più",
+   "start": 23.794,
+   "end": 23.966,
+   "cue": "dom"
+  },
+  {
+   "text": "cartellini",
+   "start": 23.966,
+   "end": 24.564,
+   "cue": "dom"
+  },
+  {
+   "text": "stasera?",
+   "start": 24.564,
+   "end": 25.02,
+   "cue": "dom"
+  },
+  {
+   "text": "Io",
+   "start": 25.32,
+   "end": 25.492,
+   "cue": "dom"
+  },
+  {
+   "text": "dico",
+   "start": 25.492,
+   "end": 25.806,
+   "cue": "dom"
+  },
+  {
+   "text": "la",
+   "start": 25.806,
+   "end": 25.978,
+   "cue": "dom"
+  },
+  {
+   "text": "Bosnia.",
+   "start": 25.978,
+   "end": 26.292,
+   "cue": "dom"
+  },
+  {
+   "text": "Commenta",
+   "start": 26.592,
+   "end": 27.048,
+   "cue": "cta"
+  },
+  {
+   "text": "analisi.",
+   "start": 27.048,
+   "end": 27.646,
+   "cue": "cta"
+  }
+ ]
+}
