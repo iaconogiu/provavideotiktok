@@ -11,9 +11,11 @@ import {Backdrop, Badge, Caption, ClipSlot, EndCard, FPS, H, Hud, StatCard, Step
  */
 
 export {FPS};
-export const HAALAND_FRAMES = Math.ceil(data.duration * FPS);
+// con la voce vera resta un secondo in più sulla schermata finale
+const TAIL = data.audio ? 1.0 : 0;
+export const HAALAND_FRAMES = Math.ceil((data.duration + TAIL) * FPS);
 const {cue, at} = makeTiming(data.words as VW[]);
-const END = data.duration;
+const END = data.duration + TAIL;
 
 const S = {
   stadio: cue('gancio').start,
@@ -54,7 +56,7 @@ export const Haaland: React.FC = () => {
 
       {/* 1 · gancio: la Norvegia deve vincere (clip) */}
       <Seg g={g} a={S.stadio} b={S.classifica}>
-        <ClipSlot g={g} a={S.stadio} seed="h-gancio" label="CLIP · NORVEGIA / HAALAND" clip={CL.gancio} />
+        <ClipSlot g={g} a={S.stadio} seed="h-gancio" label="CLIP · NORVEGIA / HAALAND" clip={CL.gancio} flag="no" />
         <Caption
           g={g}
           y={CLIP_Y}
@@ -97,7 +99,7 @@ export const Haaland: React.FC = () => {
 
       {/* 3 · uno: in Nations League ha segnato… (clip) */}
       <Seg g={g} a={S.uno} b={S.gol22}>
-        <ClipSlot g={g} a={S.uno} seed="h-uno" label="CLIP · GOL DI HAALAND" clip={CL.uno} />
+        <ClipSlot g={g} a={S.uno} seed="h-uno" label="CLIP · GOL DI HAALAND" clip={CL.uno} flag="no" />
         <Caption g={g} y={CLIP_Y} out={S.gol22} rows={[cap('white', [['IN', at('uno', 'in')], ['NATIONS', at('uno', 'nations')], ['LEAGUE', at('uno', 'league')]]), cap('navy', [['HA', at('uno', 'ha')], ['SEGNATO', at('uno', 'segnato')]])]} />
       </Seg>
 
@@ -111,7 +113,7 @@ export const Haaland: React.FC = () => {
 
       {/* 4 · due: quest'anno in casa (clip) */}
       <Seg g={g} a={S.casa} b={S.gol3}>
-        <ClipSlot g={g} a={S.casa} seed="h-casa" label="CLIP · ULLEVAAL / TIFOSI NORVEGIA" clip={CL.casa} />
+        <ClipSlot g={g} a={S.casa} seed="h-casa" label="CLIP · ULLEVAAL / TIFOSI NORVEGIA" clip={CL.casa} flag="no" />
         <Caption g={g} y={CLIP_Y} out={S.gol3} rows={[cap('white', [["QUEST'ANNO", at('due', "quest'anno")]]), cap('navy', [['IN', at('due', 'in')], ['CASA', at('due', 'casa')]])]} />
       </Seg>
 
@@ -129,8 +131,8 @@ export const Haaland: React.FC = () => {
 
       {/* 6 · domanda: schermo diviso */}
       <Seg g={g} a={S.dom} b={S.cta}>
-        <ClipSlot g={g} a={S.dom} seed="h-s1" label="CLIP · HAALAND" style={{bottom: H / 2}} clip={CL.splitTop} />
-        <ClipSlot g={g} a={S.dom} seed="h-s2" label="CLIP · GALLES" style={{top: H / 2}} clip={CL.splitBottom} />
+        <ClipSlot g={g} a={S.dom} seed="h-s1" label="CLIP · HAALAND" style={{bottom: H / 2}} clip={CL.splitTop} flag="no" />
+        <ClipSlot g={g} a={S.dom} seed="h-s2" label="CLIP · GALLES" style={{top: H / 2}} clip={CL.splitBottom} flag="gb-wls" />
         <div style={{position: 'absolute', left: 0, right: 0, top: H / 2 - 3, height: 6, background: '#0B0F33'}} />
         <Caption g={g} y={H / 2 - 88} out={at('dom', 'e') - 0.05} rows={[cap('white', [['HAALAND', at('dom', 'haaland')], ['A', at('dom', 'a')], ['SEGNO', at('dom', 'segno')]]), cap('navy', [['GIÀ', at('dom', 'gia')], ['NEL', at('dom', 'nel')], ['1°', at('dom', 'primo')], ['TEMPO?', at('dom', 'tempo')]])]} />
         <Caption g={g} y={H / 2 - 88} out={S.cta} rows={[cap('white', [['E', at('dom', 'e')], ['OCCHIO:', at('dom', 'occhio')]]), cap('navy', [['PUÒ', at('dom', 'puo')], ['FARNE', at('dom', 'farne')], ['PIÙ', at('dom', 'piu')], ['DI', at('dom', 'di')], ['UNO', at('dom', 'uno')]])]} />

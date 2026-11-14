@@ -114,9 +114,34 @@ export const Backdrop: React.FC<{g: number}> = ({g}) => (
  * Segnaposto delle clip: qui vanno i filmati veri (giocatore, squadra, stadio). Finché non ci
  * sono si vede uno stadio di notte sfocato che si avvicina piano, con la scritta "CLIP".
  */
-export type Clip = {src: string; from: number; rate?: number; x?: number};
-export const ClipSlot: React.FC<{g: number; a: number; seed: string; label?: string; style?: React.CSSProperties; clip?: Clip}> = ({g, a, seed, label = 'CLIP', style, clip}) => {
+export type Clip = {src: string; from: number; rate?: number; x?: number} | {image: string; x?: number; pan?: number};
+/**
+ * Spazio per le immagini in movimento: filmato vero (src), immagine (image, con zoom e
+ * panoramica lenta) oppure, se non c'è niente, la bandiera della squadra (flag) che sventola
+ * nei colori del canale. `placeholder` mostra invece il segnaposto "CLIP" per le prove.
+ */
+export const ClipSlot: React.FC<{g: number; a: number; seed: string; label?: string; style?: React.CSSProperties; clip?: Clip; flag?: string; placeholder?: boolean}> = ({g, a, seed, label = 'CLIP', style, clip, flag, placeholder}) => {
   const z = 1.06 + (g - a) * 0.025;
+  if (clip && 'image' in clip) {
+    const t = g - a;
+    return (
+      <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#000', ...style}}>
+        <Img
+          src={staticFile(clip.image)}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: `${(clip.x ?? 0.5) * 100}% 40%`,
+            transform: `scale(${1.08 + t * 0.035}) translateX(${(clip.pan ?? 0) * t * 12}px)`,
+          }}
+        />
+        <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,15,51,0.35) 0%, rgba(11,15,51,0.05) 40%, rgba(11,15,51,0.55) 100%)'}} />
+      </div>
+    );
+  }
   if (clip) {
     // filmato vero: ritagliato in verticale, rallentato e con un leggero zoom, come nei video MOTB
     return (
@@ -131,6 +156,26 @@ export const ClipSlot: React.FC<{g: number; a: number; seed: string; label?: str
           />
         </div>
         <AbsoluteFill style={{background: 'radial-gradient(90% 60% at 50% 50%, transparent 45%, rgba(0,0,30,0.5) 100%)'}} />
+      </div>
+    );
+  }
+  if (flag && !placeholder) {
+    // nessuna immagine: bandiera vera a tutto schermo, scurita e sfocata, che si avvicina piano
+    return (
+      <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: M.bgBottom, ...style}}>
+        <Img
+          src={staticFile(`motb/flags/${flag}.svg`)}
+          style={{position: 'absolute', inset: '-6%', width: '112%', height: '112%', objectFit: 'cover', filter: 'blur(3px) saturate(1.1)', transform: `scale(${z}) rotate(${Math.sin((g - a) * 0.8) * 1.2}deg)`}}
+        />
+        {/* pieghe di luce che scorrono, come stoffa */}
+        <AbsoluteFill
+          style={{
+            background: `repeating-linear-gradient(100deg, rgba(255,255,255,0.0) 0px, rgba(255,255,255,0.10) ${120}px, rgba(0,0,30,0.18) ${260}px, rgba(255,255,255,0.0) ${380}px)`,
+            backgroundPosition: `${(g - a) * 160}px 0`,
+            mixBlendMode: 'overlay',
+          }}
+        />
+        <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,15,51,0.55) 0%, rgba(11,15,51,0.35) 45%, rgba(11,15,51,0.75) 100%)'}} />
       </div>
     );
   }
