@@ -1,0 +1,7 @@
+#gancio Tre gol e due assist in quattro partite di Nations League. E nessuno ne parla.
+#ctx Tre numeri, stasera, per Bulgaria-Islanda. Il nome è Orri Óskarsson.
+#uno Uno. In nazionale è sempre titolare: quattro partite su quattro.
+#due Due. In Liga, con la Real Sociedad, ha già segnato tre gol.
+#tre Tre. All'andata, contro la Bulgaria? Doppietta. Finì tre a zero.
+#dom Stasera colpisce ancora, magari già nel primo tempo?
+#cta Commenta analisi.

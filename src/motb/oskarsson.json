@@ -1,0 +1,408 @@
+{
+ "audio": false,
+ "duration": 26.95,
+ "words": [
+  {
+   "text": "Tre",
+   "start": 0.0,
+   "end": 0.172,
+   "cue": "gancio"
+  },
+  {
+   "text": "gol",
+   "start": 0.172,
+   "end": 0.344,
+   "cue": "gancio"
+  },
+  {
+   "text": "e",
+   "start": 0.344,
+   "end": 0.516,
+   "cue": "gancio"
+  },
+  {
+   "text": "due",
+   "start": 0.516,
+   "end": 0.688,
+   "cue": "gancio"
+  },
+  {
+   "text": "assist",
+   "start": 0.688,
+   "end": 1.002,
+   "cue": "gancio"
+  },
+  {
+   "text": "in",
+   "start": 1.002,
+   "end": 1.174,
+   "cue": "gancio"
+  },
+  {
+   "text": "quattro",
+   "start": 1.174,
+   "end": 1.488,
+   "cue": "gancio"
+  },
+  {
+   "text": "partite",
+   "start": 1.488,
+   "end": 1.944,
+   "cue": "gancio"
+  },
+  {
+   "text": "di",
+   "start": 1.944,
+   "end": 2.116,
+   "cue": "gancio"
+  },
+  {
+   "text": "Nations",
+   "start": 2.116,
+   "end": 2.43,
+   "cue": "gancio"
+  },
+  {
+   "text": "League.",
+   "start": 2.43,
+   "end": 2.744,
+   "cue": "gancio"
+  },
+  {
+   "text": "E",
+   "start": 3.044,
+   "end": 3.216,
+   "cue": "gancio"
+  },
+  {
+   "text": "nessuno",
+   "start": 3.216,
+   "end": 3.672,
+   "cue": "gancio"
+  },
+  {
+   "text": "ne",
+   "start": 3.672,
+   "end": 3.844,
+   "cue": "gancio"
+  },
+  {
+   "text": "parla.",
+   "start": 3.844,
+   "end": 4.158,
+   "cue": "gancio"
+  },
+  {
+   "text": "Tre",
+   "start": 4.458,
+   "end": 4.63,
+   "cue": "ctx"
+  },
+  {
+   "text": "numeri,",
+   "start": 4.63,
+   "end": 5.086,
+   "cue": "ctx"
+  },
+  {
+   "text": "stasera,",
+   "start": 5.226,
+   "end": 5.682,
+   "cue": "ctx"
+  },
+  {
+   "text": "per",
+   "start": 5.822,
+   "end": 5.994,
+   "cue": "ctx"
+  },
+  {
+   "text": "Bulgaria-Islanda.",
+   "start": 5.994,
+   "end": 6.734,
+   "cue": "ctx"
+  },
+  {
+   "text": "Il",
+   "start": 7.034,
+   "end": 7.206,
+   "cue": "ctx"
+  },
+  {
+   "text": "nome",
+   "start": 7.206,
+   "end": 7.52,
+   "cue": "ctx"
+  },
+  {
+   "text": "è",
+   "start": 7.52,
+   "end": 7.692,
+   "cue": "ctx"
+  },
+  {
+   "text": "Orri",
+   "start": 7.692,
+   "end": 8.006,
+   "cue": "ctx"
+  },
+  {
+   "text": "Óskarsson.",
+   "start": 8.006,
+   "end": 8.462,
+   "cue": "ctx"
+  },
+  {
+   "text": "Uno.",
+   "start": 8.762,
+   "end": 9.076,
+   "cue": "uno"
+  },
+  {
+   "text": "In",
+   "start": 9.376,
+   "end": 9.548,
+   "cue": "uno"
+  },
+  {
+   "text": "nazionale",
+   "start": 9.548,
+   "end": 10.146,
+   "cue": "uno"
+  },
+  {
+   "text": "è",
+   "start": 10.146,
+   "end": 10.318,
+   "cue": "uno"
+  },
+  {
+   "text": "sempre",
+   "start": 10.318,
+   "end": 10.632,
+   "cue": "uno"
+  },
+  {
+   "text": "titolare:",
+   "start": 10.632,
+   "end": 11.23,
+   "cue": "uno"
+  },
+  {
+   "text": "quattro",
+   "start": 11.37,
+   "end": 11.684,
+   "cue": "uno"
+  },
+  {
+   "text": "partite",
+   "start": 11.684,
+   "end": 12.14,
+   "cue": "uno"
+  },
+  {
+   "text": "su",
+   "start": 12.14,
+   "end": 12.312,
+   "cue": "uno"
+  },
+  {
+   "text": "quattro.",
+   "start": 12.312,
+   "end": 12.626,
+   "cue": "uno"
+  },
+  {
+   "text": "Due.",
+   "start": 12.926,
+   "end": 13.098,
+   "cue": "due"
+  },
+  {
+   "text": "In",
+   "start": 13.398,
+   "end": 13.57,
+   "cue": "due"
+  },
+  {
+   "text": "Liga,",
+   "start": 13.57,
+   "end": 13.884,
+   "cue": "due"
+  },
+  {
+   "text": "con",
+   "start": 14.024,
+   "end": 14.196,
+   "cue": "due"
+  },
+  {
+   "text": "la",
+   "start": 14.196,
+   "end": 14.368,
+   "cue": "due"
+  },
+  {
+   "text": "Real",
+   "start": 14.368,
+   "end": 14.54,
+   "cue": "due"
+  },
+  {
+   "text": "Sociedad,",
+   "start": 14.54,
+   "end": 14.996,
+   "cue": "due"
+  },
+  {
+   "text": "ha",
+   "start": 15.136,
+   "end": 15.308,
+   "cue": "due"
+  },
+  {
+   "text": "già",
+   "start": 15.308,
+   "end": 15.48,
+   "cue": "due"
+  },
+  {
+   "text": "segnato",
+   "start": 15.48,
+   "end": 15.936,
+   "cue": "due"
+  },
+  {
+   "text": "tre",
+   "start": 15.936,
+   "end": 16.108,
+   "cue": "due"
+  },
+  {
+   "text": "gol.",
+   "start": 16.108,
+   "end": 16.28,
+   "cue": "due"
+  },
+  {
+   "text": "Tre.",
+   "start": 16.58,
+   "end": 16.752,
+   "cue": "tre"
+  },
+  {
+   "text": "All'andata,",
+   "start": 17.052,
+   "end": 17.65,
+   "cue": "tre"
+  },
+  {
+   "text": "contro",
+   "start": 17.79,
+   "end": 18.104,
+   "cue": "tre"
+  },
+  {
+   "text": "la",
+   "start": 18.104,
+   "end": 18.276,
+   "cue": "tre"
+  },
+  {
+   "text": "Bulgaria?",
+   "start": 18.276,
+   "end": 18.732,
+   "cue": "tre"
+  },
+  {
+   "text": "Doppietta.",
+   "start": 19.032,
+   "end": 19.488,
+   "cue": "tre"
+  },
+  {
+   "text": "Finì",
+   "start": 19.788,
+   "end": 20.102,
+   "cue": "tre"
+  },
+  {
+   "text": "tre",
+   "start": 20.102,
+   "end": 20.274,
+   "cue": "tre"
+  },
+  {
+   "text": "a",
+   "start": 20.274,
+   "end": 20.446,
+   "cue": "tre"
+  },
+  {
+   "text": "zero.",
+   "start": 20.446,
+   "end": 20.76,
+   "cue": "tre"
+  },
+  {
+   "text": "Stasera",
+   "start": 21.06,
+   "end": 21.516,
+   "cue": "dom"
+  },
+  {
+   "text": "colpisce",
+   "start": 21.516,
+   "end": 21.972,
+   "cue": "dom"
+  },
+  {
+   "text": "ancora,",
+   "start": 21.972,
+   "end": 22.428,
+   "cue": "dom"
+  },
+  {
+   "text": "magari",
+   "start": 22.568,
+   "end": 23.024,
+   "cue": "dom"
+  },
+  {
+   "text": "già",
+   "start": 23.024,
+   "end": 23.196,
+   "cue": "dom"
+  },
+  {
+   "text": "nel",
+   "start": 23.196,
+   "end": 23.368,
+   "cue": "dom"
+  },
+  {
+   "text": "primo",
+   "start": 23.368,
+   "end": 23.682,
+   "cue": "dom"
+  },
+  {
+   "text": "tempo?",
+   "start": 23.682,
+   "end": 23.996,
+   "cue": "dom"
+  },
+  {
+   "text": "Commenta",
+   "start": 24.296,
+   "end": 24.752,
+   "cue": "cta"
+  },
+  {
+   "text": "analisi.",
+   "start": 24.752,
+   "end": 25.35,
+   "cue": "cta"
+  }
+ ]
+}

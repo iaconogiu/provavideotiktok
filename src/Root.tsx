@@ -22,6 +22,7 @@ import {FPS as ROC_FPS, ROCCIA_FRAMES, Roccia} from './roccia/Roccia';
 import {DIO_FRAMES, Dio, FPS as DIO_FPS} from './dio/Dio';
 import {ARTE_FRAMES, Arte, FPS as ARTE_FPS} from './arte/Arte';
 import {FPS as PRO_FPS, PRONOSTICO_FRAMES, Pronostico} from './pronostico/Pronostico';
+import {FPS as MOTB_FPS, OSK_MOTB_FRAMES, OskarssonMotb} from './motb/OskarssonMotb';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -62,5 +63,6 @@ export const RemotionRoot: React.FC = () => (
       <Composition id="Dio" component={Dio} width={1920} height={1080} fps={DIO_FPS} durationInFrames={DIO_FRAMES} />
       <Composition id="Arte" component={Arte} width={1080} height={1920} fps={ARTE_FPS} durationInFrames={ARTE_FRAMES} />
       <Composition id="OskarssonPronostico" component={Pronostico} width={1080} height={1920} fps={PRO_FPS} durationInFrames={PRONOSTICO_FRAMES} />
+      <Composition id="OskarssonMotb" component={OskarssonMotb} width={1080} height={1920} fps={MOTB_FPS} durationInFrames={OSK_MOTB_FRAMES} />
   </>
 );
