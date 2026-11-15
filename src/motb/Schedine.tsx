@@ -23,11 +23,12 @@ const SLIPS: Shot[] = [
   {file: '5-portogallo-danimarca-over', w: 1206, h: 564, dot: {x: 116, y: 364}},
   {file: '6-portogallo-danimarca-damsgaard', w: 1206, h: 568, dot: {x: 116, y: 353}},
 ];
-// multiple: screen dell'app già pagati (codice della giocata sfocato)
+// multiple: screen dell'app già pagati, tagliati sotto la quota totale (niente importi né vincita;
+// codice della giocata sfocato)
 const MULTI: Shot[] = [
-  {file: 'm-12-11', w: 576, h: 1000},
-  {file: 'm-14-11-a', w: 792, h: 1122},
-  {file: 'm-14-11-b', w: 576, h: 1000},
+  {file: 'm-12-11', w: 576, h: 842},
+  {file: 'm-14-11-a', w: 792, h: 900},
+  {file: 'm-14-11-b', w: 576, h: 864},
 ];
 const NS = SLIPS.length;
 const NM = MULTI.length;

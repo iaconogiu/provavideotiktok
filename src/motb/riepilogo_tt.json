@@ -1,479 +1,479 @@
 {
- "audio": false,
- "duration": 34.844,
+ "audio": true,
+ "duration": 32.151,
  "words": [
   {
    "text": "Una",
    "start": 0.0,
-   "end": 0.314,
+   "end": 0.26,
    "cue": "titolo"
   },
   {
    "text": "giornata",
-   "start": 0.314,
-   "end": 0.77,
+   "start": 0.26,
+   "end": 0.64,
    "cue": "titolo"
   },
   {
    "text": "di",
-   "start": 0.77,
-   "end": 0.942,
+   "start": 0.64,
+   "end": 0.78,
    "cue": "titolo"
   },
   {
    "text": "Nations",
-   "start": 0.942,
-   "end": 1.256,
+   "start": 0.78,
+   "end": 1.12,
    "cue": "titolo"
   },
   {
    "text": "League:",
-   "start": 1.256,
-   "end": 1.57,
+   "start": 1.12,
+   "end": 1.5,
    "cue": "titolo"
   },
   {
    "text": "nove",
-   "start": 1.71,
-   "end": 2.024,
+   "start": 1.74,
+   "end": 1.94,
    "cue": "titolo"
   },
   {
    "text": "letture.",
-   "start": 2.024,
-   "end": 2.48,
+   "start": 1.94,
+   "end": 2.62,
    "cue": "titolo"
   },
   {
    "text": "Come",
    "start": 2.78,
-   "end": 3.094,
+   "end": 2.9,
    "cue": "titolo"
   },
   {
    "text": "sono",
-   "start": 3.094,
-   "end": 3.408,
+   "start": 2.9,
+   "end": 3.1,
    "cue": "titolo"
   },
   {
    "text": "finite?",
-   "start": 3.408,
-   "end": 3.864,
+   "start": 3.1,
+   "end": 3.44,
    "cue": "titolo"
   },
   {
    "text": "Turchia-Belgio,",
-   "start": 4.164,
-   "end": 4.762,
+   "start": 3.44,
+   "end": 4.92,
    "cue": "s1"
   },
   {
    "text": "gol",
-   "start": 4.902,
-   "end": 5.074,
+   "start": 4.92,
+   "end": 5.1,
    "cue": "s1"
   },
   {
    "text": "da",
-   "start": 5.074,
-   "end": 5.246,
+   "start": 5.1,
+   "end": 5.28,
    "cue": "s1"
   },
   {
    "text": "entrambe",
-   "start": 5.246,
-   "end": 5.702,
+   "start": 5.28,
+   "end": 5.56,
    "cue": "s1"
   },
   {
    "text": "le",
-   "start": 5.702,
-   "end": 5.874,
+   "start": 5.56,
+   "end": 5.7,
    "cue": "s1"
   },
   {
    "text": "parti.",
-   "start": 5.874,
-   "end": 6.188,
+   "start": 5.7,
+   "end": 5.98,
    "cue": "s1"
   },
   {
    "text": "Fatto.",
-   "start": 6.488,
-   "end": 6.802,
+   "start": 6.42,
+   "end": 6.86,
    "cue": "s1"
   },
   {
    "text": "Frattesi",
-   "start": 7.102,
-   "end": 7.558,
+   "start": 7.12,
+   "end": 7.5,
    "cue": "s2"
   },
   {
    "text": "decisivo",
-   "start": 7.558,
-   "end": 8.156,
+   "start": 7.5,
+   "end": 7.94,
    "cue": "s2"
   },
   {
    "text": "contro",
-   "start": 8.156,
-   "end": 8.47,
+   "start": 7.94,
+   "end": 8.2,
    "cue": "s2"
   },
   {
    "text": "la",
-   "start": 8.47,
-   "end": 8.642,
+   "start": 8.2,
+   "end": 8.4,
    "cue": "s2"
   },
   {
    "text": "Francia.",
-   "start": 8.642,
-   "end": 8.956,
+   "start": 8.4,
+   "end": 8.88,
    "cue": "s2"
   },
   {
    "text": "Fatto.",
-   "start": 9.256,
-   "end": 9.57,
+   "start": 9.12,
+   "end": 9.48,
    "cue": "s2"
   },
   {
    "text": "Krstović",
-   "start": 9.87,
-   "end": 10.184,
+   "start": 9.76,
+   "end": 10.18,
    "cue": "s3"
   },
   {
    "text": "a",
-   "start": 10.184,
-   "end": 10.356,
+   "start": 10.18,
+   "end": 10.36,
    "cue": "s3"
   },
   {
    "text": "segno",
-   "start": 10.356,
-   "end": 10.67,
+   "start": 10.36,
+   "end": 10.54,
    "cue": "s3"
   },
   {
    "text": "col",
-   "start": 10.67,
-   "end": 10.842,
+   "start": 10.54,
+   "end": 10.66,
    "cue": "s3"
   },
   {
    "text": "Montenegro.",
-   "start": 10.842,
-   "end": 11.44,
+   "start": 10.66,
+   "end": 11.3,
    "cue": "s3"
   },
   {
    "text": "Fatto.",
-   "start": 11.74,
-   "end": 12.054,
+   "start": 11.58,
+   "end": 11.96,
    "cue": "s3"
   },
   {
    "text": "Germania",
-   "start": 12.354,
-   "end": 12.81,
+   "start": 12.32,
+   "end": 12.66,
    "cue": "s4"
   },
   {
    "text": "padrona",
-   "start": 12.81,
-   "end": 13.266,
+   "start": 12.66,
+   "end": 13.14,
    "cue": "s4"
   },
   {
    "text": "degli",
-   "start": 13.266,
-   "end": 13.58,
+   "start": 13.14,
+   "end": 13.32,
    "cue": "s4"
   },
   {
    "text": "angoli",
-   "start": 13.58,
-   "end": 14.036,
+   "start": 13.32,
+   "end": 13.58,
    "cue": "s4"
   },
   {
    "text": "nel",
-   "start": 14.036,
-   "end": 14.208,
+   "start": 13.58,
+   "end": 13.78,
    "cue": "s4"
   },
   {
    "text": "primo",
-   "start": 14.208,
-   "end": 14.522,
+   "start": 13.78,
+   "end": 14.02,
    "cue": "s4"
   },
   {
    "text": "tempo.",
-   "start": 14.522,
-   "end": 14.836,
+   "start": 14.02,
+   "end": 14.32,
    "cue": "s4"
   },
   {
    "text": "Fatto.",
-   "start": 15.136,
-   "end": 15.45,
+   "start": 14.72,
+   "end": 15.14,
    "cue": "s4"
   },
   {
    "text": "Óskarsson",
-   "start": 15.75,
-   "end": 16.206,
+   "start": 15.4,
+   "end": 15.86,
    "cue": "s5"
   },
   {
    "text": "in",
-   "start": 16.206,
-   "end": 16.378,
+   "start": 15.86,
+   "end": 16.04,
    "cue": "s5"
   },
   {
    "text": "gol",
-   "start": 16.378,
-   "end": 16.55,
+   "start": 16.04,
+   "end": 16.14,
    "cue": "s5"
   },
   {
    "text": "con",
-   "start": 16.55,
-   "end": 16.722,
+   "start": 16.14,
+   "end": 16.28,
    "cue": "s5"
   },
   {
    "text": "l'Islanda.",
-   "start": 16.722,
-   "end": 17.178,
+   "start": 16.28,
+   "end": 17.12,
    "cue": "s5"
   },
   {
    "text": "Fatto.",
-   "start": 17.478,
-   "end": 17.792,
+   "start": 17.12,
+   "end": 17.56,
    "cue": "s5"
   },
   {
    "text": "La",
-   "start": 18.092,
-   "end": 18.264,
+   "start": 17.74,
+   "end": 17.88,
    "cue": "s6"
   },
   {
    "text": "Danimarca",
-   "start": 18.264,
-   "end": 18.862,
+   "start": 17.88,
+   "end": 18.28,
    "cue": "s6"
   },
   {
    "text": "ne",
-   "start": 18.862,
-   "end": 19.034,
+   "start": 18.28,
+   "end": 18.42,
    "cue": "s6"
   },
   {
    "text": "fa",
-   "start": 19.034,
-   "end": 19.206,
+   "start": 18.42,
+   "end": 18.56,
    "cue": "s6"
   },
   {
    "text": "quattro",
-   "start": 19.206,
-   "end": 19.52,
+   "start": 18.56,
+   "end": 18.92,
    "cue": "s6"
   },
   {
    "text": "in",
-   "start": 19.52,
-   "end": 19.692,
+   "start": 18.92,
+   "end": 19.02,
    "cue": "s6"
   },
   {
    "text": "Portogallo.",
-   "start": 19.692,
-   "end": 20.29,
+   "start": 19.02,
+   "end": 19.62,
    "cue": "s6"
   },
   {
    "text": "Fatto.",
-   "start": 20.59,
-   "end": 20.904,
+   "start": 19.92,
+   "end": 20.34,
    "cue": "s6"
   },
   {
    "text": "E",
-   "start": 21.204,
-   "end": 21.376,
+   "start": 20.54,
+   "end": 20.7,
    "cue": "s7"
   },
   {
    "text": "Damsgaard",
-   "start": 21.376,
-   "end": 21.69,
+   "start": 20.7,
+   "end": 21.22,
    "cue": "s7"
   },
   {
    "text": "serve",
-   "start": 21.69,
-   "end": 22.004,
+   "start": 21.22,
+   "end": 21.46,
    "cue": "s7"
   },
   {
    "text": "l'assist.",
-   "start": 22.004,
-   "end": 22.318,
+   "start": 21.46,
+   "end": 22.3,
    "cue": "s7"
   },
   {
    "text": "Fatto.",
-   "start": 22.618,
-   "end": 22.932,
+   "start": 22.3,
+   "end": 22.82,
    "cue": "s7"
   },
   {
    "text": "E",
-   "start": 23.232,
-   "end": 23.404,
+   "start": 23.0,
+   "end": 23.1,
    "cue": "multi"
   },
   {
    "text": "le",
-   "start": 23.404,
-   "end": 23.576,
+   "start": 23.1,
+   "end": 23.22,
    "cue": "multi"
   },
   {
    "text": "letture",
-   "start": 23.576,
-   "end": 24.032,
+   "start": 23.22,
+   "end": 23.42,
    "cue": "multi"
   },
   {
    "text": "di",
-   "start": 24.032,
-   "end": 24.204,
+   "start": 23.42,
+   "end": 23.6,
    "cue": "multi"
   },
   {
    "text": "serata?",
-   "start": 24.204,
-   "end": 24.66,
+   "start": 23.6,
+   "end": 23.9,
    "cue": "multi"
   },
   {
    "text": "Dodici",
-   "start": 24.96,
-   "end": 25.416,
+   "start": 24.24,
+   "end": 24.58,
    "cue": "m1"
   },
   {
    "text": "novembre,",
-   "start": 25.416,
-   "end": 25.872,
+   "start": 24.58,
+   "end": 25.0,
    "cue": "m1"
   },
   {
    "text": "quattro",
-   "start": 26.012,
-   "end": 26.326,
+   "start": 25.14,
+   "end": 25.48,
    "cue": "m1"
   },
   {
    "text": "partite",
-   "start": 26.326,
-   "end": 26.782,
+   "start": 25.48,
+   "end": 25.74,
    "cue": "m1"
   },
   {
    "text": "su",
-   "start": 26.782,
-   "end": 26.954,
+   "start": 25.74,
+   "end": 25.92,
    "cue": "m1"
   },
   {
    "text": "quattro.",
-   "start": 26.954,
-   "end": 27.268,
+   "start": 25.92,
+   "end": 26.48,
    "cue": "m1"
   },
   {
    "text": "Fatto.",
-   "start": 27.568,
-   "end": 27.882,
+   "start": 26.48,
+   "end": 27.2,
    "cue": "m1"
   },
   {
    "text": "Quattordici",
-   "start": 28.182,
-   "end": 28.78,
+   "start": 27.22,
+   "end": 27.78,
    "cue": "m2"
   },
   {
    "text": "novembre,",
-   "start": 28.78,
-   "end": 29.236,
+   "start": 27.78,
+   "end": 28.2,
    "cue": "m2"
   },
   {
    "text": "cinque",
-   "start": 29.376,
-   "end": 29.69,
+   "start": 28.52,
+   "end": 28.68,
    "cue": "m2"
   },
   {
    "text": "su",
-   "start": 29.69,
-   "end": 29.862,
+   "start": 28.68,
+   "end": 28.84,
    "cue": "m2"
   },
   {
    "text": "cinque.",
-   "start": 29.862,
-   "end": 30.176,
+   "start": 28.84,
+   "end": 29.28,
    "cue": "m2"
   },
   {
    "text": "Fatto.",
-   "start": 30.476,
-   "end": 30.79,
+   "start": 29.58,
+   "end": 30.18,
    "cue": "m2"
   },
   {
    "text": "Nove",
-   "start": 31.09,
-   "end": 31.404,
+   "start": 30.28,
+   "end": 30.44,
    "cue": "fine"
   },
   {
    "text": "su",
-   "start": 31.404,
-   "end": 31.576,
+   "start": 30.44,
+   "end": 30.62,
    "cue": "fine"
   },
   {
    "text": "nove.",
-   "start": 31.576,
-   "end": 31.89,
+   "start": 30.62,
+   "end": 30.88,
    "cue": "fine"
   },
   {
    "text": "Commenta",
-   "start": 32.19,
-   "end": 32.646,
+   "start": 31.3,
+   "end": 31.64,
    "cue": "fine"
   },
   {
    "text": "analisi.",
-   "start": 32.646,
-   "end": 33.244,
+   "start": 31.64,
+   "end": 32.02,
    "cue": "fine"
   }
  ]
