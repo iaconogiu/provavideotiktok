@@ -1,0 +1,12 @@
+#titolo Una giornata di Nations League: nove letture. Come sono finite?
+#s1 Turchia-Belgio, gol da entrambe le parti. Fatto.
+#s2 Frattesi decisivo contro la Francia. Fatto.
+#s3 Krstović a segno col Montenegro. Fatto.
+#s4 Germania padrona degli angoli nel primo tempo. Fatto.
+#s5 Óskarsson in gol con l'Islanda. Fatto.
+#s6 La Danimarca ne fa quattro in Portogallo. Fatto.
+#s7 E Damsgaard serve l'assist. Fatto.
+#multi E le letture di serata?
+#m1 Dodici novembre, quattro partite su quattro. Fatto.
+#m2 Quattordici novembre, cinque su cinque. Fatto.
+#fine Nove su nove. Commenta analisi.

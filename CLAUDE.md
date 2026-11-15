@@ -16,3 +16,9 @@ numeri gialli che contano, clip vere delle squadre. Niente parole da scommessa.
 - Render: `npx remotion render <Id> <file>`; poi comprimere a ~25 MB (ffmpeg due passate, ~4,5 Mbit/s)
   e mettere il file in `video/` così l'utente lo scarica da GitHub (i file > 100 MB GitHub li rifiuta).
 - Ambiente cloud consigliato: *provavideotiktok* (può scaricare da upload.wikimedia.org e huggingface.co).
+
+## Riepiloghi "letture" (Instagram e TikTok)
+- Instagram: composizione `Schedine` (screen veri delle giocate; bollino verde solo se vinta e verificata).
+- TikTok: composizione `LettureTikTok` (nessuno screen, nessuna quota: giocate ricostruite come schede).
+- Testi voce: `scripts/riepilogo_ig_voce.txt` e `scripts/riepilogo_tt_voce.txt`.
+- Quando arriva l'mp3: `scripts/motb_finalizza.sh` (accelera la voce del 12%, allinea, renderizza, comprime).

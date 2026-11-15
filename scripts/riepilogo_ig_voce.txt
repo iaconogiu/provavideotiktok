@@ -1,0 +1,13 @@
+#titolo Una giornata di Nations League: sette singole e tre multiple. Come sono finite?
+#s1 Turchia-Belgio, gol da entrambe le parti. Fatto.
+#s2 Frattesi decisivo contro la Francia. Fatto.
+#s3 Krstović a segno col Montenegro. Fatto.
+#s4 Germania padrona degli angoli nel primo tempo. Fatto.
+#s5 Óskarsson in gol con l'Islanda. Fatto.
+#s6 La Danimarca ne fa quattro in Portogallo. Fatto.
+#s7 E Damsgaard serve l'assist. Fatto.
+#multi E le multiple?
+#m1 Dodici novembre, quattro partite su quattro. Fatto.
+#m2 Quattordici novembre, cinque su cinque. Fatto.
+#m3 E la stessa, una seconda volta. Fatto.
+#fine Dieci su dieci. Commenta analisi.
