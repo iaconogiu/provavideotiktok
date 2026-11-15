@@ -1,11 +1,13 @@
 import React from 'react';
-import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
-import {Backdrop, FONT, FPS, M, W, clamp, easeBack, easeIn, easeOut, hit, prog, useFontReady} from './kit';
+import {AbsoluteFill, Audio, Img, staticFile, useCurrentFrame} from 'remotion';
+import data from './riepilogo.json';
+import {Backdrop, FONT, FPS, M, W, clamp, easeBack, easeIn, easeOut, hit, makeTiming, prog, useFontReady, type VW} from './kit';
 
 /**
  * Riepilogo della giornata di Nations League (12–14/11/2026) per Instagram, sul modello del
  * video "10 giorni, 19 letture": titolo → "come sono finite?" → una schermata per giocata
- * (2,6 s ciascuna, sotto i 4 s) con FATTO ✓ → griglia finale.
+ * (ognuna sulla sua frase, sempre sotto i 4 s) con FATTO ✓ sulla parola "fatto" → griglia finale.
+ * Voce: public/motb/riepilogo/voce.mp3 (ElevenLabs accelerata del 12%), tempi in riepilogo.json.
  * Bollino verde solo sulle giocate vinte (public/motb/schedine/): sei verificate sui risultati,
  * Frattesi (tiri) confermata dall'utente.
  */
@@ -22,11 +24,13 @@ const SLIPS: Slip[] = [
   {file: '6-portogallo-danimarca-damsgaard', w: 1206, h: 568, dot: {x: 116, y: 353}},
 ];
 const N = SLIPS.length;
-const T_Q = 1.8; // "come sono finite?"
-const T_S = 3.2; // prima schermata
-const STEP = 2.6; // durata di ogni schermata
-const T_G = T_S + N * STEP; // griglia finale
-const END = T_G + 3.8;
+const {cue, at} = makeTiming(data.words as VW[]);
+const T_Q = at('titolo', 'come') - 0.1; // "come sono finite?"
+const START = SLIPS.map((_, i) => cue(`s${i + 1}`).start - 0.15); // ogni schermata entra sulla sua frase
+const STAMP = SLIPS.map((_, i) => at(`s${i + 1}`, 'fatto') - 0.05); // FATTO ✓ quando si dice "fatto"
+const T_S = START[0];
+const T_G = cue('fine').start - 0.15; // griglia finale
+const END = data.duration + 0.8;
 export const SCHEDINE_FRAMES = Math.ceil(END * FPS);
 
 const TEAL = '#2EE6B6';
@@ -79,19 +83,19 @@ const Stamp: React.FC<{g: number; at: number; x: number; y: number; s?: number}>
 /** una schermata: entra da destra, prende il FATTO ✓, poi sale dietro alla successiva */
 const SlipCard: React.FC<{g: number; i: number}> = ({g, i}) => {
   const s = SLIPS[i];
-  const a = T_S + i * STEP;
+  const a = START[i];
   if (g < a - 0.05 || g > T_G + 0.3) return null;
   const h = (CARD_W * s.h) / s.w;
   const inP = easeOut(prog(g, a, a + 0.35));
   // quante schermate sono arrivate dopo questa: la pila si sposta in alto e si rimpicciolisce
-  const d = Math.min(2.6, [1, 2, 3].reduce((sum, k) => sum + easeOut(prog(g, a + k * STEP - 0.05, a + k * STEP + 0.3)), 0));
+  const d = Math.min(2.6, [1, 2, 3].reduce((sum, k) => (i + k < N ? sum + easeOut(prog(g, START[i + k] - 0.05, START[i + k] + 0.3)) : sum), 0));
   const exitAll = easeIn(prog(g, T_G - 0.1, T_G + 0.25));
   const y0 = 840;
   const y = y0 - d * 55;
   const sc = (0.92 + 0.08 * inP) * (1 - d * 0.08);
   const op = Math.min(inP, d > 2.4 ? clamp(3 - d) / 0.6 : 1) * (1 - exitAll) * (d > 0.01 ? 1 - Math.min(0.55, d * 0.3) : 1);
-  const tStamp = a + 0.75;
-  const ring = s.dot && g > a + 0.45 ? (g - a - 0.45) % 0.9 : -1;
+  const tStamp = STAMP[i];
+  const ring = s.dot && g > a + 0.4 ? (g - a - 0.4) % 0.9 : -1;
   const sx = CARD_W / s.w;
   return (
     <div
@@ -154,11 +158,11 @@ export const Schedine: React.FC = () => {
   const titleOut = easeIn(prog(g, T_Q - 0.15, T_Q + 0.1));
   const qIn = easeOut(prog(g, T_Q, T_Q + 0.3));
   const qOut = easeIn(prog(g, T_S - 0.15, T_S + 0.1));
-  const cuts = [T_Q, T_S, T_G, ...SLIPS.map((_, i) => T_S + i * STEP)];
+  const cuts = [T_Q, T_G, ...START];
   const flash = Math.max(...cuts.map((c) => hit(g, c, 14) * 0.18));
   // contatore: sale quando ogni schermata prende il FATTO ✓
-  const done = SLIPS.filter((_, i) => g >= T_S + i * STEP + 0.75).length;
-  const lastDone = T_S + (done - 1) * STEP + 0.75;
+  const done = STAMP.filter((t) => g >= t).length;
+  const lastDone = STAMP[Math.max(0, done - 1)];
   return (
     <AbsoluteFill style={{background: M.bgBottom, overflow: 'hidden'}}>
       <Backdrop g={g} />
@@ -175,7 +179,7 @@ export const Schedine: React.FC = () => {
         <AbsoluteFill style={{opacity: 1 - titleOut, filter: titleOut > 0.01 ? `blur(${titleOut * 14}px)` : undefined}}>
           <Kicker y={620} o={easeOut(prog(g, 0, 0.3))}>NATIONS LEAGUE</Kicker>
           <div style={{position: 'absolute', left: 0, right: 0, top: 700, textAlign: 'center', fontFamily: FONT, fontSize: 110, color: '#fff', lineHeight: 1, transform: `scale(${0.8 + 0.2 * easeBack(prog(g, 0.05, 0.35))})`}}>1 GIORNATA</div>
-          <Counter g={g} n={N} at={0.35} y={830} size={250} />
+          <Counter g={g} n={N} at={at('titolo', 'sette') - 0.05} y={830} size={250} />
         </AbsoluteFill>
       )}
 
@@ -206,13 +210,14 @@ export const Schedine: React.FC = () => {
       {g >= T_G - 0.05 && (
         <>
           <Kicker y={300}>NATIONS LEAGUE · 5ª GIORNATA</Kicker>
-          <Counter g={g} n={N} at={T_G} y={370} />
-          <div style={{position: 'absolute', left: 0, right: 0, top: 545, textAlign: 'center', fontFamily: FONT, fontSize: 52, color: TEAL, opacity: easeOut(prog(g, T_G + 0.3, T_G + 0.6))}}>{N} SU {N} ✓</div>
+          <Counter g={g} n={N} at={at('fine', 'sette')} y={370} />
+          <div style={{position: 'absolute', left: 0, right: 0, top: 545, textAlign: 'center', fontFamily: FONT, fontSize: 52, color: TEAL, opacity: easeOut(prog(g, at('fine', 'su') - 0.05, at('fine', 'su') + 0.25))}}>{N} SU {N} ✓</div>
           <Grid g={g} />
         </>
       )}
 
       <AbsoluteFill style={{background: '#fff', opacity: flash, mixBlendMode: 'screen'}} />
+      {data.audio && <Audio src={staticFile('motb/riepilogo/voce.mp3')} />}
     </AbsoluteFill>
   );
 };
