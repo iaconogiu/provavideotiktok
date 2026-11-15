@@ -6,13 +6,15 @@ import {Backdrop, FONT, FPS, M, W, clamp, easeBack, easeIn, easeOut, hit, prog, 
  * Riepilogo della giornata di Nations League (12–14/11/2026) per Instagram, sul modello del
  * video "10 giorni, 19 letture": titolo → "come sono finite?" → una schermata per giocata
  * (2,6 s ciascuna, sotto i 4 s) con FATTO ✓ → griglia finale.
- * Ci sono solo le giocate verificate come vinte (bollino verde in public/motb/schedine/).
+ * Bollino verde solo sulle giocate vinte (public/motb/schedine/): sei verificate sui risultati,
+ * Frattesi (tiri) confermata dall'utente.
  */
 
 export {FPS};
 type Slip = {file: string; w: number; h: number; dot?: {x: number; y: number}};
 const SLIPS: Slip[] = [
   {file: '1-turchia-belgio', w: 1206, h: 576, dot: {x: 116, y: 354}},
+  {file: '1b-italia-francia', w: 1206, h: 621, dot: {x: 116, y: 380}},
   {file: '2-montenegro-lettonia', w: 1206, h: 609, dot: {x: 116, y: 376}},
   {file: '3-serbia-germania', w: 1206, h: 577, dot: {x: 116, y: 360}},
   {file: '4-bulgaria-islanda', w: 1149, h: 489},
@@ -119,17 +121,19 @@ const SlipCard: React.FC<{g: number; i: number}> = ({g, i}) => {
 /** griglia finale con tutte le giocate */
 const Grid: React.FC<{g: number}> = ({g}) => {
   if (g < T_G - 0.05) return null;
-  const cw = 470;
+  const cw = 440;
   return (
     <>
       {SLIPS.map((s, i) => {
         const col = i % 2;
         const row = Math.floor(i / 2);
         const h = (cw * s.h) / s.w;
+        const alone = i === SLIPS.length - 1 && SLIPS.length % 2 === 1;
+        const left = alone ? (W - cw) / 2 : (W - 2 * cw - 40) / 2 + col * (cw + 40);
         const at = T_G + 0.1 + i * 0.12;
         const p = easeBack(prog(g, at, at + 0.3));
         return (
-          <div key={s.file} style={{position: 'absolute', left: 50 + col * (cw + 40), top: 640 + row * 270, width: cw, transform: `scale(${p})`, opacity: clamp(p * 2)}}>
+          <div key={s.file} style={{position: 'absolute', left, top: 630 + row * 238, width: cw, transform: `scale(${p})`, opacity: clamp(p * 2)}}>
             <Img src={src(s)} style={{width: cw, height: h, borderRadius: 16, display: 'block', border: `3px solid ${TEAL}`, boxShadow: '0 16px 40px rgba(0,0,0,0.45)'}} />
             <div style={{position: 'absolute', right: -14, top: -14, width: 56, height: 56, borderRadius: '50%', background: M.green, border: '4px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)'}}>
               <svg width="30" height="30" viewBox="0 0 24 24">

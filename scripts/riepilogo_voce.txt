@@ -1,8 +1,9 @@
-#titolo Una giornata di Nations League, sei letture. Come sono finite?
+#titolo Una giornata di Nations League, sette letture. Come sono finite?
 #s1 Turchia-Belgio, gol da entrambe le parti. Fatto.
-#s2 Krstović a segno col Montenegro. Fatto.
-#s3 Germania padrona degli angoli nel primo tempo. Fatto.
-#s4 Óskarsson in gol con l'Islanda. Fatto.
-#s5 La Danimarca ne fa quattro in Portogallo. Fatto.
-#s6 E Damsgaard serve l'assist. Fatto.
-#fine Sei su sei. Commenta analisi.
+#s2 Frattesi decisivo contro la Francia. Fatto.
+#s3 Krstović a segno col Montenegro. Fatto.
+#s4 Germania padrona degli angoli nel primo tempo. Fatto.
+#s5 Óskarsson in gol con l'Islanda. Fatto.
+#s6 La Danimarca ne fa quattro in Portogallo. Fatto.
+#s7 E Damsgaard serve l'assist. Fatto.
+#fine Sette su sette. Commenta analisi.
