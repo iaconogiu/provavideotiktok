@@ -1,0 +1,283 @@
+{
+"tempo": 117,
+"beats": [
+0.22,
+0.77,
+1.28,
+1.82,
+2.34,
+2.85,
+3.36,
+3.87,
+4.38,
+4.93,
+5.41,
+5.95,
+6.46,
+6.98,
+7.49,
+8.0,
+8.48,
+9.02,
+9.54,
+10.05,
+10.59,
+11.1,
+11.62,
+12.16,
+12.67,
+13.18,
+13.7,
+14.21,
+14.72,
+15.23,
+15.74,
+16.26,
+16.77,
+17.28,
+17.82
+],
+"words": [
+{
+"text": "Che",
+"line": 0,
+"start": 0.0
+},
+{
+"text": "c****",
+"line": 0,
+"start": 0.2
+},
+{
+"text": "di",
+"line": 0,
+"start": 0.58
+},
+{
+"text": "storia",
+"line": 0,
+"start": 0.7
+},
+{
+"text": "scontata",
+"line": 0,
+"start": 1.02
+},
+{
+"text": "E",
+"line": 1,
+"start": 3.24
+},
+{
+"text": "ti",
+"line": 1,
+"start": 3.34
+},
+{
+"text": "dirò",
+"line": 1,
+"start": 3.56
+},
+{
+"text": "ti",
+"line": 1,
+"start": 3.8
+},
+{
+"text": "dirò",
+"line": 1,
+"start": 4.02
+},
+{
+"text": "cose",
+"line": 1,
+"start": 4.36
+},
+{
+"text": "che",
+"line": 1,
+"start": 4.6
+},
+{
+"text": "se",
+"line": 1,
+"start": 4.86
+},
+{
+"text": "vuoi",
+"line": 1,
+"start": 5.02
+},
+{
+"text": "smaltiamo",
+"line": 1,
+"start": 5.26
+},
+{
+"text": "col",
+"line": 1,
+"start": 5.68
+},
+{
+"text": "sesso",
+"line": 1,
+"start": 5.98
+},
+{
+"text": "mi",
+"line": 2,
+"start": 6.58
+},
+{
+"text": "dirai",
+"line": 2,
+"start": 6.7
+},
+{
+"text": "mi",
+"line": 2,
+"start": 7.06
+},
+{
+"text": "dirai",
+"line": 2,
+"start": 7.12
+},
+{
+"text": "mi",
+"line": 2,
+"start": 7.48
+},
+{
+"text": "dirai",
+"line": 2,
+"start": 7.66
+},
+{
+"text": "cose",
+"line": 3,
+"start": 8.02
+},
+{
+"text": "che",
+"line": 3,
+"start": 8.66
+},
+{
+"text": "ad",
+"line": 3,
+"start": 9.0
+},
+{
+"text": "altri",
+"line": 3,
+"start": 9.08
+},
+{
+"text": "tu",
+"line": 3,
+"start": 9.26
+},
+{
+"text": "non",
+"line": 3,
+"start": 9.5
+},
+{
+"text": "hai",
+"line": 3,
+"start": 9.72
+},
+{
+"text": "mai",
+"line": 3,
+"start": 9.88
+},
+{
+"text": "detto",
+"line": 3,
+"start": 10.08
+},
+{
+"text": "finché",
+"line": 4,
+"start": 10.58
+},
+{
+"text": "ti",
+"line": 4,
+"start": 10.86
+},
+{
+"text": "chiamerò",
+"line": 4,
+"start": 11.12
+},
+{
+"text": "casa",
+"line": 4,
+"start": 11.58
+},
+{
+"text": "ma",
+"line": 5,
+"start": 12.34
+},
+{
+"text": "chiameranno",
+"line": 5,
+"start": 12.8
+},
+{
+"text": "i",
+"line": 5,
+"start": 13.38
+},
+{
+"text": "palazzi",
+"line": 5,
+"start": 13.58
+},
+{
+"text": "noi",
+"line": 6,
+"start": 14.62
+},
+{
+"text": "dovremo",
+"line": 6,
+"start": 14.98
+},
+{
+"text": "separarci",
+"line": 6,
+"start": 15.36
+},
+{
+"text": "che",
+"line": 7,
+"start": 16.68
+},
+{
+"text": "c****",
+"line": 7,
+"start": 16.72
+},
+{
+"text": "di",
+"line": 7,
+"start": 17.1
+},
+{
+"text": "storia",
+"line": 7,
+"start": 17.28
+},
+{
+"text": "scontata",
+"line": 7,
+"start": 17.46
+}
+],
+"duration": 18.2
+}
