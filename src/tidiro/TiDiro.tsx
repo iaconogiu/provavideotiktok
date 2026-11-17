@@ -85,7 +85,7 @@ const Slam: React.FC<{g: number; t0: number; children: React.ReactNode; size: nu
 }) => {
   const t = g - t0 + 0.03;
   if (t < 0) return null;
-  const k = Math.exp(-t * 18);
+  const k = Math.exp(-t * 30);
   return (
     <div
       style={{
@@ -97,7 +97,7 @@ const Slam: React.FC<{g: number; t0: number; children: React.ReactNode; size: nu
         color: outline ? 'transparent' : color,
         WebkitTextStroke: outline ? `${Math.max(2, size / 60)}px ${color}` : undefined,
         whiteSpace: 'nowrap',
-        transform: `scale(${1 + 0.35 * k})`,
+        transform: `scale(${1 + 0.28 * k}) translateY(${k * size * 0.08}px)`,
         filter: t < 0.06 ? `blur(${(1 - t / 0.06) * 10}px)` : undefined,
         opacity: Math.min(1, t / 0.03),
         ...style,
@@ -110,7 +110,7 @@ const Slam: React.FC<{g: number; t0: number; children: React.ReactNode; size: nu
 
 /** corsivo che sale da dietro una linea */
 const Rise: React.FC<{g: number; t0: number; children: React.ReactNode; size: number; color: string; style?: React.CSSProperties}> = ({g, t0, children, size, color, style}) => {
-  const p = expoOut(prog(g, t0 - 0.03, t0 + 0.35));
+  const p = expoOut(prog(g, t0 - 0.03, t0 + 0.2));
   if (p <= 0) return null;
   return (
     <div style={{overflow: 'hidden', padding: `0 ${size * 0.1}px ${size * 0.12}px`, ...style}}>
@@ -356,75 +356,70 @@ const S3: React.FC<{g: number}> = ({g}) => {
   );
 };
 
-/** 4. "cose che ad altri tu non hai mai detto": la curva, sulla carta */
+/**
+ * 4. "cose che ad altri tu non hai mai detto": tanti punti grigi (gli altri) si spengono e si allontanano,
+ * due punti arancio (tu e io) si avvicinano al centro, e su "mai detto" un cerchio si chiude attorno a loro.
+ */
 const S4: React.FC<{g: number}> = ({g}) => {
-  const a = 7.95;
-  const draw = easeInOut(prog(g, a, a + 1.6));
-  // curva di Bézier: lento, poi tutto insieme (come le cose dette solo a una persona)
-  const p0 = [0, 1];
-  const p1 = [0.62, 1];
-  const p2 = [0.25, 0];
-  const p3 = [1, 0];
-  const bez = (t: number) => {
-    const u = 1 - t;
-    return [0, 1].map((k) => u * u * u * p0[k] + 3 * u * u * t * p1[k] + 3 * u * t * t * p2[k] + t * t * t * p3[k]);
-  };
-  const GX = 140;
-  const GY = 300;
-  const GW = 620;
-  const GH = 440;
-  const path = Array.from({length: 61}, (_, i) => {
-    const [x, y] = bez(i / 60);
-    return `${i ? 'L' : 'M'}${GX + x * GW},${GY + y * GH}`;
-  }).join(' ');
-  const [bx, by] = bez(draw);
-  const words: [string, number, boolean][] = [
-    ['Cose che', at('cose', 3), false],
-    ['ad altri', at('ad', 3), true],
-    ['tu non hai', at('tu', 3), false],
-    ['mai detto.', at('mai', 3), true],
-  ];
+  const tAltri = at('ad', 3);
+  const tTu = at('tu', 3);
+  const tMai = at('mai', 3);
+  const CX = 470;
+  const CY = 540;
+  const away = expoOut(prog(g, tAltri, tAltri + 0.35));
+  const come = expoOut(prog(g, tTu, tTu + 0.3));
+  const ring = expoOut(prog(g, tMai, tMai + 0.3));
+  const bp = beatPulse(g, 12);
+  const crowd = Array.from({length: 46}, (_, i) => {
+    const ang = random(`ca${i}`) * Math.PI * 2;
+    const r0 = 90 + random(`cr${i}`) * 260;
+    const r = r0 + away * (180 + random(`cd${i}`) * 220);
+    const appear = expoOut(prog(g, 7.95 + random(`ct${i}`) * 0.3, 8.15 + random(`ct${i}`) * 0.3));
+    const s = (14 + random(`cs${i}`) * 14) * appear * (1 - away * 0.4);
+    return (
+      <div
+        key={i}
+        style={{
+          position: 'absolute',
+          left: CX + Math.cos(ang) * r - s / 2,
+          top: CY + Math.sin(ang) * r - s / 2,
+          width: s,
+          height: s,
+          borderRadius: '50%',
+          background: away > 0.05 ? '#A89A89' : C.night,
+          opacity: 1 - away * 0.25,
+        }}
+      />
+    );
+  });
+  const two = [-1, 1].map((side) => {
+    const x = CX + side * (240 - come * 200);
+    const s = 46 * expoOut(prog(g, tTu - 0.05, tTu + 0.15)) * (1 + bp * 0.15);
+    return <div key={side} style={{position: 'absolute', left: x - s / 2, top: CY - s / 2, width: s, height: s, borderRadius: '50%', background: C.sunset}} />;
+  });
   return (
     <Fill bg={`radial-gradient(75% 75% at 50% 50%, ${C.paper} 35%, #DACAB6 100%)`}>
+      {crowd}
+      {two}
       <svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
-        <line x1={GX} y1={GY + GH} x2={GX + GW} y2={GY + GH} stroke="#B9A894" strokeWidth={2} />
-        <line x1={GX} y1={GY} x2={GX} y2={GY + GH} stroke="#B9A894" strokeWidth={2} />
-        <line x1={GX} y1={GY + GH} x2={GX + p1[0] * GW} y2={GY + p1[1] * GH} stroke={C.lilac} strokeWidth={2} strokeDasharray="6 8" />
-        <line x1={GX + GW} y1={GY} x2={GX + p2[0] * GW} y2={GY + p2[1] * GH} stroke={C.lilac} strokeWidth={2} strokeDasharray="6 8" />
-        <circle cx={GX + p1[0] * GW} cy={GY + p1[1] * GH} r={9} fill={C.lilac} />
-        <circle cx={GX + p2[0] * GW} cy={GY + p2[1] * GH} r={9} fill={C.lilac} />
-        <path d={path} fill="none" stroke={C.night} strokeWidth={6} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - draw} />
-        <circle cx={GX + bx * GW} cy={GY + by * GH} r={14} fill={C.sunset} />
+        <circle cx={CX} cy={CY} r={110} fill="none" stroke={C.night} strokeWidth={6} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - ring} transform={`rotate(-90 ${CX} ${CY})`} />
       </svg>
-      <Meta color="#7A6B5D" style={{position: 'absolute', left: GX, top: GY + GH + 40}}>
-        cubic-bezier(.62, 0, .25, 1) — ad altri → a me
+      <Meta color="#8C7E70" style={{position: 'absolute', left: CX - 300, top: CY - 360, opacity: away}}>
+        gli altri
       </Meta>
-      <Meta color={C.night} style={{position: 'absolute', left: GX, top: 230}}>
-        detto / non detto
+      <Meta color={C.sunset} style={{position: 'absolute', left: CX - 30, top: CY + 140, opacity: ring}}>
+        noi
       </Meta>
-      {/* barre del tempo, a scalini sul beat */}
-      {[0, 1, 2, 3, 4].map((i) => {
-        const tb = a + 0.25 + i * 0.5;
-        const p = expoOut(prog(g, tb, tb + 0.4));
-        return (
-          <div
-            key={i}
-            style={{
-              position: 'absolute',
-              left: 1480 + i * 40 + (1 - p) * 120,
-              top: 820 + i * 30,
-              width: 150,
-              height: 22,
-              borderRadius: 11,
-              background: i % 2 ? C.night : C.sunset,
-              opacity: p,
-            }}
-          />
-        );
-      })}
-      <div style={{position: 'absolute', left: 900, top: 250, display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
-        {words.map(([w, t0, acc], i) => (
-          <Rise key={i} g={g} t0={t0} size={112} color={acc ? C.sunset : C.night}>
+      <div style={{position: 'absolute', left: 1000, top: 250, display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+        {(
+          [
+            ['Cose che', at('cose', 3), false],
+            ['ad altri', tAltri, true],
+            ['tu non hai', tTu, false],
+            ['mai detto.', tMai, true],
+          ] as [string, number, boolean][]
+        ).map(([w, t0, acc], i) => (
+          <Rise key={i} g={g} t0={t0} size={118} color={acc ? C.sunset : C.night}>
             {w}
           </Rise>
         ))}
@@ -637,9 +632,6 @@ const LIGHT = new Set([0, 4]); // scene chiare: l'interfaccia diventa scura
 /** cornice da reel: etichette agli angoli, timecode che scorre, puntino sul beat */
 const Hud: React.FC<{g: number; light: boolean; frame: number}> = ({g, light, frame}) => {
   const col = light ? 'rgba(20,17,16,0.65)' : 'rgba(241,230,216,0.6)';
-  const ff = String(frame % FPS).padStart(2, '0');
-  const ss = String(Math.floor(g)).padStart(2, '0');
-  const bp = beatPulse(g, 8);
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>
       <Meta color={col} size={18} style={{position: 'absolute', left: 60, top: 44}}>
@@ -648,17 +640,8 @@ const Hud: React.FC<{g: number; light: boolean; frame: number}> = ({g, light, fr
       <Meta color={col} size={18} style={{position: 'absolute', right: 60, top: 44}}>
         miria · atto ii
       </Meta>
-      <Meta color={col} size={18} style={{position: 'absolute', left: 60, bottom: 40}}>
-        00:00:{ss}:{ff}
-      </Meta>
-      <div style={{position: 'absolute', right: 60, bottom: 40, display: 'flex', alignItems: 'center', gap: 12}}>
-        <div style={{width: 10, height: 10, borderRadius: 5, background: C.sunset, transform: `scale(${0.7 + bp * 0.8})`}} />
-        <Meta color={col} size={18}>
-          117 bpm
-        </Meta>
-      </div>
-      <div style={{position: 'absolute', left: 60, right: 60, bottom: 78, height: 1, background: col, opacity: 0.4}} />
-      <div style={{position: 'absolute', left: 60, bottom: 78, height: 2, width: (W - 120) * clamp(g / DURATION), background: C.sunset}} />
+      <div style={{position: 'absolute', left: 60, right: 60, bottom: 50, height: 1, background: col, opacity: 0.4}} />
+      <div style={{position: 'absolute', left: 60, bottom: 50, height: 2, width: (W - 120) * clamp(g / DURATION), background: C.sunset}} />
     </AbsoluteFill>
   );
 };
@@ -670,7 +653,7 @@ export const TiDiro: React.FC = () => {
   const si = SCENES.findIndex(([a, b]) => g >= a && g < b);
   const [a, , Sc] = SCENES[Math.max(0, si)];
   // ingresso di ogni scena: piccolo scatto di scala
-  const enter = 1 - expoOut(prog(g, a, a + 0.25));
+  const enter = 1 - expoOut(prog(g, a, a + 0.14));
   const punch = 1 + beatPulse(g, 12) * 0.006 + enter * 0.04;
   const f2 = Math.floor(frame / 2);
   const fade = prog(g, DURATION - 0.45, DURATION);
